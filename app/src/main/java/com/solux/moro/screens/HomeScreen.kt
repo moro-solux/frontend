@@ -24,9 +24,12 @@ fun HomeScreen(){
         horizontalAlignment = Alignment.Start,
         ){//홈 화면
         feed()
+        feed()
     }
 }
-@Preview
+@Preview(
+    heightDp = 2340,
+    widthDp = 1080)
 @Composable
 fun HomeScreenPreview(){
     HomeScreen()
