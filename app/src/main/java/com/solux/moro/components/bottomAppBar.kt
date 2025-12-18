@@ -50,7 +50,7 @@ fun BottomBar() {
             ) {
 
                 Icon(
-                    painter = painterResource(R.drawable.home),
+                    painter = painterResource(R.drawable.icon_home),
                     modifier = Modifier
                         .padding((0.15429 / PIXEL_4A_DENSITY).dp)
                         .width((60.48 / PIXEL_4A_DENSITY).dp)
@@ -115,7 +115,7 @@ fun BottomBar() {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.camera),
+                    painter = painterResource(R.drawable.icon_camera),
                     modifier = Modifier
                         .padding((0.15429 / PIXEL_4A_DENSITY).dp)
                         .width((60.48 / PIXEL_4A_DENSITY).dp)

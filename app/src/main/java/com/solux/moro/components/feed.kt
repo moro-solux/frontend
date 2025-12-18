@@ -59,7 +59,7 @@ fun Feed() {
                     .height((110.76924/PIXEL_4A_DENSITY).dp)
                     .clip(CircleShape)
                     .background(color = Color(0xFFF2F2F2)),
-                painter = painterResource(id = R.drawable.frame),
+                painter = painterResource(id = R.drawable.img_profile_small),
                 contentDescription = "image description",
                 contentScale = ContentScale.FillHeight
             )
@@ -140,7 +140,7 @@ fun Feed() {
                 modifier = Modifier
                     .width((740.16003/PIXEL_4A_DENSITY).dp)
                     .height((986.88007/PIXEL_4A_DENSITY).dp),
-                painter = painterResource(id = R.drawable.feed_img),
+                painter = painterResource(id = R.drawable.img_feed),
                 contentDescription = "image description",
                 contentScale = ContentScale.FillBounds,
 
@@ -264,7 +264,7 @@ fun Feed() {
                     modifier = Modifier.size((55.38462/PIXEL_4A_DENSITY).dp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.chat),
+                        painter = painterResource(id = R.drawable.icon_chat),
                         contentDescription = "More options",
                         tint = Color.White,
                         modifier = Modifier

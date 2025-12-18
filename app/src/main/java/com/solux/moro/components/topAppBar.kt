@@ -68,7 +68,7 @@ fun TopBar() {
                         .height((126.72 / PIXEL_4A_DENSITY).dp)
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.bell),
+                        painter = painterResource(R.drawable.icon_bell),
                         modifier = Modifier
                             .padding((0.15429 / PIXEL_4A_DENSITY).dp)
                             .width((60.48 / PIXEL_4A_DENSITY).dp)
