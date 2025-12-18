@@ -16,8 +16,6 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.components.BottomBar
-import com.solux.moro.components.Captures
-import com.solux.moro.components.Profile
 import com.solux.moro.components.TopBar
 
 @Composable
@@ -37,8 +35,7 @@ fun MyProfileScreen(){
             horizontalAlignment = Alignment.Start,
         ) {
             Column() {
-                Profile()
-                Captures()
+
             }
         }
     }
