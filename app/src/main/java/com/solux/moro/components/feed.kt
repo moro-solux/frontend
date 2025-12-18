@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,33 +28,35 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.solux.moro.R
 
+
 @Composable
-fun feed() {
+fun Feed() {
     Column(
-        verticalArrangement = Arrangement.spacedBy(30.461544036865234.dp, Alignment.Top),
+        verticalArrangement = Arrangement.spacedBy((30.461544036865234/PIXEL_4A_DENSITY).dp, Alignment.Top),
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
-            .width(1080.dp)
-            .height(1442.17859.dp)
-            .padding(start = 46.08.dp, top = 46.08.dp, end = 46.08.dp, bottom = 46.08.dp)
-    ) {//피드 컬럼
+            .fillMaxWidth()
+            .height((1442.17859/PIXEL_4A_DENSITY).dp)
+            .padding(start = (46.08/PIXEL_4A_DENSITY).dp, top = (46.08/PIXEL_4A_DENSITY).dp, end = (46.08/PIXEL_4A_DENSITY).dp, bottom = (46.08/PIXEL_4A_DENSITY).dp)
+    ) {//피드 컬럼 ( /PIXEL_4A_DENSITY)
         Row(
             Modifier
-                .width(987.84003.dp)
-                .height(110.76924.dp),
-            horizontalArrangement = Arrangement.spacedBy(28.80000114440918.dp, Alignment.Start),
+                .width((987.84003/PIXEL_4A_DENSITY).dp)
+                .height((110.76924/PIXEL_4A_DENSITY).dp),
+            horizontalArrangement = Arrangement.spacedBy((28.80000114440918/PIXEL_4A_DENSITY).dp, Alignment.Start),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
                 modifier = Modifier
                     .padding(0.dp)
-                    .width(110.76924.dp)
-                    .height(110.76924.dp)
+                    .width((110.76924/PIXEL_4A_DENSITY).dp)
+                    .height((110.76924/PIXEL_4A_DENSITY).dp)
                     .clip(CircleShape)
                     .background(color = Color(0xFFF2F2F2)),
                 painter = painterResource(id = R.drawable.frame),
@@ -62,61 +65,61 @@ fun feed() {
             )
             Row(
                 Modifier
-                    .width(847.38458.dp)
-                    .height(110.76924.dp),
+                    .width((847.38458/PIXEL_4A_DENSITY).dp)
+                    .height((110.76924/PIXEL_4A_DENSITY).dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(
-                        20.15999984741211.dp,
+                    horizontalArrangement = Arrangement.spacedBy((
+                        20.15999984741211/PIXEL_4A_DENSITY).dp,
                         Alignment.Start
                     ),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .width(393.48001.dp)
-                        .height(65.dp)
+                        .width((393.48001/PIXEL_4A_DENSITY).dp)
+                        .height((65/PIXEL_4A_DENSITY).dp)
                 ) {
                     Text(
                         text = "@colorlover",
                         // Body1/SemiBold/16px
                         style = TextStyle(
-                            fontSize = 46.08.sp,
-                            lineHeight = 64.51.sp,
+                            fontSize = (46.08/PIXEL_4A_DENSITY).sp,
+                            lineHeight = (64.51/PIXEL_4A_DENSITY).sp,
 //////폰트 다운       fontFamily = FontFamily(Font(R.font.inter)),
                             fontWeight = FontWeight(600),
                             color = Color(0xFFF2F2F2),
                         ),
                         modifier = Modifier
-                            .width(261.dp)
-                            .height(65.dp)
+                            .width((261/PIXEL_4A_DENSITY).dp)
+                            .height((65/PIXEL_4A_DENSITY).dp)
                     )
                     Text(
                         text = "2h ago",
 
                         // Body3/Regular/12px
                         style = TextStyle(
-                            fontSize = 34.56.sp,
-                            lineHeight = 48.38.sp,
+                            fontSize = (34.56/PIXEL_4A_DENSITY).sp,
+                            lineHeight = (48.38/PIXEL_4A_DENSITY).sp,
 //////폰트 다운     //fontFamily = FontFamily(Font(R.font.inter)),
                             fontWeight = FontWeight(400),
                             color = Color(0xFFA5A5A5),
                         ),
                         modifier = Modifier
-                            .width(112.32001.dp)
-                            .height(48.dp)
+                            .width((112.32001/PIXEL_4A_DENSITY).dp)
+                            .height((48/PIXEL_4A_DENSITY).dp)
                     )
                 }
                 IconButton(onClick = { /*  */ },
-                    modifier = Modifier.size(69.12.dp)
+                    modifier = Modifier.size((69.12/PIXEL_4A_DENSITY).dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.MoreVert,
                         contentDescription = "More options",
                         tint = Color.White,
                         modifier = Modifier
-                            .padding(2.88.dp)
-                            .size(69.12.dp)
+                            .padding((2.88/PIXEL_4A_DENSITY).dp)
+                            .size((69.12/PIXEL_4A_DENSITY).dp)
 
                     )
                 }
@@ -125,18 +128,18 @@ fun feed() {
 
         Row(
             Modifier
-                .width(987.84003.dp)
-                .height(1044.4801.dp)
-                .padding(top = 28.8.dp, bottom = 28.8.dp),
-            horizontalArrangement = Arrangement.spacedBy(23.040000915527344.dp, Alignment.Start),
+                .width((987.84003/PIXEL_4A_DENSITY).dp)
+                .height((1044.4801/PIXEL_4A_DENSITY).dp)
+                .padding(top = (28.8/PIXEL_4A_DENSITY).dp, bottom = (28.8/PIXEL_4A_DENSITY).dp),
+            horizontalArrangement = Arrangement.spacedBy((23.040000915527344/PIXEL_4A_DENSITY).dp, Alignment.Start),
             verticalAlignment = Alignment.CenterVertically,
         ) {
 
             Image(
                 //피드 화면
                 modifier = Modifier
-                    .width(740.16003.dp)
-                    .height(986.88007.dp),
+                    .width((740.16003/PIXEL_4A_DENSITY).dp)
+                    .height((986.88007/PIXEL_4A_DENSITY).dp),
                 painter = painterResource(id = R.drawable.feed_img),
                 contentDescription = "image description",
                 contentScale = ContentScale.FillBounds,
@@ -145,174 +148,174 @@ fun feed() {
 
             Column(
                 Modifier// 색상 칩
-                    .width(224.64001.dp)
-                    .height(986.88007.dp),
+                    .width((224.64001/PIXEL_4A_DENSITY).dp)
+                    .height((986.88007/PIXEL_4A_DENSITY).dp),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.Start,
             ) {
                 Box(
                     Modifier
-                        .width(224.64001.dp)
-                        .height(224.64001.dp)
+                        .width((224.64001/PIXEL_4A_DENSITY).dp)
+                        .height((224.64001/PIXEL_4A_DENSITY).dp)
                         .background(
                             color = Color(0xFF4982E5),
-                            shape = RoundedCornerShape(size = 3.84615.dp)
+                            shape = RoundedCornerShape(size = (3.84615/PIXEL_4A_DENSITY).dp)
                         )
                 )
                 Box(
                     Modifier
-                        .width(224.64001.dp)
-                        .height(224.64001.dp)
+                        .width((224.64001/PIXEL_4A_DENSITY).dp)
+                        .height((224.64001/PIXEL_4A_DENSITY).dp)
                         .background(
                             color = Color(0xFF032564),
-                            shape = RoundedCornerShape(size = 3.84615.dp)
+                            shape = RoundedCornerShape(size = (3.84615/PIXEL_4A_DENSITY).dp)
                         )
                 )
                 Box(
                     Modifier
-                        .width(224.64001.dp)
-                        .height(224.64001.dp)
+                        .width((224.64001/PIXEL_4A_DENSITY).dp)
+                        .height((224.64001/PIXEL_4A_DENSITY).dp)
                         .background(
                             color = Color(0xFFC8D7EC),
-                            shape = RoundedCornerShape(size = 3.84615.dp)
+                            shape = RoundedCornerShape(size = (3.84615/PIXEL_4A_DENSITY).dp)
                         )
                 )
                 Box(
                     Modifier
-                        .width(224.64001.dp)
-                        .height(224.64001.dp)
+                        .width((224.64001/PIXEL_4A_DENSITY).dp)
+                        .height((224.64001/PIXEL_4A_DENSITY).dp)
                         .background(
                             color = Color(0xFF98ADE2),
-                            shape = RoundedCornerShape(size = 3.84615.dp)
+                            shape = RoundedCornerShape(size = (3.84615/PIXEL_4A_DENSITY).dp)
                         )
                 )
             }
         }
         Row(
             Modifier// 색상 코드
-                .width(987.84003.dp)
-                .height(48.dp),
+                .width((987.84003/PIXEL_4A_DENSITY).dp)
+                .height((48/PIXEL_4A_DENSITY).dp),
             horizontalArrangement = Arrangement.spacedBy(22.15384864807129.dp, Alignment.Start),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(//1st color code
                 text = "#FF6025 ",
                 style = TextStyle(
-                    fontSize = 34.56.sp,
-                    lineHeight = 48.38.sp,
+                    fontSize = (34.56/PIXEL_4A_DENSITY).sp,
+                    lineHeight = (48.38/PIXEL_4A_DENSITY).sp,
 ////                    fontFamily = FontFamily(Font(R.font.inter)),
                     fontWeight = FontWeight(400),
                     color = Color(0xFFA5A5A5),
                 ),
                 modifier = Modifier
-                    .width(143.dp)
-                    .height(48.dp)
+                    .width((143/PIXEL_4A_DENSITY).dp)
+                    .height((48/PIXEL_4A_DENSITY).dp)
             )
             Text(//2nd color code
                 text = "#FF6025 ",
                 style = TextStyle(
-                    fontSize = 34.56.sp,
-                    lineHeight = 48.38.sp,
+                    fontSize = (34.56/PIXEL_4A_DENSITY).sp,
+                    lineHeight = (48.38/PIXEL_4A_DENSITY).sp,
                     //////                   fontFamily = FontFamily(Font(R.font.inter)),
                     fontWeight = FontWeight(400),
                     color = Color(0xFFA5A5A5),
 
                     ), modifier = Modifier
-                    .width(143.dp)
-                    .height(48.dp)
+                    .width((143/PIXEL_4A_DENSITY).dp)
+                    .height((48/PIXEL_4A_DENSITY).dp)
             )
             Text(//3th color code
                 text = "#FF6025 ",
                 style = TextStyle(
-                    fontSize = 34.56.sp,
-                    lineHeight = 48.38.sp,
+                    fontSize = (34.56/PIXEL_4A_DENSITY).sp,
+                    lineHeight = (48.38/PIXEL_4A_DENSITY).sp,
 ///                    fontFamily = FontFamily(Font(R.font.inter)),
                     fontWeight = FontWeight(400),
                     color = Color(0xFFA5A5A5),
                 ), modifier = Modifier
-                    .width(143.dp)
-                    .height(48.dp)
+                    .width((143/PIXEL_4A_DENSITY).dp)
+                    .height((48/PIXEL_4A_DENSITY).dp)
             )
             Text(
                 text = "#FF6025 ",
                 style = TextStyle(
-                    fontSize = 34.56.sp,
-                    lineHeight = 48.38.sp,
+                    fontSize = (34.56/PIXEL_4A_DENSITY).sp,
+                    lineHeight = (48.38/PIXEL_4A_DENSITY).sp,
                     ////                fontFamily = FontFamily(Font(R.font.inter)),
                     fontWeight = FontWeight(400),
                     color = Color(0xFFA5A5A5),
                 ), modifier = Modifier
-                    .width(143.dp)
-                    .height(48.dp)
+                    .width((143/PIXEL_4A_DENSITY).dp)
+                    .height((48/PIXEL_4A_DENSITY).dp)
             )
         }
         Row(
             Modifier
-                .width(987.84003.dp)
-                .height(55.38462.dp),
-            horizontalArrangement = Arrangement.spacedBy(28.80000114440918.dp, Alignment.Start),
+                .width((987.84003/PIXEL_4A_DENSITY).dp)
+                .height((55.38462/PIXEL_4A_DENSITY).dp),
+            horizontalArrangement = Arrangement.spacedBy((28.80000114440918/PIXEL_4A_DENSITY).dp, Alignment.Start),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             // 좋아요, 공유
             Row(
-                horizontalArrangement = Arrangement.spacedBy(11.52.dp, Alignment.Start)
+                horizontalArrangement = Arrangement.spacedBy((11.52/PIXEL_4A_DENSITY).dp, Alignment.Start)
             ){
                 IconButton(onClick = { /*  */ },
-                    modifier = Modifier.size(55.38462.dp)
+                    modifier = Modifier.size((55.38462/PIXEL_4A_DENSITY).dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.chat),
                         contentDescription = "More options",
                         tint = Color.White,
                         modifier = Modifier
-                            .padding(0.09736.dp)
-                            .size(49.85878.dp)
+                            .padding((0.09736/PIXEL_4A_DENSITY).dp)
+                            .size((49.85878/PIXEL_4A_DENSITY).dp)
 
                     )
                 }
                 Text(
                     text = "8",
                     style = TextStyle(
-                        fontSize = 40.32.sp,
-                        lineHeight = 56.45.sp,
+                        fontSize = (40.32/PIXEL_4A_DENSITY).sp,
+                        lineHeight = (56.45/PIXEL_4A_DENSITY).sp,
    //                     fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
                         textAlign = TextAlign.Center,
                     ),
                     modifier = Modifier
-                        .width(24.92308.dp)
-                        .height(55.38462.dp)
+                        .width((24.92308/PIXEL_4A_DENSITY).dp)
+                        .height((55.38462/PIXEL_4A_DENSITY).dp)
                 )
             }
             Row(
-                horizontalArrangement = Arrangement.spacedBy(11.52.dp, Alignment.Start)
+                horizontalArrangement = Arrangement.spacedBy((11.52/PIXEL_4A_DENSITY).dp, Alignment.Start)
             ){
                 IconButton(onClick = { /*  */ },
-                    modifier = Modifier.size(55.38462.dp)
+                    modifier = Modifier.size((55.38462/PIXEL_4A_DENSITY).dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.share),
                         contentDescription = "More options",
                         tint = Color.White,
                         modifier = Modifier
-                            .padding(0.09736.dp)
-                            .size(49.85878.dp)
+                            .padding((0.09736/PIXEL_4A_DENSITY).dp)
+                            .size((49.85878/PIXEL_4A_DENSITY).dp)
                     )
                 }
                 Text(
                     text = "8",
                     style = TextStyle(
-                        fontSize = 40.32.sp,
-                        lineHeight = 56.45.sp,
+                        fontSize = (40.32/PIXEL_4A_DENSITY).sp,
+                        lineHeight = (56.45/PIXEL_4A_DENSITY).sp,
                         //                     fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
                         textAlign = TextAlign.Center,
                     ),
                     modifier = Modifier
-                        .width(24.92308.dp)
-                        .height(55.38462.dp)
+                        .width((24.92308/PIXEL_4A_DENSITY).dp)
+                        .height((55.38462/PIXEL_4A_DENSITY).dp)
                 )
             }
         }
@@ -321,9 +324,8 @@ fun feed() {
 
 
 @Preview(
-    heightDp = 2340,
-    widthDp = 1080)
+    device = Devices.PIXEL_4A)
 @Composable
-fun feedPreview(){
-    feed()
+fun FeedPreview(){
+    Feed()
 }
