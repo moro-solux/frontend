@@ -21,7 +21,7 @@ import com.solux.moro.components.Profile
 import com.solux.moro.components.TopBar
 
 @Composable
-fun MyProfileScreen(){
+fun ProfileScreen(){
     Scaffold(
         bottomBar = { BottomBar() },
         topBar = { TopBar() }
@@ -46,6 +46,6 @@ fun MyProfileScreen(){
 @Preview(
     device = Devices.PIXEL_4A)
 @Composable
-fun MyProfileScreenPreview(){
-    MyProfileScreen()
+fun ProfileScreenPreview(){
+    ProfileScreen()
 }
