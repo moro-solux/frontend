@@ -22,15 +22,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.solux.moro.R
 
 @Composable
 fun BottomBar() {
     Column {
         HorizontalDivider(
-            thickness = (2.88 / PIXEL_4A_DENSITY).dp,
+            thickness = (2.88 ).toPxDp,
             color = Color(0xFFF2F2F2)
         )
         BottomAppBar(
@@ -39,30 +37,30 @@ fun BottomBar() {
     ) {
             Column(
                 Modifier
-                    .width((203.60001 / PIXEL_4A_DENSITY).dp)
-                    .height((166.72 / PIXEL_4A_DENSITY).dp)
+                    .width((203.60001 ).toPxDp)
+                    .height((166.72 ).toPxDp)
                     .background(color = Color(0xFF121212)),
                 verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 / PIXEL_4A_DENSITY).dp,
+                    (11.520000457763672 ).toPxDp,
                     Alignment.CenterVertically
                 ),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
                 Icon(
-                    painter = painterResource(R.drawable.home),
+                    painter = painterResource(R.drawable.icon_home),
                     modifier = Modifier
-                        .padding((0.15429 / PIXEL_4A_DENSITY).dp)
-                        .width((60.48 / PIXEL_4A_DENSITY).dp)
-                        .height((69.12 / PIXEL_4A_DENSITY).dp),
+                        .padding((0.15429 ).toPxDp)
+                        .width((60.48 ).toPxDp)
+                        .height((69.12 ).toPxDp),
                     contentDescription = "home icon",
                     tint = White
                 )
                 Text(
                     text = "Home",
                     style = TextStyle(
-                        fontSize = (40.32 / PIXEL_4A_DENSITY).sp,
-                        lineHeight = (40.32 / PIXEL_4A_DENSITY).sp,
+                        fontSize = (40.32 ).toPxSp,
+                        lineHeight = (40.32 ).toPxSp,
 //                           fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
@@ -74,10 +72,10 @@ fun BottomBar() {
 
             Column(
                 Modifier
-                    .width((201.60001 / PIXEL_4A_DENSITY).dp)
-                    .height((166.72 / PIXEL_4A_DENSITY).dp),
+                    .width((201.60001 ).toPxDp)
+                    .height((166.72 ).toPxDp),
                 verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 / PIXEL_4A_DENSITY).dp,
+                    (11.520000457763672 ).toPxDp,
                     Alignment.CenterVertically
                 ),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,17 +83,17 @@ fun BottomBar() {
                 Icon(
                     painter = painterResource(R.drawable.mission),
                     modifier = Modifier
-                        .padding((0.15429 / PIXEL_4A_DENSITY).dp)
-                        .width((60.48 / PIXEL_4A_DENSITY).dp)
-                        .height((69.12 / PIXEL_4A_DENSITY).dp),
+                        .padding((0.15429 ).toPxDp)
+                        .width((60.48 ).toPxDp)
+                        .height((69.12 ).toPxDp),
                     contentDescription = "mission icon",
                     tint = White
                 )
                 Text(
                     text = "Mission",
                     style = TextStyle(
-                        fontSize = (40.32 / PIXEL_4A_DENSITY).sp,
-                        lineHeight = (40.32 / PIXEL_4A_DENSITY).sp,
+                        fontSize = (40.32 ).toPxSp,
+                        lineHeight = (40.32 ).toPxSp,
 //                           fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
@@ -106,28 +104,28 @@ fun BottomBar() {
             }
             Column(
                 Modifier
-                    .width((201.60001 / PIXEL_4A_DENSITY).dp)
-                    .height((165.64 / PIXEL_4A_DENSITY).dp),
+                    .width((201.60001 ).toPxDp)
+                    .height((165.64 ).toPxDp),
                 verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 / PIXEL_4A_DENSITY).dp,
+                    (11.520000457763672 ).toPxDp,
                     Alignment.CenterVertically
                 ),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.camera),
+                    painter = painterResource(R.drawable.icon_camera),
                     modifier = Modifier
-                        .padding((0.15429 / PIXEL_4A_DENSITY).dp)
-                        .width((60.48 / PIXEL_4A_DENSITY).dp)
-                        .height((69.12 / PIXEL_4A_DENSITY).dp),
+                        .padding((0.15429 ).toPxDp)
+                        .width((60.48 ).toPxDp)
+                        .height((69.12 ).toPxDp),
                     contentDescription = "camera icon",
                     tint = White
                 )
                 Text(
                     text = "Camera",
                     style = TextStyle(
-                        fontSize = (40.32 / PIXEL_4A_DENSITY).sp,
-                        lineHeight = (40.32 / PIXEL_4A_DENSITY).sp,
+                        fontSize = (40.32 ).toPxSp,
+                        lineHeight = (40.32 ).toPxSp,
 //                           fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
@@ -138,10 +136,10 @@ fun BottomBar() {
             }
             Column(
                 Modifier
-                    .width((201.60001 / PIXEL_4A_DENSITY).dp)
-                    .height((166.72 / PIXEL_4A_DENSITY).dp),
+                    .width((201.60001 ).toPxDp)
+                    .height((166.72 ).toPxDp),
                 verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 / PIXEL_4A_DENSITY).dp,
+                    (11.520000457763672 ).toPxDp,
                     Alignment.CenterVertically
                 ),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -149,17 +147,17 @@ fun BottomBar() {
                 Icon(
                     painter = painterResource(R.drawable.map),
                     modifier = Modifier
-                        .padding((0.15429 / PIXEL_4A_DENSITY).dp)
-                        .width((60.48 / PIXEL_4A_DENSITY).dp)
-                        .height((69.12 / PIXEL_4A_DENSITY).dp),
+                        .padding((0.15429 ).toPxDp)
+                        .width((60.48 ).toPxDp)
+                        .height((69.12 ).toPxDp),
                     contentDescription = "map icon",
                     tint = White
                 )
                 Text(
                     text = "Map",
                     style = TextStyle(
-                        fontSize = (40.32 / PIXEL_4A_DENSITY).sp,
-                        lineHeight = (40.32 / PIXEL_4A_DENSITY).sp,
+                        fontSize = (40.32 ).toPxSp,
+                        lineHeight = (40.32 ).toPxSp,
 //                           fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
@@ -170,10 +168,10 @@ fun BottomBar() {
             }
             Column(
                 Modifier
-                    .width((201.60001 / PIXEL_4A_DENSITY).dp)
-                    .height((166.72 / PIXEL_4A_DENSITY).dp),
+                    .width((201.60001 ).toPxDp)
+                    .height((166.72 ).toPxDp),
                 verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 / PIXEL_4A_DENSITY).dp,
+                    (11.520000457763672 ).toPxDp,
                     Alignment.CenterVertically
                 ),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -181,17 +179,17 @@ fun BottomBar() {
                 Icon(
                     painter = painterResource(R.drawable.profile),
                     modifier = Modifier
-                        .padding((0.15429 / PIXEL_4A_DENSITY).dp)
-                        .width((60.48 / PIXEL_4A_DENSITY).dp)
-                        .height((69.12 / PIXEL_4A_DENSITY).dp),
+                        .padding((0.15429 ).toPxDp)
+                        .width((60.48 ).toPxDp)
+                        .height((69.12 ).toPxDp),
                     contentDescription = "profile icon",
                     tint = White
                 )
                 Text(
                     text = "Profile",
                     style = TextStyle(
-                        fontSize = (40.32 / PIXEL_4A_DENSITY).sp,
-                        lineHeight = (40.32 / PIXEL_4A_DENSITY).sp,
+                        fontSize = (40.32 ).toPxSp,
+                        lineHeight = (40.32 ).toPxSp,
 //                           fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
