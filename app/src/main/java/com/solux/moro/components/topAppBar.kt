@@ -22,11 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.solux.moro.R
 
-const val PIXEL_4A_DENSITY = 2.75f
+const val PIXEL_DENSITY = 2.625f
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBar() {
@@ -36,10 +34,10 @@ fun TopBar() {
             modifier = Modifier
                 .background(color = Color(0xFF121212))
                 .padding(
-                    start = (46.08 / PIXEL_4A_DENSITY).dp,
-                    top = (14.4 / PIXEL_4A_DENSITY).dp,
-                    end = (46.08 / PIXEL_4A_DENSITY).dp,
-                    bottom = (14.4 / PIXEL_4A_DENSITY).dp
+                    start = (46.08).toPxDp,
+                    top = (14.4).toPxDp,
+                    end = (46.08).toPxDp,
+                    bottom = (14.4).toPxDp
                 ),
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color(0xFF121212),
@@ -51,8 +49,8 @@ fun TopBar() {
                 Text(
                     text = "Moro",
                     style = TextStyle(
-                        fontSize = (92.16 / PIXEL_4A_DENSITY).sp,
-                        lineHeight = (69.12 / PIXEL_4A_DENSITY).sp,
+                        fontSize = (92.16).toPxSp,
+                        lineHeight = (69.12).toPxSp,
 //                    fontFamily = FontFamily(Font(R.font.kit_rounded)),
                         fontWeight = FontWeight(600),
                         color = Color(0xFFF2F2F2),
@@ -64,22 +62,22 @@ fun TopBar() {
                 IconButton(
                     onClick = { },
                     Modifier
-                        .width((126.72 / PIXEL_4A_DENSITY).dp)
-                        .height((126.72 / PIXEL_4A_DENSITY).dp)
+                        .width((126.72).toPxDp)
+                        .height((126.72).toPxDp)
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.icon_bell),
                         modifier = Modifier
-                            .padding((0.15429 / PIXEL_4A_DENSITY).dp)
-                            .width((60.48 / PIXEL_4A_DENSITY).dp)
-                            .height((69.12 / PIXEL_4A_DENSITY).dp),
+                            .padding((0.15429).toPxDp)
+                            .width((60.48).toPxDp)
+                            .height((69.12).toPxDp),
                         contentDescription = "More"
                     )
                 }
             },
         )
         HorizontalDivider(
-            thickness = (2.88 / PIXEL_4A_DENSITY).dp,
+            thickness = (2.88).toPxDp,
             color = Color(0xFFF2F2F2)
         )
     }

@@ -33,8 +33,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.solux.moro.R
 
-val Number.toPxDp: Dp get() = (this.toDouble()/ PIXEL_4A_DENSITY).dp
-val Number.toPxSp: TextUnit get() = (this.toDouble() / PIXEL_4A_DENSITY).sp
+val Number.toPxDp: Dp get() = (this.toDouble()/ PIXEL_DENSITY).dp
+val Number.toPxSp: TextUnit get() = (this.toDouble() / PIXEL_DENSITY).sp
 
 @Composable
 fun Profile(){
