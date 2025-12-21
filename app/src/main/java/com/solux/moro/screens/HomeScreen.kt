@@ -3,7 +3,7 @@ package com.solux.moro.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -30,17 +30,15 @@ fun HomeScreen(){
             Modifier
                 //.height((2340/PIXEL_4A_DENSITY).dp)
                 //.width((1080/PIXEL_4A_DENSITY).dp)
-                .fillMaxWidth()
+                .fillMaxSize()
                 .background(color = Color(0xFF121212))
                 .padding(innerPadding)
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
             horizontalAlignment = Alignment.Start,
         ) {//홈 화면
-            Column() {
-                Feed()
-                Feed()
-            }
+            Feed()
+            //Feed()
         }
     }
 }
