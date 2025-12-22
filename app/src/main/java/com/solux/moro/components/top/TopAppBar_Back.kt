@@ -1,4 +1,5 @@
 package com.solux.moro.components.top
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.solux.moro.R
 import com.solux.moro.components.top.figmaDp
@@ -40,13 +40,17 @@ fun TopBarBack(
 
     Column {
 
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(70.dp)
+                .height(figmaDp(70f))
                 .background(color = Color(0xFF121212))
-                .padding(start = 16.dp, top = 5.dp, end = 16.dp, bottom = 5.dp),
+                .padding(
+                    start = figmaDp(16f),
+                    top = figmaDp(5f),
+                    end = figmaDp(16f),
+                    bottom = figmaDp(5f)
+                ),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -68,9 +72,9 @@ fun TopBarBack(
             )
             Row(
                 modifier = Modifier
-                    .width(20.99063.dp)
-                    .height(18.dp),
-                horizontalArrangement = Arrangement.spacedBy(0.dp, Alignment.CenterHorizontally),
+                    .width(figmaDp(20.99063f))
+                    .height(figmaDp(18f)),
+                horizontalArrangement = Arrangement.spacedBy(figmaDp(0f), Alignment.CenterHorizontally),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Child views.
