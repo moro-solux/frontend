@@ -1,4 +1,4 @@
-package com.solux.moro
+package com.solux.moro.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,8 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.solux.moro.screens.HomeScreen
-import com.solux.moro.ui.theme.MorofrontendTheme
+import com.solux.moro.ui.home.HomeScreen
+import com.solux.moro.core.designsystem.theme.MorofrontendTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.solux.moro.screens
+package com.solux.moro.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,11 +25,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.solux.moro.components.BottomBar
-import com.solux.moro.components.top.TopBarBack
-import com.solux.moro.components.top.figmaDp
-import java.time.format.TextStyle
-import androidx.compose.ui.draw.drawWithCache
+import com.solux.moro.core.designsystem.component.BottomBar
+import com.solux.moro.core.designsystem.component.top.TopBarBack
+import com.solux.moro.core.designsystem.component.top.figmaDp
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons

@@ -1,4 +1,4 @@
-package com.solux.moro.components
+package com.solux.moro.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

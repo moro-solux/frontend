@@ -1,4 +1,4 @@
-package com.solux.moro.screens
+package com.solux.moro.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,12 +15,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.solux.moro.components.BottomBar
-import com.solux.moro.components.Feed
-import com.solux.moro.components.TopBar
+import com.solux.moro.core.designsystem.component.BottomBar
+import com.solux.moro.core.designsystem.component.TopBar
 
 @Composable
-fun HomeScreen(){
+fun FollowScreen(){
     Scaffold(
         bottomBar = { BottomBar() },
         topBar = { TopBar() }
@@ -37,16 +36,14 @@ fun HomeScreen(){
             verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
             horizontalAlignment = Alignment.Start,
         ) {//홈 화면
-            Column() {
-                Feed()
-                Feed()
-            }
+
         }
     }
 }
+
 @Preview(
-    device = Devices.PIXEL_4A)
+    device = Devices.PIXEL_4)
 @Composable
-fun HomeScreenPreview(){
-    HomeScreen()
+fun FollowScreenPreview(){
+    FollowScreen()
 }

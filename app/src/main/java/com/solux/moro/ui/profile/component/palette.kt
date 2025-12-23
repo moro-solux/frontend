@@ -1,4 +1,4 @@
-package com.solux.moro.components
+package com.solux.moro.ui.profile.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,7 +26,7 @@ fun Palette() {
         contentAlignment = Alignment.Center
     ) {
         Box(
-            modifier = Modifier
+            modifier = Modifier.Companion
                 .size(478.07999.toPxDp)
                 .clip(CircleShape)
                 .background(Color(0xFF8EEAF4)),
