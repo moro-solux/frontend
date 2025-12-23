@@ -27,48 +27,5 @@ inline fun Modifier.noRippleClickable(crossinline onClick: () -> Unit): Modifier
         }
     }
 
-fun Modifier.dropShadow(
-    shape: Shape,
-    color: Color = Color.Black.copy(0.25f),
-    blur: Dp = 4.dp,
-    offsetY: Dp = 4.dp,
-    offsetX: Dp = 0.dp,
-    spread: Dp = 0.dp
-) = this.drawBehind {
-    val shadowSize = Size(size.width + spread.toPx(), size.height + spread.toPx())
-    val shadowOutline = shape.createOutline(shadowSize, layoutDirection, this)
 
-    val paint = Paint().apply {
-        this.color = color
-    }
 
-    if (blur.toPx() > 0) {
-        paint.asFrameworkPaint().apply {
-            maskFilter = BlurMaskFilter(blur.toPx(), BlurMaskFilter.Blur.NORMAL)
-        }
-    }
-
-    drawIntoCanvas { canvas ->
-        canvas.save()
-        canvas.translate(offsetX.toPx(), offsetY.toPx())
-        canvas.drawOutline(shadowOutline, paint)
-        canvas.restore()
-    }
-}
-
-fun Modifier.bottomBorder(
-    strokeWidth: Dp,
-    color: Color
-): Modifier =
-    this.drawBehind {
-        val strokeWidthPx = strokeWidth.toPx()
-        val width = size.width
-        val height = size.height - strokeWidthPx / 2
-
-        drawLine(
-            color = color,
-            start = Offset(x = 0f, y = height),
-            end = Offset(x = width, y = height),
-            strokeWidth = strokeWidthPx
-        )
-    }
