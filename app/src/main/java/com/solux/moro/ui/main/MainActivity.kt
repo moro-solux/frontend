@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            com.solux.moro.core.designsystem.theme.MoroTheme {
+            MoroTheme {
                 HomeScreen()
             }
         }
