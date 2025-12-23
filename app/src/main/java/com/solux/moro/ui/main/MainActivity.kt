@@ -8,15 +8,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.ui.home.HomeScreen
-import com.solux.moro.core.designsystem.theme.MorofrontendTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MorofrontendTheme {
+            MoroTheme {
                 HomeScreen()
             }
         }
@@ -34,7 +34,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    MorofrontendTheme {
+    MoroTheme {
         Greeting("Android")
     }
 }
