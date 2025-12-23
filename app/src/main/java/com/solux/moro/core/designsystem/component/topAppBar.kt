@@ -1,4 +1,4 @@
-package com.solux.moro.components
+package com.solux.moro.core.designsystem.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -23,6 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.solux.moro.R
+import com.solux.moro.ui.profile.component.toPxDp
+import com.solux.moro.ui.profile.component.toPxSp
 
 const val PIXEL_DENSITY = 2.625f
 @OptIn(ExperimentalMaterial3Api::class)
@@ -86,5 +88,5 @@ fun TopBar() {
 @Preview (device = Devices.PIXEL_4A)
 @Composable
 fun TopBarPreview(){
-    com.solux.moro.components.TopBar()
+    TopBar()
 }

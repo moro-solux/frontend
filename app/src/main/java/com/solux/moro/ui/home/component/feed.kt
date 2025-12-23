@@ -1,4 +1,4 @@
-package com.solux.moro.components
+package com.solux.moro.ui.home.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +32,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.R
+import com.solux.moro.ui.profile.component.toPxDp
+import com.solux.moro.ui.profile.component.toPxSp
 
 
 @Composable

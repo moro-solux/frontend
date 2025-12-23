@@ -1,4 +1,4 @@
-package com.solux.moro.components
+package com.solux.moro.ui.profile.component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -30,7 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 @Composable
 fun Captures(){
     Column(
-        modifier = Modifier
+        modifier = Modifier.Companion
             .width(1080.toPxDp)
             .height(1091.65552.toPxDp)
             .padding(start = 46.08.toPxDp, end = 46.08.toPxDp),

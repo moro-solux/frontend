@@ -1,4 +1,4 @@
-package com.solux.moro.components
+package com.solux.moro.ui.profile.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.solux.moro.R
+import com.solux.moro.core.designsystem.component.PIXEL_DENSITY
 
 val Number.toPxDp: Dp get() = (this.toDouble()/ PIXEL_DENSITY).dp
 val Number.toPxSp: TextUnit get() = (this.toDouble() / PIXEL_DENSITY).sp
