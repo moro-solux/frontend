@@ -1,4 +1,4 @@
-package com.solux.moro.core.designsystem.component
+package com.solux.moro.ui.followList.component
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -27,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.R
+import com.solux.moro.ui.profile.component.toPxDp
+import com.solux.moro.ui.profile.component.toPxSp
 
 @Composable
 fun FollowUserItem() {

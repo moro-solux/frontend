@@ -34,11 +34,11 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.R
-import com.solux.moro.components.BottomBar
 import com.solux.moro.components.FollowTopBar
-import com.solux.moro.components.FollowUserItem
-import com.solux.moro.components.toPxDp
-import com.solux.moro.components.toPxSp
+import com.solux.moro.core.designsystem.component.BottomBar
+import com.solux.moro.ui.followList.component.FollowUserItem
+import com.solux.moro.ui.profile.component.toPxDp
+import com.solux.moro.ui.profile.component.toPxSp
 
 @Composable
 fun FollowScreen(){
