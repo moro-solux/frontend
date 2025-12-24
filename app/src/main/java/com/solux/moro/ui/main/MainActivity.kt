@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.ui.home.HomeScreen
+import com.solux.moro.ui.splash.SplashScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,6 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MoroTheme {
+//                SplashScreen()
                 HomeScreen()
             }
         }
