@@ -24,13 +24,12 @@ import androidx.compose.ui.unit.sp
 import com.solux.moro.R
 import com.solux.moro.core.util.figmaDp
 
-private const val TARGET_SCALE = 2.88f
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopBarBack(
     title: String = "텍스트 입력",
+    navigationIconResId: Int = R.drawable.left,
+    showBottomDivider: Boolean = true,
     onBackClick: () -> Unit = {}
 ) {
 
@@ -51,8 +50,8 @@ fun TopBarBack(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.left),
-                contentDescription = "image description",
+                painter = painterResource(id = navigationIconResId),
+                contentDescription = "navigation",
             )
             Text(
                 text = title,
@@ -76,12 +75,14 @@ fun TopBarBack(
                 // Child views.
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(figmaDp(1f))
-                .background(Color(0xFFF2F2F2))
-        )
+        if (showBottomDivider) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(figmaDp(1f))
+                    .background(Color(0xFFF2F2F2))
+            )
+        }
     }
 
 }
@@ -90,5 +91,15 @@ fun TopBarBack(
 @Composable
 fun TopBarBackPreview() {
     TopBarBack("안녕"
+    )
+}
+
+@Preview
+@Composable
+fun TopBarClosePreview() {
+    TopBarBack(
+        title = "닫기",
+        navigationIconResId = R.drawable.ic_close,
+        showBottomDivider = false
     )
 }
