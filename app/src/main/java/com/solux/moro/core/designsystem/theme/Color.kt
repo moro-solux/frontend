@@ -17,6 +17,9 @@ val Gray15 = Color(0xFFEEEEEE)
 val Gray20 = Color(0xFFD5D5D5)
 val Gray30 = Color(0xFFBDBDBD)
 val Gray40 = Color(0xFFA5A5A5)
+val Gray50 = Color(0xFF404040)
+val Gray60 = Color(0xFF262626)
+
 
 // Background / Text
 val Background = Color(0xFF121212)
@@ -32,6 +35,8 @@ data class Colors(
     val gray20: Color = Gray20,
     val gray30: Color = Gray30,
     val gray40: Color = Gray40,
+    val gray50: Color = Gray50,
+    val gray60: Color = Gray60,
 )
 
 val defaultColors = Colors()

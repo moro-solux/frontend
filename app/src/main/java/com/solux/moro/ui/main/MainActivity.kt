@@ -17,6 +17,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MoroTheme {
+//                SignUpScreen()
                 HomeScreen()
             }
         }
