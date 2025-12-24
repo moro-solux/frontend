@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.solux.moro.R
+import com.solux.moro.core.util.figmaDp
 
 private const val TARGET_SCALE = 2.88f
 

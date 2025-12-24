@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.top.TopBarBack
-import com.solux.moro.core.designsystem.component.top.figmaDp
+import com.solux.moro.core.util.figmaDp
 
 @Composable
 fun MyMissionScreen() {
