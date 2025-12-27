@@ -15,12 +15,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -86,8 +88,7 @@ fun Upload_Section() {
     ) {
         Column(
             modifier = Modifier
-                .width(figmaDp(193.5f))
-                .height(figmaDp(482.68954f)),
+                .width(266.17987.dp),
             verticalArrangement = Arrangement.spacedBy(
                 figmaDp(16f),
                 Alignment.CenterVertically
@@ -138,8 +139,8 @@ fun Upload_Section() {
             }
 
             // 미션 컨텐츠 부분
-            TargetCapture()
-
+            //TargetCapture()
+            MissionCapture()
 
             Image(
                 painter = painterResource(id = R.drawable.moro_logo_m),
@@ -295,6 +296,148 @@ fun InstagramUpload(){
 }
 
 @Composable
+fun MissionCapture() {
+    Column(
+        modifier = Modifier
+            .width(figmaDp(266.17987f))
+            .height(figmaDp(413.13202f))
+            .padding(
+                start = figmaDp(14.12626f),
+                top = figmaDp(14.12626f),
+                end = figmaDp(14.12626f),
+                bottom = figmaDp(14.12626f)
+            ),
+        verticalArrangement = Arrangement.spacedBy(
+            figmaDp(9.338271141052246f),
+            Alignment.Top
+        ),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        //id
+        Row(
+            modifier = Modifier
+                .width(figmaDp(237.92735f))
+                .height(figmaDp(33.95735f)),
+            horizontalArrangement = Arrangement.spacedBy(
+                figmaDp(8.828909873962402f),
+                Alignment.Start
+            ),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                Modifier
+                    .size(figmaDp(33.95735f))
+                    .clip(CircleShape)
+                    .background(color = Color(0xFFD9D9D9))
+            )
+            Row(
+                modifier = Modifier
+                    .width(figmaDp(195.1411f))
+                    .height(figmaDp(33.95735f)),
+                horizontalArrangement = Arrangement.spacedBy(
+                    figmaDp(0f),
+                    Alignment.Start
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .width(figmaDp(80f))
+                        .height(figmaDp(20f)),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        figmaDp(6.18023681640625f),
+                        Alignment.Start
+                    ),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = "@colorlover",
+                        style = androidx.compose.ui.text.TextStyle(
+                            fontSize = 14.13.sp,
+                            lineHeight = 19.78.sp,
+                            //fontFamily = FontFamily(Font(R.font.inter)),
+                            fontWeight = FontWeight(600),
+                            color = Color(0xFFF2F2F2),
+                        )
+                    )
+                }
+            }
+        }
+
+        //미션
+        Row(
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(
+                modifier = Modifier
+                    .width(figmaDp(237.92735f))
+                    .height(figmaDp(15.00915f)),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "노을빛을 찾아보세요 🌇",
+                    style = androidx.compose.ui.text.TextStyle(
+                        fontSize = 10.59.sp,
+                        lineHeight = 14.83.sp,
+                        // fontFamily = FontFamily(Font(R.font.inter)),
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFFA5A5A5),
+                    )
+                )
+
+                //퍼센트
+                Row(
+                    Modifier
+                        .width(figmaDp(76.98497f))
+                        .height(figmaDp(15.00915f)),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        figmaDp(3.6385810375213623f),
+                        Alignment.Start
+                    ),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TargetColorSmall()
+
+                    Row(
+                        modifier = Modifier
+                            .width(figmaDp(21f))
+                            .height(figmaDp(15f)),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            figmaDp(0f),
+                            Alignment.CenterHorizontally
+                        ),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "97%",
+                            style = androidx.compose.ui.text.TextStyle(
+                                fontSize = 10.59.sp,
+                                lineHeight = 14.83.sp,
+                                // fontFamily = FontFamily(Font(R.font.inter)),
+                                fontWeight = FontWeight(400),
+                                color = Color(0xFFA5A5A5),
+                            )
+                        )
+                    }
+                }
+            }
+        }
+
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(figmaDp(317.23648f))
+                .background(
+                    color = Color(0xFFD9D9D9),
+                    shape = RoundedCornerShape(figmaDp(8.83f))
+                )
+        )
+    }
+}
+
+@Composable
 fun TargetCapture() {
     Column(
         modifier = Modifier
@@ -306,68 +449,8 @@ fun TargetCapture() {
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Row(
-            modifier = Modifier
-                .border(
-                    width = figmaDp(1f),
-                    color = Color(0xFFF2F2F2),
-                    shape = RoundedCornerShape(figmaDp(9999f))
-                )
-                .width(figmaDp(107f))
-                .height(figmaDp(33f))
-                .background(
-                    color = Color(0xFF121212),
-                    shape = RoundedCornerShape(figmaDp(9999f))
-                )
-                .padding(
-                    start = figmaDp(11f),
-                    top = figmaDp(8f),
-                    end = figmaDp(11f),
-                    bottom = figmaDp(8f)
-                ),
-            horizontalArrangement = Arrangement.spacedBy(
-                figmaDp(8f),
-                Alignment.Start
-            ),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Box(
-                Modifier
-                    .border(
-                        width = figmaDp(0f),
-                        color = Color(0xFFE5E7EB),
-                        shape = RoundedCornerShape(figmaDp(9999f))
-                    )
-                    .width(figmaDp(16f))
-                    .height(figmaDp(16f))
-                    .background(
-                        color = Color(0xFF3366FF),
-                        shape = RoundedCornerShape(figmaDp(9999f))
-                    )
-            )
-
-            Row(
-                modifier = Modifier
-                    .width(figmaDp(61f))
-                    .height(figmaDp(17f)),
-                horizontalArrangement = Arrangement.spacedBy(
-                    figmaDp(8f),
-                    Alignment.CenterHorizontally
-                ),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "#3366FF",
-                    style = androidx.compose.ui.text.TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFF2F2F2),
-                        textAlign = TextAlign.Center,
-                    )
-                )
-            }
-        }
-
+        //타겟 컬러
+        TargetColor()
         Box(
             Modifier
                 .width(figmaDp(151f))
@@ -405,7 +488,8 @@ fun TargetCapture() {
             )
         }
 
-        //타겟 컬러
+
+
         Row(
             horizontalArrangement = Arrangement.spacedBy(
                 figmaDp(28f),
@@ -517,9 +601,126 @@ fun TargetCapture() {
 
 
 @Composable
-fun FreeCapture(){
+fun TargetColor(){
+    Row(
+        modifier = Modifier
+            .border(
+                width = figmaDp(1f),
+                color = Color(0xFFF2F2F2),
+                shape = RoundedCornerShape(figmaDp(9999f))
+            )
+            .width(figmaDp(107f))
+            .height(figmaDp(33f))
+            .background(
+                color = Color(0xFF121212),
+                shape = RoundedCornerShape(figmaDp(9999f))
+            )
+            .padding(
+                start = figmaDp(11f),
+                top = figmaDp(8f),
+                end = figmaDp(11f),
+                bottom = figmaDp(8f)
+            ),
+        horizontalArrangement = Arrangement.spacedBy(
+            figmaDp(8f),
+            Alignment.Start
+        ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            Modifier
+                .border(
+                    width = figmaDp(0f),
+                    color = Color(0xFFE5E7EB),
+                    shape = RoundedCornerShape(figmaDp(9999f))
+                )
+                .width(figmaDp(16f))
+                .height(figmaDp(16f))
+                .background(
+                    color = Color(0xFF3366FF),
+                    shape = RoundedCornerShape(figmaDp(9999f))
+                )
+        )
+
+        Row(
+            modifier = Modifier
+                .width(figmaDp(61f))
+                .height(figmaDp(17f)),
+            horizontalArrangement = Arrangement.spacedBy(
+                figmaDp(8f),
+                Alignment.CenterHorizontally
+            ),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = "#3366FF",
+                style = androidx.compose.ui.text.TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight(400),
+                    color = Color(0xFFF2F2F2),
+                    textAlign = TextAlign.Center,
+                )
+            )
+        }
+    }
 
 }
+
+@Composable
+fun TargetColorSmall() {
+    Row(
+        modifier = Modifier
+            .border(
+                width = figmaDp(0.45482f),
+                color = Color(0xFFF2F2F2),
+                shape = RoundedCornerShape(size = figmaDp(4547.77148f))
+            )
+            .width(figmaDp(48.92184f))
+            .height(figmaDp(15.00915f))
+            .background(
+                color = Color(0xFF121212),
+                shape = RoundedCornerShape(size = figmaDp(4547.77148f))
+            )
+            .padding(
+                start = figmaDp(5.00305f),
+                top = figmaDp(3.63858f),
+                end = figmaDp(5.00305f),
+                bottom = figmaDp(3.63858f)
+            ),
+        horizontalArrangement = Arrangement.spacedBy(
+            figmaDp(3.6385810375213623f),
+            Alignment.Start
+        ),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            Modifier
+                .border(
+                    width = figmaDp(0f),
+                    color = Color(0xFFE5E7EB),
+                    shape = RoundedCornerShape(size = figmaDp(4547.77148f))
+                )
+                .width(figmaDp(7.27716f))
+                .height(figmaDp(7.27716f))
+                .background(
+                    color = Color(0xFF3366FF),
+                    shape = RoundedCornerShape(size = figmaDp(4547.77148f))
+                )
+        )
+
+        Text(
+            text = "#3366FF",
+            style = androidx.compose.ui.text.TextStyle(
+                fontSize = 6.37.sp,
+                // fontFamily = FontFamily(Font(R.font.inter)),
+                fontWeight = FontWeight(400),
+                color = Color(0xFFF2F2F2),
+                textAlign = TextAlign.Center,
+            )
+        )
+    }
+}
+
 
 @Preview
 @Composable
