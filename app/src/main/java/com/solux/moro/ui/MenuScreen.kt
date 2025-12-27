@@ -42,6 +42,8 @@ import com.solux.moro.core.util.figmaDp
 @Composable
 fun MenuScreen() {
     var isPublic by remember { mutableStateOf(true) }
+    var isPushOn by remember { mutableStateOf(false) }
+
 
     Scaffold(
         topBar = { TopBarBack("메뉴") },
@@ -61,9 +63,12 @@ fun MenuScreen() {
             }
             item {
                 Setting_3(
-                    isOn = isPublic,
-                    onToggle = { isPublic = it }
+                    isPublic = isPublic,
+                    onPublicToggle = { isPublic = it },
+                    isPushOn = isPushOn,
+                    onPushToggle = { isPushOn = it }
                 )
+
             }
         }
     }
@@ -195,11 +200,15 @@ fun Settings(
 
 }
 
+
 @Composable
 fun Setting_3(
-    isOn: Boolean,
-    onToggle: (Boolean) -> Unit
-) {
+    isPublic: Boolean,
+    onPublicToggle: (Boolean) -> Unit,
+    isPushOn: Boolean,
+    onPushToggle: (Boolean) -> Unit
+)
+ {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -211,23 +220,19 @@ fun Setting_3(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(figmaDp(48f))
-                .clickable { onToggle(!isOn) }, //row 전체 클릭
+                .clickable { onPublicToggle(!isPublic) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "공개 / 비공개 설정",
-                style = androidx.compose.ui.text.TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 22.4.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFFF2F2F2)
-                )
+                fontSize = 16.sp,
+                color = Color(0xFFF2F2F2)
             )
 
             ToggleButton(
-                isOn = isOn,
-                onToggle = onToggle
+                isOn = isPublic,
+                onToggle = onPublicToggle
             )
         }
 
@@ -235,51 +240,24 @@ fun Setting_3(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(figmaDp(48f))
-                .clickable { onToggle(!isOn) }, //row 전체 클릭
+                .clickable { onPushToggle(!isPushOn) },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 text = "푸시 알림 설정",
-                style = androidx.compose.ui.text.TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 22.4.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFFF2F2F2)
-                )
+                fontSize = 16.sp,
+                color = Color(0xFFF2F2F2)
             )
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                modifier = Modifier.size(figmaDp(24f)),
-                tint = Color(0xFFF2F2F2)
+
+            ToggleButton(
+                isOn = isPushOn,
+                onToggle = onPushToggle
             )
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(figmaDp(48f))
-                .clickable { onToggle(!isOn) }, //row 전체 클릭
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "회원 탈퇴",
-                style = androidx.compose.ui.text.TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 22.4.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFFF2F2F2)
-                )
-            )
-            Icon(
-                imageVector = Icons.Filled.KeyboardArrowRight,
-                contentDescription = null,
-                modifier = Modifier.size(figmaDp(24f)),
-                tint = Color(0xFFF2F2F2)
-            )
-        }
+
+
     }
     Row(
         modifier = Modifier
