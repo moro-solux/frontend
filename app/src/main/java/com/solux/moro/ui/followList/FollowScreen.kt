@@ -34,7 +34,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.R
-import com.solux.moro.components.FollowTopBar
+import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.ui.followList.component.FollowUserItem
 import com.solux.moro.ui.profile.component.toPxDp
@@ -44,7 +44,7 @@ import com.solux.moro.ui.profile.component.toPxSp
 fun FollowScreen(){
     Scaffold(
         bottomBar = { BottomBar() },
-        topBar = { FollowTopBar(null,{}) }
+        topBar = { BackNavigationTopAppBar(null,{}) }
     ) {innerPadding ->
         val scrollState = rememberScrollState()
         Column(

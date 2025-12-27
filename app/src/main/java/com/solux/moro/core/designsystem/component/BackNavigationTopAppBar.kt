@@ -28,10 +28,60 @@ import com.solux.moro.ui.profile.component.toPxSp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FollowTopBar(  title: String ?= "colornoonsong",
+fun BackNavigationTopAppBar(  title: String ?= "colornoonsong",
                    onBackClick: () -> Unit,) {
+<<<<<<< Updated upstream:app/src/main/java/com/solux/moro/core/designsystem/component/FollowTopBar.kt
     Column {
         Row(
+=======
+    Column() {
+        Row(
+            modifier = Modifier
+                .height(76.57.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            IconButton(
+                onClick = onBackClick,
+                modifier = Modifier.padding(0.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_back),
+                    contentDescription = "뒤로가기",
+                    tint = (Color(0xFFFFFFFF)),
+                    modifier = Modifier.padding(0.dp),
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .padding(end = 50.dp),
+                    //.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = title ?: "colornoonsong",
+                    style = TextStyle(
+                        fontSize = (51.84).toPxSp,
+                        lineHeight = (69.12).toPxSp,
+//                    fontFamily = FontFamily(Font(R.font.kit_rounded)),
+                        fontWeight = FontWeight(600),
+                        color = Color(0xFFF2F2F2),
+                        textAlign = TextAlign.Center,
+                    ),
+                )
+            }
+            Spacer(modifier = Modifier.height(76.57.dp))
+        }
+        HorizontalDivider(
+            thickness = (2.88).toPxDp,
+            color = Color(0xFFF2F2F2)
+        )
+    }
+    /*   Column {
+        TopAppBar(
+            windowInsets = WindowInsets(0),
+>>>>>>> Stashed changes:app/src/main/java/com/solux/moro/core/designsystem/component/BackNavigationTopAppBar.kt
             modifier = Modifier
                 .fillMaxWidth()
                 //.width(1080.toPxDp)
@@ -75,10 +125,12 @@ fun FollowTopBar(  title: String ?= "colornoonsong",
             color = Color(0xFFF2F2F2)
         )
     }
+
+  */
 }
 
 @Preview()
 @Composable
-fun FollowTopBarPreview(){
-    com.solux.moro.components.FollowTopBar(null,{})
+fun BackNavigationTopAppBarPreview(){
+    com.solux.moro.components.BackNavigationTopAppBar(null,{})
 }

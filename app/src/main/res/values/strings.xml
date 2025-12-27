@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Moro-frontend</string>
+
+    <!-- Notification - Comment -->
+    <string name="notification_comment_message">%1$s님이 회원님의 사진에 댓글을 남겼습니다.</string>
+
+    <!-- Notification - Like -->
+    <string name="notification_like_message">%1$s님이 회원님의 사진을 좋아합니다.</string>
+
+    <!-- Notification - Follow -->
+    <string name="notification_follow_message">%1$s님이 회원님을 팔로우하기 시작했습니다.</string>
+
+    <!-- Notification - Mission -->
+    <string name="notification_mission_message">오늘의 미션이 1시간 남았어요!</string>
+
+    <!-- Notification - Unlock -->
+    <string name="notification_unlock_message">새로운 색이 열렸어요! 지금 만나보세요.</string>
+
+    <!-- Notification - Content - Comment -->
+    <string name="notification_comment_content">%1$s %2$s</string>
+    <!-- Notification- Content -  - Mission -->
+    <string name="notification_mission_content">내가 가장 좋아하는 색이 담긴 사진을 찍어보세요.</string>
+
+
 </resources>
