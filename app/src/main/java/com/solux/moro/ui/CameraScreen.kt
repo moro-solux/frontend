@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.solux.moro.R
@@ -143,7 +144,7 @@ fun CameraBottomBar(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height(figmaDp(229f)),
+            .height(figmaDp(285f)),
         verticalArrangement = Arrangement.spacedBy(figmaDp(21f)),
         horizontalAlignment = Alignment.Start
     ) {
@@ -170,7 +171,7 @@ fun CameraBottomBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(figmaDp(186f))
+                    .height(figmaDp(242f))
                     .background(Color(0xFF121212))
                     .padding(
                         start = figmaDp(16f),
@@ -204,18 +205,28 @@ fun ConfirmPhotoDialog(
     Dialog(onDismissRequest = {}) {
         Column(
             modifier = Modifier
-                .width(figmaDp(290f))
-                .height(figmaDp(200f))
+                .width(figmaDp(309f))
+                .height(figmaDp(500f))
                 .background(
                     color = Color(0xFF121212),
                     shape = RoundedCornerShape(figmaDp(20f))
                 ),
             verticalArrangement = Arrangement.spacedBy(
-                figmaDp(30f),
+                figmaDp(37f),
                 Alignment.CenterVertically
             ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Box(
+                Modifier
+                    .width(230.dp)
+                    .height(307.dp)
+                    .background(
+                        color = Color(0xFFD9D9D9),
+                        shape = RoundedCornerShape(size = 20.dp)
+                    )
+            )
+
             Text(
                 text = "이 사진을 업로드 하시겠습니까?",
                 fontSize = 14.sp,
