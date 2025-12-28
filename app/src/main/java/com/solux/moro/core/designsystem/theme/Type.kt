@@ -42,6 +42,7 @@ data class Typography(
     val bodySemiBold16: TextStyle,
     val bodySemiBold14: TextStyle,
     val bodySemiBold12: TextStyle,
+    val bodyRegular23: TextStyle,
     val bodyRegular16: TextStyle,
     val bodyRegular14: TextStyle,
     val bodyRegular12: TextStyle,
@@ -117,6 +118,10 @@ val defaultTypography = Typography(
     bodySemiBold12 = moroTextStyle(
         fontFamily = PretendardFont.SemiBold,
         fontSize = 12.sp
+    ),
+    bodyRegular23 = moroTextStyle(
+        fontFamily = PretendardFont.Regular,
+        fontSize = 23.sp
     ),
     bodyRegular16 = moroTextStyle(
         fontFamily = PretendardFont.Regular,
