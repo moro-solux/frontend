@@ -2,6 +2,12 @@ package com.solux.moro.ui.notification.component
 
 import java.time.Instant
 
+data class NotificationResponse(
+    val type: String,
+    val name: String?,
+    val content: String?,
+    val createdAt: String
+)
 sealed class NotificationUiModel {
     abstract val createdAt: Instant
 

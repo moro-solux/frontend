@@ -4,6 +4,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.solux.moro.R
 
+data class NotificationGroup(
+    val title: String,              // "Today", "Yesterday"
+    val notifications: List<NotificationUiModel>
+)
+
 enum class NotificationType(
     val needsName: Boolean,
     val needsContent:Boolean
@@ -11,15 +16,15 @@ enum class NotificationType(
     COMMENT(true,true),
     LIKE(true,false),
     FOLLOW(true,false),
-    MISSION(false,false),
-    UNLOCK(false,true);
+    MISSION(false,true),
+    UNLOCK(false,false);
     @DrawableRes
     fun iconRes(): Int = when (this) {
         COMMENT -> R.drawable.img_notification_profile
         LIKE    -> R.drawable.img_notification_like
         FOLLOW  -> R.drawable.img_notification_follow
         MISSION -> R.drawable.img_notification_mission
-        UNLOCK -> R.drawable.img_notification_lock
+        UNLOCK -> R.drawable.img_notification_unlock
     }
 
     @StringRes

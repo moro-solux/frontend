@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -22,6 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.solux.moro.R
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
@@ -30,10 +30,6 @@ import com.solux.moro.ui.profile.component.toPxSp
 @Composable
 fun BackNavigationTopAppBar(  title: String ?= "colornoonsong",
                    onBackClick: () -> Unit,) {
-<<<<<<< Updated upstream:app/src/main/java/com/solux/moro/core/designsystem/component/FollowTopBar.kt
-    Column {
-        Row(
-=======
     Column() {
         Row(
             modifier = Modifier

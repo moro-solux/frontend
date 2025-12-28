@@ -74,6 +74,18 @@ fun NotificationScreen(
                 id= "@uzinnss",
                 content=null,
             )
+            NotificationItem(
+                type= NotificationType.UNLOCK,
+                name= null,
+                id= null,
+                content=null,
+            )
+            NotificationItem(
+                type= NotificationType.MISSION,
+                name= null,
+                id= null,
+                content=null,
+            )
         }
     }
     }
