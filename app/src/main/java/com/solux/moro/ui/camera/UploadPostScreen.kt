@@ -1,8 +1,5 @@
-package com.solux.moro.ui
+package com.solux.moro.ui.camera
 
-import android.R.attr.onClick
-import android.R.attr.scaleX
-import android.R.attr.scaleY
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,7 +38,8 @@ import com.solux.moro.R
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.top.TopBarBack
 import com.solux.moro.core.util.figmaDp
-import java.time.format.TextStyle
+import com.solux.moro.ui.mission.InstagramUpload
+import com.solux.moro.ui.mission.Upload_Button
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,7 +126,7 @@ fun UploadStepTitle(step: Int) {
             else -> "Moro에 업로드하면 나의 색상 여정이 지도에 그려집니다."
         },
         style = when (step) {
-            2 -> androidx.compose.ui.text.TextStyle(
+            2 -> TextStyle(
                 fontSize = 14.sp,
                 lineHeight = 19.6.sp,
                 //fontFamily = FontFamily(Font(R.font.inter)),
@@ -136,7 +135,7 @@ fun UploadStepTitle(step: Int) {
                 textAlign = TextAlign.Center,
             )
 
-            else -> androidx.compose.ui.text.TextStyle(
+            else -> TextStyle(
                 fontSize = 18.sp,
                 lineHeight = 28.sp,
                 fontWeight = FontWeight(400),
@@ -221,7 +220,7 @@ fun Post_Place(onClick: () -> Unit) {
         )
         Text(
             text = "숙명여자대학교 Sookmyung women",
-            style = androidx.compose.ui.text.TextStyle(
+            style = TextStyle(
                 fontSize = 18.sp,
                 lineHeight = 28.sp,
                 //fontFamily = FontFamily(Font(R.font.inter)),
