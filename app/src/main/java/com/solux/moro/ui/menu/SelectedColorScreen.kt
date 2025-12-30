@@ -1,4 +1,4 @@
-package com.solux.moro.ui
+package com.solux.moro.ui.menu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -98,7 +99,7 @@ fun SelectedColorSection() {
             ) {
                 Text(
                     text = "#FF6584",
-                    style = androidx.compose.ui.text.TextStyle(
+                    style = TextStyle(
                         fontSize = 16.sp,
                         lineHeight = 24.sp,
                         //fontFamily = FontFamily(Font(R.font.inter)),

@@ -1,4 +1,4 @@
-package com.solux.moro.ui
+package com.solux.moro.ui.camera
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

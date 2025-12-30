@@ -1,4 +1,4 @@
-package com.solux.moro.ui
+package com.solux.moro.ui.menu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import com.solux.moro.core.util.figmaDp
 
@@ -112,7 +113,7 @@ fun Num_Button(
                 .width(figmaDp(48f))
                 .height(figmaDp(22f)),
             text = "num",
-            style = androidx.compose.ui.text.TextStyle(
+            style = TextStyle(
                 fontSize = 16.sp,
                 lineHeight = 22.4.sp,
                 fontWeight = FontWeight(400),
@@ -179,7 +180,7 @@ fun ColorTheme(
             text = "Color Map",
 
             // Subtitle2/SemiBold/18px
-            style = androidx.compose.ui.text.TextStyle(
+            style = TextStyle(
                 fontSize = 18.sp,
                 lineHeight = 25.2.sp,
                 fontWeight = FontWeight(600),
@@ -561,7 +562,7 @@ fun ColorCell(
         if (showNumber && !isLocked) {
             Text(
                 text = number,
-                style = androidx.compose.ui.text.TextStyle(
+                style = TextStyle(
                     fontSize = 16.sp,
                     lineHeight = 22.4.sp,
                     fontWeight = FontWeight(400),
