@@ -1,4 +1,4 @@
-package com.solux.moro.ui
+package com.solux.moro.ui.menu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,9 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.top.TopBarBack
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowRight
-import androidx.compose.material3.Icon
+import androidx.compose.ui.text.TextStyle
 import com.solux.moro.core.util.figmaDp
 
 @Composable
@@ -100,7 +98,7 @@ fun Settings(
         ) {
             Text(
                 text = "설정",
-                style = androidx.compose.ui.text.TextStyle(
+                style = TextStyle(
                     fontSize = 20.sp,
                     lineHeight = 28.sp,
                     //fontFamily = FontFamily(Font(R.font.inter)),
@@ -150,7 +148,7 @@ fun Settings(
                             .width(figmaDp(89f))
                             .height(figmaDp(24f)),
                         text = "colormap",
-                        style = androidx.compose.ui.text.TextStyle(
+                        style = TextStyle(
                             fontSize = 20.sp,
                             lineHeight = 24.sp,
                             //fontFamily = FontFamily(Font(R.font.inter)),
@@ -275,7 +273,7 @@ fun Setting_3(
             text = "로그아웃",
 
             // Body1/Regular/16px
-            style = androidx.compose.ui.text.TextStyle(
+            style = TextStyle(
                 fontSize = 16.sp,
                 lineHeight = 22.4.sp,
                 //fontFamily = FontFamily(Font(R.font.inter)),
