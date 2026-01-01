@@ -93,8 +93,7 @@ fun SelectedColorRow(
     Column(
         modifier=modifier
             .fillMaxWidth()
-            .padding(top = 16.dp)
-            .padding(top = 6.dp)
+            .padding(top = 20.dp)
     ) {
         Text("Palette",
             color=color,
