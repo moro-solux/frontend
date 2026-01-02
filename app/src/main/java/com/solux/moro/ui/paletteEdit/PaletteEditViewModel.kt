@@ -1,10 +1,11 @@
-package com.solux.moro.ui.profile
+package com.solux.moro.ui.paletteEdit
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.core.designsystem.theme.colorsOf
+import com.solux.moro.ui.profile.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class PaletteColorViewModel (
+class PaletteEditViewModel (
     private val userRepository: UserRepository
 ): ViewModel() {
 
@@ -22,19 +23,19 @@ class PaletteColorViewModel (
         user.map { it?.colorPalette?.theme ?: MoroThemeType.Pastel }
             .stateIn(
                 viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
+                SharingStarted.Companion.WhileSubscribed(5_000),
                 MoroThemeType.Pastel
             )
 
     private val _editingColorIndex =
-            MutableStateFlow<Int>(0)
+        MutableStateFlow<Int>(0)
 
     val colors: StateFlow<List<Color>> =
         selectedTheme
             .map { theme -> colorsOf(theme) }
             .stateIn(
                 viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
+                SharingStarted.Companion.WhileSubscribed(5_000),
                 emptyList()
             )
 
@@ -43,7 +44,7 @@ class PaletteColorViewModel (
             .map { it?.colorPalette?.paletteColors ?: emptyList() }
             .stateIn(
                 viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
+                SharingStarted.Companion.WhileSubscribed(5_000),
                 emptyList()
             )
 

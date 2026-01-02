@@ -1,17 +1,18 @@
-package com.solux.moro.ui.profile
+package com.solux.moro.ui.ProfileColorEdit
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.core.designsystem.theme.colorsOf
+import com.solux.moro.ui.profile.UserRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class ProfileColorViewModel(
+class ProfileColorEditViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -21,7 +22,7 @@ class ProfileColorViewModel(
         user.map { it?.colorPalette?.theme ?: MoroThemeType.Pastel }
             .stateIn(
                 viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
+                SharingStarted.Companion.WhileSubscribed(5_000),
                 MoroThemeType.Pastel
             )
 
@@ -32,7 +33,7 @@ class ProfileColorViewModel(
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
+                started = SharingStarted.Companion.WhileSubscribed(5_000),
                 initialValue = emptyList()
             )
 
@@ -45,7 +46,7 @@ class ProfileColorViewModel(
         }
     }
 
-    fun  updateUserColor(userColor: androidx.compose.ui.graphics.Color) { //사용자 색상 선택
+    fun  updateUserColor(userColor: Color) { //사용자 색상 선택
         viewModelScope.launch {
             val current = user.value ?: return@launch
             userRepository.updateUserColorPalette(

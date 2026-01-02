@@ -1,4 +1,4 @@
-package com.solux.moro.ui.profile
+package com.solux.moro.ui.paletteEdit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -41,8 +42,8 @@ import com.solux.moro.ui.profile.component.ColorGrid
 
 
 @Composable
-fun PaletteColorScreen(
-    viewModel: PaletteColorViewModel = viewModel(),
+fun PaletteEditScreen(
+    viewModel: PaletteEditViewModel = viewModel(),
     modifier: Modifier = Modifier,
     color: Color = MoroTheme.colors.fontColor,
     style: TextStyle = MoroTheme.typography.titleBold24,
@@ -158,7 +159,7 @@ fun SelectedButton(modifier: Modifier = Modifier,
                 .height(55.dp)
                 .width(90.dp),
             shape = RoundedCornerShape(10.dp),
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+            colors = ButtonDefaults.buttonColors(
                 containerColor = Gray40,
             )
         ) {

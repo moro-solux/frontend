@@ -1,4 +1,4 @@
-package com.solux.moro.ui.profile
+package com.solux.moro.ui.ProfileColorEdit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,8 +37,8 @@ import com.solux.moro.ui.profile.component.ColorCellData
 import com.solux.moro.ui.profile.component.ColorGrid
 
 @Composable
-fun ProfileColorScreen(
-    viewModel: ProfileColorViewModel = viewModel(),
+fun ProfileColorEditScreen(
+    viewModel: ProfileColorEditViewModel = viewModel(),
     modifier: Modifier = Modifier,
     color: Color = MoroTheme.colors.fontColor,
     style: TextStyle = MoroTheme.typography.titleBold24,
@@ -75,12 +76,14 @@ fun ProfileColorScreen(
                 horizontalArrangement = Arrangement.Center) {
 
                 Button(
-                    onClick = {},
+                    onClick = {
+                        viewModel::updateUserColor
+                    },
                     Modifier
                         .height(55.dp)
                         .width(90.dp),
                     shape = RoundedCornerShape(10.dp),
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    colors = ButtonDefaults.buttonColors(
                         containerColor = Gray40,
                     )
                 ) {
