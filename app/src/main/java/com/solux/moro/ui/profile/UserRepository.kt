@@ -12,4 +12,8 @@ interface UserRepository {
     suspend fun updateUserColorPalette(
         palette: UserColorPalette
     )
+
+    suspend fun updateNickname(
+        nickname: String
+    )
 }
