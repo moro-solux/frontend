@@ -18,9 +18,9 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.core.designsystem.component.BottomBar
-import com.solux.moro.ui.profile.component.Profile
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.ui.profile.component.Captures
+import com.solux.moro.ui.profile.component.Profile
 
 @Composable
 fun ProfileScreen(){
