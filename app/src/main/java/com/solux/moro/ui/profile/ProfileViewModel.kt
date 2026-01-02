@@ -5,18 +5,25 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.core.designsystem.theme.colorsOf
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class ProfileColorViewModel : ViewModel() {
+class ProfileColorViewModel(
+    private val userRepository: UserRepository
+) : ViewModel() {
 
-    private val _selectedTheme =
-        MutableStateFlow(MoroThemeType.Pastel)
-    val selectedTheme = _selectedTheme.asStateFlow()
+    val user = userRepository.user
+
+    val selectedTheme =
+        user.map { it?.colorPalette?.theme ?: MoroThemeType.Pastel }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                MoroThemeType.Pastel
+            )
 
     val colors: StateFlow<List<Color>> =
         selectedTheme
@@ -29,7 +36,22 @@ class ProfileColorViewModel : ViewModel() {
                 initialValue = emptyList()
             )
 
-    fun onThemeSelected(theme: MoroThemeType) {
-        _selectedTheme.value = theme
+    fun onThemeSelected(theme: MoroThemeType) { //테마 선택
+        viewModelScope.launch {
+            val current = user.value ?: return@launch
+            userRepository.updateUserColorPalette(
+                current.colorPalette.copy(theme = theme)
+            )
+        }
     }
+
+    fun  updateUserColor(userColor: androidx.compose.ui.graphics.Color) { //사용자 색상 선택
+        viewModelScope.launch {
+            val current = user.value ?: return@launch
+            userRepository.updateUserColorPalette(
+                current.colorPalette.copy(userColor = userColor)
+            )
+        }
+    }
+
 }
