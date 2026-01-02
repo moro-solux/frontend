@@ -3,6 +3,7 @@ package com.solux.moro.ui.profile.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -16,26 +17,37 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.solux.moro.R
 import kotlin.math.cos
 import kotlin.math.sin
 
 @Composable
-fun Palette() {
+fun Palette(
+) {
     Box(
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.CenterStart
     ) {
         Box(
+            contentAlignment = Alignment.Center,
             modifier = Modifier.Companion
                 .size(478.07999.toPxDp)
+                .offset(x=-60.dp)
                 .clip(CircleShape)
                 .background(Color(0xFF8EEAF4)),
-            contentAlignment = Alignment.Center
         ) {
             Image(
                 painter = painterResource(id = R.drawable.icon_edit),
                 contentDescription = null,
-                modifier = Modifier.size(57.10587.toPxDp)
+                modifier = Modifier
+                    .size(28.dp)
+                    .offset(x = 25.dp)
+                    .clickable(
+                        onClick = {
+                            // 페이지 이동
+                        }
+                    ),
+
             )
         }
         SemiCircleItems(
@@ -58,9 +70,10 @@ fun SemiCircleItems(
     itemColors: List<Color> = mutableListOf(Color(0x00000000), Color(0x00000000), Color(0x00000000),Color(0x00000000), Color(0x00000000), Color(0x00000000)),
 ) {
     Box(
+        contentAlignment = Alignment.CenterStart,
         modifier = Modifier
-            .size(radius * 2 + itemSize),
-        contentAlignment = Alignment.Center
+            .size(radius * 2 + itemSize)
+            .offset(x=-10.dp),
     ) {
         val angleStep = 180f / (itemCount - 1)
 
@@ -91,7 +104,12 @@ fun SemiCircleItems(
                         .size(itemSize)
                         .offset(x = x, y = y)
                         .clip(CircleShape)
-                        .background(color),
+                        .background(color)
+                        .clickable(
+                            onClick = {
+                                    //개별 색상 페이지로 이동
+                            }
+                        ),
                     contentAlignment = Alignment.Center,
                 ) {
                 }
