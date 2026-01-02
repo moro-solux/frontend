@@ -37,9 +37,17 @@ class PaletteColorViewModel (
                 SharingStarted.WhileSubscribed(5_000),
                 emptyList()
             )
+
+    val paletteColors: StateFlow<List<Color>> =
+        user
+            .map { it?.colorPalette?.paletteColors ?: emptyList() }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                emptyList()
+            )
+
     val editingColorIndex=_editingColorIndex.asStateFlow()
-
-
 
     init {
         viewModelScope.launch {

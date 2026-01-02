@@ -63,7 +63,7 @@ fun PaletteColorScreen(
             }
         }
 
-        val selectedColors by viewModel.selectedColors.collectAsState()
+        val selectedColors by viewModel.paletteColors.collectAsState()
         val editingColorIndex by viewModel.editingColorIndex.collectAsState()
         val editingColor =selectedColors[editingColorIndex]
 
