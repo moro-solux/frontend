@@ -11,41 +11,55 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class PaletteColorViewModel : ViewModel() {
+class PaletteColorViewModel (
+    private val userRepository: UserRepository
+): ViewModel() {
 
-    private val _selectedTheme =
-        MutableStateFlow(MoroThemeType.Pastel)
-    private val _selectedColors =
-        MutableStateFlow<List<Color>>(
-            listOf(
-                Color.Transparent,
-                Color.Transparent,
-                Color.Transparent,
-                Color.Transparent,
-                Color.Transparent,
-                Color.Transparent)
-        )
+    val user = userRepository.user
+    val selectedTheme =
+        user.map { it?.colorPalette?.theme ?: MoroThemeType.Pastel }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                MoroThemeType.Pastel
+            )
+
     private val _editingColorIndex =
             MutableStateFlow<Int>(0)
 
-    val selectedTheme = _selectedTheme.asStateFlow()
-    val selectedColors=_selectedColors.asStateFlow()
+    val colors: StateFlow<List<Color>> =
+        selectedTheme
+            .map { theme -> colorsOf(theme) }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000),
+                emptyList()
+            )
     val editingColorIndex=_editingColorIndex.asStateFlow()
 
 
-    val colors: StateFlow<List<Color>> =
-        selectedTheme
-            .map { theme ->
-                colorsOf(theme)
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = emptyList()
-            )
 
-    fun onThemeSelected(theme: MoroThemeType) {
-        _selectedTheme.value = theme
+    init {
+        viewModelScope.launch {
+            userRepository.loadUser()
+        }
     }
+
+
+    fun updatePaletteColor(index: Int, color: Color) { // 팔레트 업데이트
+        viewModelScope.launch {
+            val current = user.value ?: return@launch
+            val newColors = current.colorPalette.paletteColors.toMutableList()
+            newColors[index] = color
+
+            userRepository.updateUserColorPalette(
+                current.colorPalette.copy(
+                    paletteColors = newColors
+                )
+            )
+        }
+    }
+
 }
