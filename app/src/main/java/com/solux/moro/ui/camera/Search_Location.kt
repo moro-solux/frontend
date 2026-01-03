@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,11 +25,23 @@ import androidx.compose.ui.unit.sp
 import com.solux.moro.R
 import com.solux.moro.core.util.figmaDp
 
-
+data class PlaceData(
+    val name: String,
+    val address: String
+)
 @Composable
 fun LocationBottomSheet(
-    onClose: () -> Unit
-){
+    onClose: () -> Unit,
+    onPlaceSelected: (String) -> Unit,
+    selectedLocation: String, // [2] 현재 선택된 위치 이름 (체크 표시용)
+    nearbyPlaces: List<PlaceData> = listOf( // [3] 가짜 데이터 (나중에 백엔드 데이터로 교체될 곳)
+        PlaceData("숙명여자대학교", "Seoul, South Korea"),
+        PlaceData("N서울타워", "Seoul, South Korea"),
+        PlaceData("경복궁", "Seoul, South Korea"),
+        PlaceData("북촌한옥마을", "Seoul, South Korea"),
+        PlaceData("명동성당", "Seoul, South Korea")
+    )
+) {
     Column(
         modifier = Modifier
             .shadow(
@@ -232,40 +245,14 @@ fun LocationBottomSheet(
                 verticalArrangement = Arrangement.spacedBy(figmaDp(12f)),
                 contentPadding = PaddingValues(vertical = figmaDp(8f))
             ) {
-                // TODO: 장소 리스트 데이터 연동 후 items()로 변경 예정
-                item {
+                // items()를 사용하여 리스트만큼 반복 생성
+                items(nearbyPlaces) { place ->
                     PlaceItem(
-                        isSelected = true,
-                        name = "Gyeongbokgung Palace",
-                        address = "Seoul, South Korea"
-                    )
-                }
-                item {
-                    PlaceItem(
-                        isSelected = false,
-                        name = "N Seoul Tower",
-                        address = "Seoul, South Korea"
-                    )
-                }
-                item {
-                    PlaceItem(
-                        isSelected = false,
-                        name = "Bukchon Hanok Village",
-                        address = "Seoul, South Korea"
-                    )
-                }
-                item {
-                    PlaceItem(
-                        isSelected = false,
-                        name = "Bukchon Hanok Village",
-                        address = "Seoul, South Korea"
-                    )
-                }
-                item {
-                    PlaceItem(
-                        isSelected = false,
-                        name = "Bukchon Hanok Village",
-                        address = "Seoul, South Korea"
+                        // 현재 이 아이템의 이름이 선택된 이름과 같으면 체크 표시
+                        isSelected = (place.name == selectedLocation),
+                        name = place.name,
+                        address = place.address,
+                        onClick = { onPlaceSelected(place.name) } // 클릭 시 이름 전달
                     )
                 }
             }
