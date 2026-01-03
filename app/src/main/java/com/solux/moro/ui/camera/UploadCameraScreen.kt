@@ -3,7 +3,6 @@ package com.solux.moro.ui.camera
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -23,8 +22,9 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.solux.moro.ui.main.createImageUri
+import android.net.Uri
 import java.io.File
+
 
 @Composable
 fun UploadCameraScreen(
@@ -137,5 +137,18 @@ private fun takePhoto(
                 Toast.makeText(context, "사진 촬영 실패", Toast.LENGTH_SHORT).show()
             }
         }
+    )
+}
+
+fun Context.createImageUri(): Uri {
+    val file = File.createTempFile(
+        "temp_image",
+        ".jpg",
+        this.externalCacheDir
+    )
+    return FileProvider.getUriForFile(
+        this,
+        "${this.packageName}.fileprovider",
+        file
     )
 }
