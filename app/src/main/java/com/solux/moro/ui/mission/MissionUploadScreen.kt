@@ -3,6 +3,7 @@ package com.solux.moro.ui.mission
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -148,7 +149,9 @@ fun Upload_Section() {
 }
 
 @Composable
-fun Upload_Button() {
+fun Upload_Button(
+    onClick: () -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -157,6 +160,7 @@ fun Upload_Button() {
                 color = Color(0xFFF2F2F2),
                 shape = RoundedCornerShape(figmaDp(12f))
             )
+            .clickable { onClick() }
             .padding(
                 start = figmaDp(16f),
                 top = figmaDp(16f),
@@ -210,7 +214,10 @@ fun Upload_Button() {
 }
 
 @Composable
-fun InstagramUpload(){
+fun InstagramUpload(
+    onInstagramClick: () -> Unit = {}, // 인스타 클릭 이벤트
+    onSaveClick: () -> Unit = {}       // 저장 클릭 이벤트
+){
     Row(
         modifier = Modifier
             .width(figmaDp(138f))
@@ -220,6 +227,7 @@ fun InstagramUpload(){
     ) {
         //인스타
         Column(
+            modifier = Modifier.clickable { onInstagramClick() },
             verticalArrangement = Arrangement.spacedBy(figmaDp(4f), Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -249,6 +257,7 @@ fun InstagramUpload(){
 
         //저장
         Column(
+            modifier = Modifier.clickable { onSaveClick() },
             verticalArrangement = Arrangement.spacedBy(figmaDp(4f), Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
