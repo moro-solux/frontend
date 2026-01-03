@@ -10,11 +10,9 @@ class CameraViewModel : ViewModel() {
 
     // 다이얼로그 표시 여부
     var showConfirmDialog by mutableStateOf(false)
-        private set
 
     // 찍은 사진의 주소를 저장할 변수 추가
     var capturedUri by mutableStateOf<Uri?>(null)
-        private set
 
     // 사진 촬영 완료 시 호출
     fun onPhotoCaptured(uri: Uri) {

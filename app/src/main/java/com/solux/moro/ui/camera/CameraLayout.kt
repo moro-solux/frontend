@@ -27,6 +27,7 @@ import com.solux.moro.core.util.figmaDp
 //import coil.compose.AsyncImage
 @Composable
 fun CameraLayout(
+    remainingShots: Int = 3,
     showShotCount: Boolean = false,
     onCameraClick: () -> Unit,
     showConfirmDialog: Boolean,
@@ -50,15 +51,15 @@ fun CameraLayout(
 
         if (showShotCount) {
             ShotCount(
+                count = remainingShots,
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
+                    .align(Alignment.TopEnd) // 오른쪽 상단 기준
                     .padding(
                         top = figmaDp(70f) + figmaDp(12f),
                         end = figmaDp(16f)
                     )
             )
         }
-
 
         Column(modifier = Modifier.align(Alignment.BottomCenter)) {
             CameraBottomBar(
@@ -178,6 +179,7 @@ fun CameraBottomBar(
 
 @Composable
 fun ShotCount(
+    count: Int,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -191,7 +193,7 @@ fun ShotCount(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "3",
+            text = "$count",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.White
