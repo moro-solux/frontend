@@ -67,4 +67,16 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // CameraX (카메라 기능)
+    val cameraVersion = "1.3.1"
+    implementation("androidx.camera:camera-core:${cameraVersion}")
+    implementation("androidx.camera:camera-camera2:${cameraVersion}")
+    implementation("androidx.camera:camera-lifecycle:${cameraVersion}")
+    implementation("androidx.camera:camera-view:${cameraVersion}")
+
+    // coil (사진 파일(Uri)을 화면에 보여주기 기능)
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // 권한 요청 (Accompanist)
+    implementation("com.google.accompanist:accompanist-permissions:0.34.0")
 }

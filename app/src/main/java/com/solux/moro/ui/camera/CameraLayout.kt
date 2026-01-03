@@ -1,5 +1,6 @@
 package com.solux.moro.ui.camera
 
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -18,13 +21,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import coil.compose.AsyncImage
 import com.solux.moro.R
 import com.solux.moro.core.util.figmaDp
-
+//import coil.compose.AsyncImage
 @Composable
-fun CameraScreen() {
-
-    var showConfirmDialog by remember { mutableStateOf(false) }
+fun CameraLayout(
+    showShotCount: Boolean = false,
+    onCameraClick: () -> Unit,
+    showConfirmDialog: Boolean,
+    onConfirm: () -> Unit,
+    onRetry: () -> Unit,
+    capturedImageUri: Uri? = null, //찍은 사진 확인용
+    cameraContent: @Composable () -> Unit //카메라 화면 끼워넣기
+) {
 
     Box(
         modifier = Modifier
@@ -32,46 +42,35 @@ fun CameraScreen() {
             .background(Color.Black)
     ) {
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFF404040)) // 임시
-        )
+        cameraContent()
 
-        Column(
-            modifier = Modifier.align(Alignment.TopCenter)
-        ) {
+        Column(modifier = Modifier.align(Alignment.TopCenter)) {
             CameraTopBar()
         }
 
-        ShotCount(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(
-                    top = figmaDp(70f) + figmaDp(12f),
-                    end = figmaDp(16f)
-                )
-        )
+        if (showShotCount) {
+            ShotCount(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(
+                        top = figmaDp(70f) + figmaDp(12f),
+                        end = figmaDp(16f)
+                    )
+            )
+        }
 
-        Column(
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
+
+        Column(modifier = Modifier.align(Alignment.BottomCenter)) {
             CameraBottomBar(
-                onCameraClick = {
-                    showConfirmDialog = true
-                }
+                onCameraClick = onCameraClick
             )
         }
 
         if (showConfirmDialog) {
             ConfirmPhotoDialog(
-                onConfirm = {
-                    showConfirmDialog = false
-                    // TODO: 업로드 로직
-                },
-                onRetry = {
-                    showConfirmDialog = false
-                }
+                imageUri = capturedImageUri,
+                onConfirm = onConfirm,
+                onRetry = onRetry
             )
         }
     }
@@ -114,28 +113,7 @@ fun CameraTopBar() {
     }
 }
 
-@Composable
-fun ShotCount(
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .size(figmaDp(50f))
-            .background(
-                color = Color(0xFF121212),
-                shape = RoundedCornerShape(figmaDp(50f))
-            ),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "3",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
-        )
-    }
-}
+
 
 @Composable
 fun CameraBottomBar(
@@ -197,8 +175,33 @@ fun CameraBottomBar(
     }
 }
 
+
+@Composable
+fun ShotCount(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .size(figmaDp(50f))
+            .background(
+                color = Color(0xFF121212),
+                shape = RoundedCornerShape(figmaDp(50f))
+            ),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "3",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+    }
+}
+
 @Composable
 fun ConfirmPhotoDialog(
+    imageUri: Uri?, // 찍은 사진 주소
     onConfirm: () -> Unit,
     onRetry: () -> Unit
 ) {
@@ -217,15 +220,27 @@ fun ConfirmPhotoDialog(
             ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // 사진이 들어갈 박스
             Box(
-                Modifier
+                modifier = Modifier
                     .width(230.dp)
                     .height(307.dp)
                     .background(
                         color = Color(0xFFD9D9D9),
                         shape = RoundedCornerShape(size = 20.dp)
                     )
-            )
+            ) {
+                if (imageUri != null) {
+                    AsyncImage(
+                        model = imageUri, // 사진 파일 주소
+                        contentDescription = "찍은 사진",
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(20.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
 
             Text(
                 text = "이 사진을 업로드 하시겠습니까?",
@@ -280,10 +295,4 @@ fun ConfirmPhotoDialog(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun CameraScreenPreview() {
-    CameraScreen()
 }
