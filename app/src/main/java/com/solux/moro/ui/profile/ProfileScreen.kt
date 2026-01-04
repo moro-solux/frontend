@@ -11,19 +11,39 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.ui.profile.component.Captures
 import com.solux.moro.ui.profile.component.Profile
 
 @Composable
-fun ProfileScreen(){
+fun ProfileScreen(
+    viewModel: ProfileViewModel = viewModel()
+){
+    val action by viewModel.profileAction.collectAsState()
+    val isMyProfile by viewModel.isMyProfile.collectAsState()
+
+    val user by viewModel.user.collectAsState()
+    val stats by viewModel.stats.collectAsState()
+
+    val nickname by viewModel.nickname.collectAsState()
+    val userColor by viewModel.userColor.collectAsState()
+    val colorsCount by viewModel.colorsCount.collectAsState()
+    val followerCount by viewModel.followerCount.collectAsState()
+    val isFollowing by viewModel.isFollowing.collectAsState()
+    val followingCount by viewModel.followingCount.collectAsState()
+
+
+
     Scaffold(
         bottomBar = { BottomBar() },
         topBar = { TopBar() }
@@ -40,7 +60,17 @@ fun ProfileScreen(){
         ) {
             Box() {
                 Column() {
-                    Profile()
+                    Profile(
+                        nickname,
+                        userColor,
+                        followerCount,
+                        followingCount,
+                        colorsCount ,
+
+                        action,
+                        onEditProfile = { },
+                        onFollow = { }
+                    )
                     Captures()
                 }
                 Box(

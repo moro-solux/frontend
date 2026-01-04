@@ -67,7 +67,8 @@ fun ProfileEditScreen(
             verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
             horizontalAlignment = Alignment.Start,
         ) {
-            ProfileHeader(user)
+            ProfileHeader(user?.nickname ?:"@colorhunter" ,
+                user?.colorPalette?.userColor?.value.toString(),)
 
             Column(Modifier
                     .fillMaxWidth()

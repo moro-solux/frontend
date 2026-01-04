@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface UserRepository {
     val user: StateFlow<User?>
+    val userStats: StateFlow<UserStats?>
+
 
     suspend fun loadUser()
     suspend fun getUserTheme(): MoroThemeType

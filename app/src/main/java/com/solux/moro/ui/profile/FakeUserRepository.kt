@@ -39,6 +39,8 @@ class FakeUserRepository : UserRepository {
     )
 
     override val user: StateFlow<User?> = _user.asStateFlow()
+    private val _userStats = MutableStateFlow<UserStats?>(null)
+    override val userStats: StateFlow<UserStats?> = _userStats
 
     override suspend fun getUserTheme(): MoroThemeType {
         return _user.value?.colorPalette?.theme ?: MoroThemeType.Pastel
@@ -52,5 +54,9 @@ class FakeUserRepository : UserRepository {
         palette: UserColorPalette
     ) {
         _user.update { it?.copy(colorPalette = palette) }
+    }
+
+    override suspend fun updateNickname(nickname: String) {
+        TODO("Not yet implemented")
     }
 }
