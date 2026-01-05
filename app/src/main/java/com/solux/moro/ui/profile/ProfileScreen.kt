@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.ui.profile.component.Captures
@@ -27,6 +28,7 @@ import com.solux.moro.ui.profile.component.Profile
 
 @Composable
 fun ProfileScreen(
+    navController: NavHostController,
     viewModel: ProfileViewModel = viewModel()
 ){
     val action by viewModel.profileAction.collectAsState()
@@ -41,7 +43,6 @@ fun ProfileScreen(
     val followerCount by viewModel.followerCount.collectAsState()
     val isFollowing by viewModel.isFollowing.collectAsState()
     val followingCount by viewModel.followingCount.collectAsState()
-
 
 
     Scaffold(
@@ -68,8 +69,12 @@ fun ProfileScreen(
                         colorsCount ,
 
                         action,
-                        onEditProfile = { },
-                        onFollow = { }
+                        onEditProfile = {
+                            navController.navigate("profileEdit")
+                        },
+                        onFollow = {
+
+                        }
                     )
                     Captures()
                 }
@@ -88,5 +93,5 @@ fun ProfileScreen(
     device = Devices.PIXEL_4A)
 @Composable
 fun ProfileScreenPreview(){
-    ProfileScreen()
+    //ProfileScreen()
 }
