@@ -1,50 +1,88 @@
 package com.solux.moro.ui.home
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.solux.moro.core.designsystem.component.BottomBar
-import com.solux.moro.ui.home.component.Feed
 import com.solux.moro.core.designsystem.component.TopBar
+import com.solux.moro.ui.home.component.CommentWindow
+import com.solux.moro.ui.home.component.Feed
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(){
+fun HomeScreen(
+    viewModel: FeedViewModel = hiltViewModel()
+) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showBottomSheet by remember { mutableStateOf(false) }
+    var selectedPostId by remember { mutableStateOf<String?>(null) }
+
     Scaffold(
         bottomBar = { BottomBar() },
         topBar = { TopBar() }
-    ) {innerPadding ->
-        val scrollState = rememberScrollState()
-        Column(
-            Modifier
-                //.height((2340/PIXEL_4A_DENSITY).dp)
-                //.width((1080/PIXEL_4A_DENSITY).dp)
+    ) { innerPadding ->
+        val feed by viewModel.feed.collectAsState()
+
+        LazyColumn(
+            modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color(0xFF121212))
                 .padding(innerPadding)
-                .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
-            horizontalAlignment = Alignment.Start,
-        ) {//홈 화면
-            Feed()
-            //Feed()
+                .background(Color.Black)
+
+        ) {
+            items(feed) { item ->
+                Feed(
+                    item = item,
+                    onLikeClick = { viewModel.onLikeClick(item.id) },
+                    onCommentClick = {
+                        selectedPostId = item.id
+                        showBottomSheet = true
+                    }
+                )
+            }
         }
     }
-}
-@Preview(
-    device = Devices.PIXEL_4A)
-@Composable
-fun HomeScreenPreview(){
-    HomeScreen()
+    if (showBottomSheet && selectedPostId != null) {
+        ModalBottomSheet(
+            onDismissRequest = {
+                showBottomSheet = false
+                selectedPostId = null
+            },
+            sheetState = sheetState,
+            containerColor = Color(0xFF4C4C4C),
+            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            dragHandle = {
+                Box(
+                    modifier = Modifier
+                        .padding(vertical = 12.dp)
+                        .width(41.dp)
+                        .height(4.dp)
+                        .background(color = Color(0xFFA5A5A5), shape = CircleShape)
+                )
+            }
+        ) {
+            CommentWindow(postId = selectedPostId!!)
+        }
+    }
 }

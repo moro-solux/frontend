@@ -46,10 +46,12 @@ dependencies {
     // Lifecycle /Viewmodel
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-// Hilt  dependencies
+    // Hilt  dependencies
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.lifecycle.vm.compose)
+    // Navigation(Compose)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

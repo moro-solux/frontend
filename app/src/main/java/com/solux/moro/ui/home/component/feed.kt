@@ -11,19 +11,29 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -31,26 +41,61 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.solux.moro.R
+import com.solux.moro.core.designsystem.theme.MoroPalette
+import com.solux.moro.core.designsystem.theme.MoroTheme
+import com.solux.moro.ui.home.FeedItem
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
 
 
 @Composable
-fun Feed() {
+fun Feed(
+    item: FeedItem = FeedItem(
+        id = "",
+        authorId = "",
+        authorNickname = "",
+        authorProfileColor = Color.Black,
+        hexCodes = listOf<String>("3357FF","3357FF"),
+        contentColors= listOf(
+            MoroPalette.Pastel.Purple400,
+            MoroPalette.Pastel.Orange300,
+            MoroPalette.Pastel.Cyan400,
+            MoroPalette.Pastel.Gray400,
+        ),
+        imageUrl = null,
+        commentCount = 10,
+        likeCount = 10,
+        isLiked = false,
+        createdAt = 0
+    ),
+    onLikeClick: () -> Unit = {},
+    onCommentClick: () -> Unit={}
+    ) {
+    var expanded by remember { mutableStateOf(false) }
     Column(
         verticalArrangement = Arrangement.spacedBy((30.461544036865234).toPxDp, Alignment.Top),
         horizontalAlignment = Alignment.Start,
         modifier = Modifier
             .fillMaxWidth()
             .height((1442.17859).toPxDp)
-            .padding(start = (46.08).toPxDp, top = (46.08).toPxDp, end = (46.08).toPxDp, bottom = (46.08).toPxDp)
-    ) {//피드 컬럼 ( /PIXEL_4A_DENSITY)
+            .padding(
+                start = (46.08).toPxDp,
+                top = (46.08).toPxDp,
+                end = (46.08).toPxDp,
+                bottom = (46.08).toPxDp
+            )
+    ) {
         Row(
             Modifier
                 .width((987.84003).toPxDp)
                 .height((110.76924).toPxDp),
-            horizontalArrangement = Arrangement.spacedBy((28.80000114440918).toPxDp, Alignment.Start),
+            horizontalArrangement = Arrangement.spacedBy(
+                (28.80000114440918).toPxDp,
+                Alignment.Start
+            ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
@@ -72,8 +117,9 @@ fun Feed() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy((
-                        20.15999984741211).toPxDp,
+                    horizontalArrangement = Arrangement.spacedBy(
+                        (
+                                20.15999984741211).toPxDp,
                         Alignment.Start
                     ),
                     verticalAlignment = Alignment.CenterVertically,
@@ -83,11 +129,9 @@ fun Feed() {
                 ) {
                     Text(
                         text = "@colorlover",
-                        // Body1/SemiBold/16px
                         style = TextStyle(
                             fontSize = (46.08).toPxSp,
                             lineHeight = (64.51).toPxSp,
-//////폰트 다운       fontFamily = FontFamily(Font(R.font.inter)),
                             fontWeight = FontWeight(600),
                             color = Color(0xFFF2F2F2),
                         ),
@@ -97,12 +141,9 @@ fun Feed() {
                     )
                     Text(
                         text = "2h ago",
-
-                        // Body3/Regular/12px
                         style = TextStyle(
                             fontSize = (34.56).toPxSp,
                             lineHeight = (48.38).toPxSp,
-//////폰트 다운     //fontFamily = FontFamily(Font(R.font.inter)),
                             fontWeight = FontWeight(400),
                             color = Color(0xFFA5A5A5),
                         ),
@@ -111,19 +152,10 @@ fun Feed() {
                             .height((48).toPxDp)
                     )
                 }
-                IconButton(onClick = { /*  */ },
-                    modifier = Modifier.size((69.12).toPxDp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = "More options",
-                        tint = Color.White,
-                        modifier = Modifier
-                            .padding((2.88).toPxDp)
-                            .size((69.12).toPxDp)
-
-                    )
-                }
+                FeedMoreMenu(
+                    onEditClick = { /*TODO*/ },
+                    onDeleteClick = { /*TODO*/ }
+                )
             }
         }
 
@@ -132,136 +164,84 @@ fun Feed() {
                 .width((987.84003).toPxDp)
                 .height((1044.4801).toPxDp)
                 .padding(top = (28.8).toPxDp, bottom = (28.8).toPxDp),
-            horizontalArrangement = Arrangement.spacedBy((23.040000915527344).toPxDp, Alignment.Start),
+            horizontalArrangement = Arrangement.spacedBy(
+                (23.040000915527344).toPxDp,
+                Alignment.Start
+            ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-
-            Image(
-                //피드 화면
+            AsyncImage(
                 modifier = Modifier
                     .width((740.16003).toPxDp)
                     .height((986.88007).toPxDp),
-                painter = painterResource(id = R.drawable.img_feed),
-                contentDescription = "image description",
-                contentScale = ContentScale.FillBounds,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(item.imageUrl ?: R.drawable.img_feed)
+                    .build(),
+                placeholder = painterResource(R.drawable.img_feed),
+                contentDescription = null,
+                contentScale = ContentScale.FillBounds
+            )
 
-                )
-
-            Column(
+            LazyColumn(
                 Modifier// 색상 칩
                     .width((224.64001).toPxDp)
                     .height((986.88007).toPxDp),
                 verticalArrangement = Arrangement.SpaceBetween,
                 horizontalAlignment = Alignment.Start,
             ) {
-                Box(
-                    Modifier
-                        .width((224.64001).toPxDp)
-                        .height((224.64001).toPxDp)
-                        .background(
-                            color = Color(0xFF4982E5),
-                            shape = RoundedCornerShape(size = (3.84615).toPxDp)
-                        )
-                )
-                Box(
-                    Modifier
-                        .width((224.64001).toPxDp)
-                        .height((224.64001).toPxDp)
-                        .background(
-                            color = Color(0xFF032564),
-                            shape = RoundedCornerShape(size = (3.84615).toPxDp)
-                        )
-                )
-                Box(
-                    Modifier
-                        .width((224.64001).toPxDp)
-                        .height((224.64001).toPxDp)
-                        .background(
-                            color = Color(0xFFC8D7EC),
-                            shape = RoundedCornerShape(size = (3.84615).toPxDp)
-                        )
-                )
-                Box(
-                    Modifier
-                        .width((224.64001).toPxDp)
-                        .height((224.64001).toPxDp)
-                        .background(
-                            color = Color(0xFF98ADE2),
-                            shape = RoundedCornerShape(size = (3.84615).toPxDp)
-                        )
-                )
+                items(item.contentColors) { color ->
+                    Box(
+                        Modifier
+                            .width((224.64001).toPxDp)
+                            .height((224.64001).toPxDp)
+                            .background(
+                                color = color,
+                                shape = RoundedCornerShape(size = (3.84615).toPxDp)
+                            )
+                    )
+                }
             }
         }
-        Row(
+        LazyRow(
             Modifier// 색상 코드
                 .width((987.84003).toPxDp)
                 .height((48).toPxDp),
-            horizontalArrangement = Arrangement.spacedBy(22.15384864807129.dp, Alignment.Start),
+            horizontalArrangement = Arrangement.spacedBy(22.15384864807129.toPxDp, Alignment.Start),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(//1st color code
-                text = "#FF6025 ",
-                style = TextStyle(
-                    fontSize = (34.56).toPxSp,
-                    lineHeight = (48.38).toPxSp,
-////                    fontFamily = FontFamily(Font(R.font.inter)),
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFFA5A5A5),
-                ),
-                modifier = Modifier
-                    .width((143).toPxDp)
-                    .height((48).toPxDp)
-            )
-            Text(//2nd color code
-                text = "#FF6025 ",
-                style = TextStyle(
-                    fontSize = (34.56).toPxSp,
-                    lineHeight = (48.38).toPxSp,
-                    //////                   fontFamily = FontFamily(Font(R.font.inter)),
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFFA5A5A5),
-
-                    ), modifier = Modifier
-                    .width((143).toPxDp)
-                    .height((48).toPxDp)
-            )
-            Text(//3th color code
-                text = "#FF6025 ",
-                style = TextStyle(
-                    fontSize = (34.56).toPxSp,
-                    lineHeight = (48.38).toPxSp,
-///                    fontFamily = FontFamily(Font(R.font.inter)),
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFFA5A5A5),
-                ), modifier = Modifier
-                    .width((143).toPxDp)
-                    .height((48).toPxDp)
-            )
-            Text(
-                text = "#FF6025 ",
-                style = TextStyle(
-                    fontSize = (34.56).toPxSp,
-                    lineHeight = (48.38).toPxSp,
-                    ////                fontFamily = FontFamily(Font(R.font.inter)),
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFFA5A5A5),
-                ), modifier = Modifier
-                    .width((143).toPxDp)
-                    .height((48).toPxDp)
-            )
+            items(item.hexCodes) { hexCode ->
+                Text(
+                    text = hexCode,
+                    style = TextStyle(
+                        fontSize = (34.56).toPxSp,
+                        lineHeight = (48.38).toPxSp,
+                        fontWeight = FontWeight(400),
+                        color = Color(0xFFA5A5A5),
+                    ),
+                    modifier = Modifier
+                        .width((143).toPxDp)
+                        .height((48).toPxDp)
+                )
+            }
         }
         Row(
             Modifier
                 .width((987.84003).toPxDp)
                 .height((55.38462).toPxDp),
-            horizontalArrangement = Arrangement.spacedBy((28.80000114440918).toPxDp, Alignment.Start),
+            horizontalArrangement = Arrangement.spacedBy(
+                (28.80000114440918).toPxDp,
+                Alignment.Start
+            ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // 좋아요, 공유
+            // 댓글
             Row(
                 horizontalArrangement = Arrangement.spacedBy((11.52).toPxDp, Alignment.Start)
-            ){
-                IconButton(onClick = { /*  */ },
+            ) {
+                IconButton(
+                    onClick = {
+                        onCommentClick()
+                    },
                     modifier = Modifier.size((55.38462).toPxDp)
                 ) {
                     Icon(
@@ -275,11 +255,10 @@ fun Feed() {
                     )
                 }
                 Text(
-                    text = "8",
+                    text = item.commentCount.toString(),
                     style = TextStyle(
                         fontSize = (40.32).toPxSp,
                         lineHeight = (56.45).toPxSp,
-   //                     fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
                         textAlign = TextAlign.Center,
@@ -289,10 +268,14 @@ fun Feed() {
                         .height((55.38462).toPxDp)
                 )
             }
-            Row(
+
+            Row(   // 좋아요??????
                 horizontalArrangement = Arrangement.spacedBy((11.52).toPxDp, Alignment.Start)
-            ){
-                IconButton(onClick = { /*  */ },
+            ) {
+                IconButton(
+                    onClick = {
+                        onLikeClick()
+                    },
                     modifier = Modifier.size((55.38462).toPxDp)
                 ) {
                     Icon(
@@ -305,11 +288,10 @@ fun Feed() {
                     )
                 }
                 Text(
-                    text = "8",
+                    text = item.likeCount.toString(),
                     style = TextStyle(
                         fontSize = (40.32).toPxSp,
                         lineHeight = (56.45).toPxSp,
-                        //                     fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
                         textAlign = TextAlign.Center,
@@ -319,14 +301,68 @@ fun Feed() {
                         .height((55.38462).toPxDp)
                 )
             }
+
         }
     }
 }
 
+@Composable
+fun FeedMoreMenu(
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        IconButton(
+            onClick = { expanded = true }, // 클릭 시 메뉴 오픈
+            modifier = Modifier.size((69.12).toPxDp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "More options",
+                tint = Color.White,
+                modifier = Modifier
+                    .padding((2.88).toPxDp)
+                    .size((69.12).toPxDp)
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(142.dp)
+                .background(Color(0xFF2B2B2B))
+        ) {
+            DropdownMenuItem(
+                leadingIcon ={
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_trash), // ⭐ painter 지정
+                        contentDescription = "삭제 아이콘",
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                },
+                text = {
+                    Text(
+                        "삭제",
+                        color = Color.Red,
+                    style = MoroTheme.typography.bodyRegular16,
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onDeleteClick()
+                }
+            )
+        }
+    }
+}
 
 @Preview(
     device = Devices.PIXEL_4A)
 @Composable
 fun FeedPreview(){
-    Feed()
+
 }

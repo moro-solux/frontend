@@ -25,18 +25,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.R
 
 @Composable
 fun ProfileHeader(
-    user: com.solux.moro.ui.profile.User? = null
+    nickname: String,
+    colorCode: String,
 ){
     Column(
         Modifier
-            .width(1080.toPxDp)
-            .padding(start = 46.08.toPxDp, top = 46.08.toPxDp, end = 46.08.toPxDp, bottom = 46.08.toPxDp),
-        verticalArrangement = Arrangement.spacedBy(57.60000228881836.toPxDp, Alignment.Top),
+            .width(1080.toPxDp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
@@ -131,7 +132,7 @@ fun ProfileHeader(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = user?.colorPalette?.userColor.toString()?:"#3366FF",
+                    text = colorCode,
                     style = TextStyle(
                         fontSize = 40.32.toPxSp,
                         lineHeight = 56.45.toPxSp,
@@ -145,7 +146,7 @@ fun ProfileHeader(
                 )
             }
             Text(
-                text = user?.id?:"@colorhunter",
+                text = nickname,
                 style = TextStyle(
                     fontSize = 51.84.toPxSp,
                     lineHeight = 72.58.toPxSp,
@@ -160,4 +161,12 @@ fun ProfileHeader(
             )
         }
     }
+}
+@Preview(device = Devices.PIXEL_4A)
+@Composable
+fun ProfileHeaderPreview(){
+    ProfileHeader(
+        "@colorhunter",
+        "#3366FF"
+    )
 }
