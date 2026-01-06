@@ -2,12 +2,13 @@ package com.solux.moro.ui.profile
 
 import com.solux.moro.core.designsystem.theme.MoroPalette
 import com.solux.moro.core.designsystem.theme.MoroThemeType
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class FakeUserRepository : UserRepository {
+class FakeUserRepository @Inject constructor() : UserRepository {
 
     private val _user = MutableStateFlow<User?>(
         User(
