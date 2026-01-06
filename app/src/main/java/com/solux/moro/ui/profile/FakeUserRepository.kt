@@ -53,4 +53,10 @@ class FakeUserRepository : UserRepository {
     ) {
         _user.update { it?.copy(colorPalette = palette) }
     }
+
+    override suspend fun updateNickname(nickname: String) {
+        _user.update { user ->
+            user?.copy(nickname = nickname)
+        }
+    }
 }
