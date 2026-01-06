@@ -60,7 +60,6 @@ data class OnboardingPage(
 @Composable
 fun OnboardingScreen(
     modifier: Modifier = Modifier,
-    @DrawableRes logoRes: Int? = null,
     onFinish: () -> Unit,
 ) {
     val pages = remember {
@@ -171,7 +170,7 @@ fun OnboardingScreen(
             }
         }
 
-        Spacer(Modifier.height(36.dp))
+        Spacer(Modifier.height(56.dp))
 
         HorizontalPager(
             state = pagerState,
@@ -207,7 +206,7 @@ private fun OnboardingPageContent(
                 .padding(horizontal = 12.dp)
         )
 
-        Spacer(Modifier.height(60.dp))
+        Spacer(Modifier.height(80.dp))
 
         // 폰 목업 영역
         Box(
@@ -269,7 +268,6 @@ private fun DotsIndicator(
 private fun OnboardingScreenPreview() {
     MoroTheme {
         OnboardingScreen(
-            logoRes = null,
             onFinish = {}
         )
     }
