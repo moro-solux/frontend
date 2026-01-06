@@ -1,5 +1,6 @@
 package com.solux.moro.ui.profile.component
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,9 +23,31 @@ import androidx.compose.ui.unit.dp
 import com.solux.moro.R
 import kotlin.math.cos
 import kotlin.math.sin
+class SidePanelState(
+    initialOffset: Float
+) {
+    val offsetX = Animatable(initialOffset)
+
+    suspend fun open() {
+        offsetX.animateTo(0f)
+    }
+
+    suspend fun close(panelWidth: Float) {
+        offsetX.animateTo(-panelWidth)
+    }
+}
 
 @Composable
+fun rememberSidePanelState(
+    panelWidthPx: Float
+): SidePanelState {
+    return remember {
+        SidePanelState(initialOffset = -panelWidthPx)
+    }
+}
+@Composable
 fun Palette(
+    modifier: Modifier
 ) {
     Box(
         contentAlignment = Alignment.CenterStart
@@ -122,5 +146,5 @@ fun SemiCircleItems(
 @Preview(device = Devices.PIXEL_4A)
 @Composable
 fun PalettePreview(){
-    Palette()
+    Palette(modifier = Modifier)
 }
