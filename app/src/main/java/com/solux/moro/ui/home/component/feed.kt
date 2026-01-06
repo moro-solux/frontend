@@ -18,10 +18,16 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,6 +45,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.theme.MoroPalette
+import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.ui.home.FeedItem
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
@@ -67,6 +74,7 @@ fun Feed(
     onLikeClick: () -> Unit = {},
     onCommentClick: () -> Unit={}
     ) {
+    var expanded by remember { mutableStateOf(false) }
     Column(
         verticalArrangement = Arrangement.spacedBy((30.461544036865234).toPxDp, Alignment.Top),
         horizontalAlignment = Alignment.Start,
@@ -144,20 +152,10 @@ fun Feed(
                             .height((48).toPxDp)
                     )
                 }
-                IconButton(    // 삼선 바
-                    onClick = { /*  */ },
-                    modifier = Modifier.size((69.12).toPxDp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = "More options",
-                        tint = Color.White,
-                        modifier = Modifier
-                            .padding((2.88).toPxDp)
-                            .size((69.12).toPxDp)
-
-                    )
-                }
+                FeedMoreMenu(
+                    onEditClick = { /*TODO*/ },
+                    onDeleteClick = { /*TODO*/ }
+                )
             }
         }
 
@@ -308,11 +306,63 @@ fun Feed(
     }
 }
 
+@Composable
+fun FeedMoreMenu(
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box {
+        IconButton(
+            onClick = { expanded = true }, // 클릭 시 메뉴 오픈
+            modifier = Modifier.size((69.12).toPxDp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.MoreVert,
+                contentDescription = "More options",
+                tint = Color.White,
+                modifier = Modifier
+                    .padding((2.88).toPxDp)
+                    .size((69.12).toPxDp)
+            )
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(142.dp)
+                .background(Color(0xFF2B2B2B))
+        ) {
+            DropdownMenuItem(
+                leadingIcon ={
+                    Icon(
+                        painter = painterResource(id = R.drawable.icon_trash), // ⭐ painter 지정
+                        contentDescription = "삭제 아이콘",
+                        tint = Color.White,
+                        modifier = Modifier.size(20.dp)
+                    )
+                },
+                text = {
+                    Text(
+                        "삭제",
+                        color = Color.Red,
+                    style = MoroTheme.typography.bodyRegular16,
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    onDeleteClick()
+                }
+            )
+        }
+    }
+}
+
 @Preview(
     device = Devices.PIXEL_4A)
 @Composable
 fun FeedPreview(){
-    Feed(
 
-    )
 }
