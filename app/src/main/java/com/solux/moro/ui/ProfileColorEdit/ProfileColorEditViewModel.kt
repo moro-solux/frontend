@@ -6,13 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.core.designsystem.theme.colorsOf
 import com.solux.moro.ui.profile.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-class ProfileColorEditViewModel(
+@HiltViewModel
+class ProfileColorEditViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 

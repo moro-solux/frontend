@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.solux.moro.R
 import kotlin.math.cos
 import kotlin.math.sin
@@ -47,7 +48,8 @@ fun rememberSidePanelState(
 }
 @Composable
 fun Palette(
-    modifier: Modifier
+    modifier: Modifier,
+    navController: NavHostController
 ) {
     Box(
         contentAlignment = Alignment.CenterStart
@@ -68,7 +70,7 @@ fun Palette(
                     .offset(x = 25.dp)
                     .clickable(
                         onClick = {
-                            // 페이지 이동
+                            navController.navigate("paletteEdit")
                         }
                     ),
 
@@ -146,5 +148,5 @@ fun SemiCircleItems(
 @Preview(device = Devices.PIXEL_4A)
 @Composable
 fun PalettePreview(){
-    Palette(modifier = Modifier)
+    //Palette(modifier = Modifier)
 }

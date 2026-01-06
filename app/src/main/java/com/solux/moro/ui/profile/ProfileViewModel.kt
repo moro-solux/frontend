@@ -110,5 +110,11 @@ class ProfileViewModel @Inject constructor(
                 "팔로우"
             )
 
+    val userPosts = userRepository.getUserPosts(profileUserId)
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList() // 초기값은 빈 리스트
+        )
 
 }

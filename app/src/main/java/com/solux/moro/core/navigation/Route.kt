@@ -29,6 +29,7 @@ sealed interface MainTabRoute : Route
 data object Profile : Route {
     override val route = "profile/{userId}"
 
+
     fun createRoute(userId: String): String =
         "profile/$userId"
 }

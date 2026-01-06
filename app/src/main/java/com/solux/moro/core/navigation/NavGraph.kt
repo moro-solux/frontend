@@ -8,8 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.solux.moro.ui.home.HomeScreen
+import com.solux.moro.ui.paletteEdit.PaletteEditScreen
 import com.solux.moro.ui.profile.ProfileScreen
 import com.solux.moro.ui.profile.ProfileViewModel
+import com.solux.moro.ui.profileEdit.ProfileEditScreen
 
 @Composable
 fun NavGraph(navController: NavHostController){
@@ -29,6 +31,18 @@ fun NavGraph(navController: NavHostController){
         ) { backStackEntry ->
             val viewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(navController, viewModel)
+        }
+
+        composable(
+            "profileEdit",
+        ) {
+            ProfileEditScreen()
+        }
+
+        composable(
+            "paletteEdit"
+        ) {
+            PaletteEditScreen()
         }
     }
 

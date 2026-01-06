@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun ProfileScreen(
     navController: NavHostController,
-    viewModel: ProfileViewModel = viewModel()
+    viewModel: ProfileViewModel = hiltViewModel()
 ){
     val action by viewModel.profileAction.collectAsState()
     val isMyProfile by viewModel.isMyProfile.collectAsState()
@@ -55,6 +55,9 @@ fun ProfileScreen(
     val followerCount by viewModel.followerCount.collectAsState()
     val isFollowing by viewModel.isFollowing.collectAsState()
     val followingCount by viewModel.followingCount.collectAsState()
+
+    val posts by viewModel.userPosts.collectAsState()
+
 
 
     Scaffold(
@@ -97,7 +100,7 @@ fun ProfileScreen(
 
                             }
                         )
-                        Captures()
+                        Captures(posts)
                     }
                     Box(
                         modifier = Modifier
@@ -141,8 +144,8 @@ fun ProfileScreen(
                 )
                 ) {
                 Palette(
-                    modifier = Modifier
-
+                    modifier = Modifier,
+                    navController = navController
                 )
             }
 

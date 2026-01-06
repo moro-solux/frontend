@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.solux.moro.core.designsystem.theme.MoroTheme
-import com.solux.moro.ui.home.HomeScreen
+import com.solux.moro.core.navigation.NavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,8 +22,7 @@ class MainActivity : ComponentActivity() {
             MoroTheme {
 //                SignUpScreen()
                 val navController = rememberNavController()
-                //NavGraph(navController = navController)
-                HomeScreen()
+                NavGraph(navController = navController)
             }
         }
     }

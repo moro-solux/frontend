@@ -1,11 +1,13 @@
 package com.solux.moro.ui.profile.component
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,25 +15,32 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.solux.moro.R
+import com.solux.moro.ui.home.FeedItem
 
 @SuppressLint("DiscouragedApi")
 @Composable
-fun Captures(){
+fun Captures(
+    posts: List<FeedItem>
+){
     Column(
         modifier = Modifier.Companion
-            .width(1080.toPxDp)
+            .fillMaxWidth()
             .height(1091.65552.toPxDp)
             .padding(start = 46.08.toPxDp, end = 46.08.toPxDp),
         verticalArrangement = Arrangement.spacedBy(28.80000114440918.toPxDp, Alignment.Top),
@@ -62,13 +71,13 @@ fun Captures(){
         val captureImages = (1..9).map { i ->
             context.resources.getIdentifier("imp_captures_$i", "drawable", context.packageName)
         }
-        ImageFeedGrid(captureImages)
+        ImageFeedGrid(posts)
 
     }
 }
 
 @Composable
-fun ImageFeedGrid(images: List<Int>) {
+fun ImageFeedGrid(posts: List<FeedItem>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier
@@ -77,15 +86,20 @@ fun ImageFeedGrid(images: List<Int>) {
         verticalArrangement = Arrangement.spacedBy(28.8.toPxDp),
         horizontalArrangement = Arrangement.spacedBy(28.8.toPxDp) 
     ) {
-        items(images) { imageRes ->
-            Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = null,
+        items(posts) { post ->
+            Box(
                 modifier = Modifier
                     .aspectRatio(1f)
-                    .fillMaxWidth(),
-                contentScale = ContentScale.Crop
-            )
+                    .clip(RoundedCornerShape(8.dp)) // 살짝 둥글게 처리
+                    .background(Color(0xFF2B2B2B)) // 로딩 전 기본 배경색
+            ) {
+                AsyncImage(
+                    model = post.imageUrl?: R.drawable.imp_captures_1,
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
     }
 }
@@ -93,5 +107,5 @@ fun ImageFeedGrid(images: List<Int>) {
     device = Devices.PIXEL_4A)
 @Composable
 fun CapturePreview(){
-    Captures()
+   // Captures()
 }

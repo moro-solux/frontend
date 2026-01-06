@@ -36,5 +36,7 @@ abstract class RepositoryModule {
     abstract fun bindFeedRepository(
         impl: FakeFeedRepository
     ): FeedRepository
+
+
 }
 
