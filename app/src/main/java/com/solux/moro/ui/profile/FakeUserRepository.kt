@@ -58,6 +58,8 @@ class FakeUserRepository @Inject constructor() : UserRepository {
     }
 
     override suspend fun updateNickname(nickname: String) {
-        TODO("Not yet implemented")
+        _user.update { user ->
+            user?.copy(nickname = nickname)
+        }
     }
 }
