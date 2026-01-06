@@ -36,7 +36,7 @@ fun NavGraph(navController: NavHostController){
         composable(
             "profileEdit",
         ) {
-            ProfileEditScreen()
+            ProfileEditScreen(navController = navController)
         }
 
         composable(

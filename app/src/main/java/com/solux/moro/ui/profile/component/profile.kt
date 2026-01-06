@@ -40,7 +40,6 @@ fun Profile(
     colorsCnt: Int,
     followerCnt: Int,
     followingCnt: Int,
-
     action: ProfileAction,
     onEditProfile: () -> Unit,
     onFollow: () -> Unit,

@@ -86,19 +86,19 @@ fun ProfileScreen(
                 ) {
                     Column() {
                         Profile(
+
                             nickname,
                             userColor,
                             followerCount,
                             followingCount,
                             colorsCount,
-
                             action,
                             onEditProfile = {
                                 navController.navigate("profileEdit")
                             },
                             onFollow = {
 
-                            }
+                            },
                         )
                         Captures(posts)
                     }

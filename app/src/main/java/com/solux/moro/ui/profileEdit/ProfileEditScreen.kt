@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.theme.Gray20
@@ -43,6 +44,7 @@ import com.solux.moro.ui.profile.component.ProfileHeader
 
 @Composable
 fun ProfileEditScreen(
+    navController: NavController,
     viewModel: ProfileEditViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
     color: Color = MoroTheme.colors.fontColor,
@@ -55,7 +57,9 @@ fun ProfileEditScreen(
         topBar = {
             BackNavigationTopAppBar(
                 "프로필 편집",
-                onBackClick = {}
+                onBackClick = {
+                    navController.popBackStack()
+                }
             )
         }
     ) { innerPadding ->
