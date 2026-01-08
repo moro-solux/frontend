@@ -76,9 +76,14 @@ fun MapScreenRoute(
         keyword = uiState.keyword,
         onKeywordChange = viewModel::onKeywordChange,
         onSearch = viewModel::search,
-        onSelectPost = { viewModel.selectPost(it) },
+        onSelectPost = viewModel::selectPost,
         onClearSelection = viewModel::clearSelection,
-        onLoadNearby = { lat, lng -> viewModel.loadNearby(lat, lng) },
+        onLoadNearby = viewModel::loadNearby,
+
+        hasFineLocationPermission = uiState.hasFineLocationPermission,
+        lastKnownLatLng = uiState.lastKnownLatLng,
+        onLocationPermissionChanged = viewModel::onLocationPermissionChanged,
+        onUpdateLastKnownLocation = viewModel::updateLastKnownLocation,
     )
 }
 
@@ -93,14 +98,17 @@ fun MapScreen(
     onSelectPost: (Long) -> Unit,
     onClearSelection: () -> Unit,
     onLoadNearby: (Double, Double) -> Unit,
+
+    hasFineLocationPermission: Boolean,
+    lastKnownLatLng: LatLng?,
+    onLocationPermissionChanged: (Boolean) -> Unit,
+    onUpdateLastKnownLocation: (LatLng?) -> Unit,
+
     enableAutoLoad: Boolean = true,
 ) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-
     val isPreview = LocalInspectionMode.current
-
-    var lastKnownLatLng by remember { mutableStateOf<LatLng?>(null) }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
@@ -109,6 +117,7 @@ fun MapScreen(
     val rightControlsTop: Dp = with(density) {
         if (searchBarBottomPx <= 0f) 40.dp else searchBarBottomPx.toDp() + 40.dp
     }
+
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             LatLng(37.5665, 126.9780),
@@ -120,11 +129,18 @@ fun MapScreen(
         rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
     } else null
 
-    val hasFineLocationPermission = !isPreview &&
-        ContextCompat.checkSelfPermission(
-            context,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
+    val hasFineLocationPermissionNow = !isPreview &&
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+
+    LaunchedEffect(hasFineLocationPermissionNow) {
+        if (!isPreview) onLocationPermissionChanged(hasFineLocationPermissionNow)
+    }
+
+    val effectiveHasFineLocationPermission =
+        hasFineLocationPermission || hasFineLocationPermissionNow
 
     val fusedLocationClient = if (!isPreview) {
         remember { LocationServices.getFusedLocationProviderClient(context) }
@@ -132,17 +148,14 @@ fun MapScreen(
 
     LaunchedEffect(Unit) {
         if (isPreview) return@LaunchedEffect
-
-        // 첫 진입 시 권한 요청
-        if (!hasFineLocationPermission) {
+        if (!effectiveHasFineLocationPermission) {
             fineLocationPermissionState?.launchPermissionRequest()
         }
     }
 
-    // 현재 위치를 가져와 카메라 이동
     fun requestAndMoveToMyLocation() {
         if (isPreview) return
-        if (!hasFineLocationPermission) return
+        if (!effectiveHasFineLocationPermission) return
 
         @SuppressLint("MissingPermission")
         val cts = CancellationTokenSource()
@@ -153,7 +166,7 @@ fun MapScreen(
                 ?.addOnSuccessListener { loc: Location? ->
                     if (loc != null) {
                         val latLng = LatLng(loc.latitude, loc.longitude)
-                        lastKnownLatLng = latLng
+                        onUpdateLastKnownLocation(latLng)
                         scope.launch {
                             cameraPositionState.animate(
                                 CameraUpdateFactory.newLatLngZoom(latLng, 15f),
@@ -161,12 +174,11 @@ fun MapScreen(
                             )
                         }
                     } else {
-                        // 마지막 캐시 위치
                         try {
                             fusedLocationClient?.lastLocation?.addOnSuccessListener { last: Location? ->
                                 if (last != null) {
                                     val latLng = LatLng(last.latitude, last.longitude)
-                                    lastKnownLatLng = latLng
+                                    onUpdateLastKnownLocation(latLng)
                                     scope.launch {
                                         cameraPositionState.animate(
                                             CameraUpdateFactory.newLatLngZoom(latLng, 15f),
@@ -175,35 +187,29 @@ fun MapScreen(
                                     }
                                 }
                             }
-                        } catch (_: SecurityException) {
-                        }
+                        } catch (_: SecurityException) {}
                     }
                 }
-        } catch (_: SecurityException) {
-        }
+        } catch (_: SecurityException) {}
     }
 
-    // 권한이 허용되면 현재 위치로 카메라 이동
-    LaunchedEffect(hasFineLocationPermission) {
+    LaunchedEffect(effectiveHasFineLocationPermission) {
         if (isPreview) return@LaunchedEffect
-        if (hasFineLocationPermission) {
+        if (effectiveHasFineLocationPermission) {
             requestAndMoveToMyLocation()
         }
     }
 
     val mapProperties = MapProperties(
-        isMyLocationEnabled = hasFineLocationPermission
+        isMyLocationEnabled = effectiveHasFineLocationPermission
     )
     val mapUiSettings = MapUiSettings(
         myLocationButtonEnabled = false,
-        zoomControlsEnabled = false, // 기본 줌인/줌아웃 버튼 숨김
+        zoomControlsEnabled = false,
     )
 
-    // 상세가 생기면 바텀시트 열기
     LaunchedEffect(selectedPost?.postId) {
-        if (selectedPost != null) {
-            scope.launch { sheetState.show() }
-        }
+        if (selectedPost != null) scope.launch { sheetState.show() }
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -225,9 +231,7 @@ fun MapScreen(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .fillMaxWidth(),
-            onSearchBarBottomPxChange = { bottomPx ->
-                searchBarBottomPx = bottomPx
-            }
+            onSearchBarBottomPxChange = { bottomPx -> searchBarBottomPx = bottomPx }
         )
 
         RightControls(
@@ -236,18 +240,15 @@ fun MapScreen(
                 .padding(end = 16.dp)
                 .padding(top = rightControlsTop),
             onMyLocationClick = {
-                // 내 위치로 이동
-                if (!hasFineLocationPermission) {
+                if (!effectiveHasFineLocationPermission) {
                     if (!isPreview) fineLocationPermissionState?.launchPermissionRequest()
                     return@RightControls
                 }
 
-                // 캐시가 있으면 바로 이동, 없으면 현재 위치를 다시 요청
                 if (lastKnownLatLng != null) {
-                    val latLng = lastKnownLatLng!!
                     scope.launch {
                         cameraPositionState.animate(
-                            CameraUpdateFactory.newLatLngZoom(latLng, 15f),
+                            CameraUpdateFactory.newLatLngZoom(lastKnownLatLng, 15f),
                             durationMs = 600
                         )
                     }
@@ -256,20 +257,10 @@ fun MapScreen(
                 }
             },
             onZoomInClick = {
-                scope.launch {
-                    cameraPositionState.animate(
-                        CameraUpdateFactory.zoomIn(),
-                        durationMs = 300
-                    )
-                }
+                scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomIn(), 300) }
             },
             onZoomOutClick = {
-                scope.launch {
-                    cameraPositionState.animate(
-                        CameraUpdateFactory.zoomOut(),
-                        durationMs = 300
-                    )
-                }
+                scope.launch { cameraPositionState.animate(CameraUpdateFactory.zoomOut(), 300) }
             },
         )
     }
@@ -440,6 +431,12 @@ private fun MapScreenPreview() {
             onSelectPost = {},
             onClearSelection = {},
             onLoadNearby = { _, _ -> },
+
+            hasFineLocationPermission = false,
+            lastKnownLatLng = null,
+            onLocationPermissionChanged = {},
+            onUpdateLastKnownLocation = {},
+
             enableAutoLoad = false
         )
     }

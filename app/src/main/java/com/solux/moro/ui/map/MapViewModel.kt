@@ -2,6 +2,7 @@ package com.solux.moro.ui.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.solux.moro.data.service.MapService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,18 +22,21 @@ class MapViewModel(
         _uiState.update { it.copy(keyword = v) }
     }
 
+    fun onLocationPermissionChanged(granted: Boolean) {
+        _uiState.update { it.copy(hasFineLocationPermission = granted) }
+    }
+
+    fun updateLastKnownLocation(latLng: LatLng?) {
+        _uiState.update { it.copy(lastKnownLatLng = latLng) }
+    }
+
     fun loadNearby(lat: Double, lng: Double) = viewModelScope.launch {
-        val prev = lastCenter
         lastCenter = lat to lng
 
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-        runCatching {
-            api.getNearbyPosts(lat, lng, _uiState.value.radius)
-        }.onSuccess { list ->
-            _uiState.update { it.copy(posts = list, isLoading = false) }
-        }.onFailure { e ->
-            _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
-        }
+        runCatching { api.getNearbyPosts(lat, lng, _uiState.value.radius) }
+            .onSuccess { list -> _uiState.update { it.copy(posts = list, isLoading = false) } }
+            .onFailure { e -> _uiState.update { it.copy(isLoading = false, errorMessage = e.message) } }
     }
 
     fun search() = viewModelScope.launch {
@@ -40,13 +44,9 @@ class MapViewModel(
         if (keyword.isBlank()) return@launch
 
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-        runCatching {
-            api.searchPosts(keyword = keyword, radius = 5.0)
-        }.onSuccess { list ->
-            _uiState.update { it.copy(posts = list, isLoading = false) }
-        }.onFailure { e ->
-            _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
-        }
+        runCatching { api.searchPosts(keyword = keyword, radius = 5.0) }
+            .onSuccess { list -> _uiState.update { it.copy(posts = list, isLoading = false) } }
+            .onFailure { e -> _uiState.update { it.copy(isLoading = false, errorMessage = e.message) } }
     }
 
     fun selectPost(postId: Long) = viewModelScope.launch {
