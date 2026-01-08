@@ -1,25 +1,20 @@
 package com.solux.moro.ui.map
-import android.location.Location
-import com.google.android.gms.location.LocationServices
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
+import android.location.Location
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -28,26 +23,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
+import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
@@ -55,9 +52,14 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.solux.moro.R
+import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.data.dto.response.MapPostDetailDto
 import com.solux.moro.data.dto.response.MapPostDto
+import com.solux.moro.ui.map.component.CircleActionButton
+import com.solux.moro.ui.map.component.MapPostBottomSheet
+import com.solux.moro.ui.map.component.MapSearchBar
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
@@ -96,11 +98,17 @@ fun MapScreen(
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
+    val isPreview = LocalInspectionMode.current
+
     var lastKnownLatLng by remember { mutableStateOf<LatLng?>(null) }
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
-    // 권한/위치 획득 시 사용자 현재 위치로 이동
+    var searchBarBottomPx by remember { mutableStateOf(0f) }
+    val density = LocalDensity.current
+    val rightControlsTop: Dp = with(density) {
+        if (searchBarBottomPx <= 0f) 40.dp else searchBarBottomPx.toDp() + 40.dp
+    }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(
             LatLng(37.5665, 126.9780),
@@ -108,69 +116,88 @@ fun MapScreen(
         )
     }
 
-    val fineLocationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val fineLocationPermissionState = if (!isPreview) {
+        rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
+    } else null
+
+    val hasFineLocationPermission = !isPreview &&
+        ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+    val fusedLocationClient = if (!isPreview) {
+        remember { LocationServices.getFusedLocationProviderClient(context) }
+    } else null
 
     LaunchedEffect(Unit) {
+        if (isPreview) return@LaunchedEffect
+
         // 첫 진입 시 권한 요청
-        if (!fineLocationPermissionState.status.isGranted) {
-            fineLocationPermissionState.launchPermissionRequest()
+        if (!hasFineLocationPermission) {
+            fineLocationPermissionState?.launchPermissionRequest()
         }
     }
 
     // 현재 위치를 가져와 카메라 이동
     fun requestAndMoveToMyLocation() {
-        if (!fineLocationPermissionState.status.isGranted) return
+        if (isPreview) return
+        if (!hasFineLocationPermission) return
 
         @SuppressLint("MissingPermission")
         val cts = CancellationTokenSource()
 
-        fusedLocationClient
-            .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cts.token)
-            .addOnSuccessListener { loc: Location? ->
-                if (loc != null) {
-                    val latLng = LatLng(loc.latitude, loc.longitude)
-                    lastKnownLatLng = latLng
-                    scope.launch {
-                        cameraPositionState.animate(
-                            CameraUpdateFactory.newLatLngZoom(latLng, 15f),
-                            durationMs = 600
-                        )
-                    }
-                } else {
-                    // fallback: 마지막 캐시 위치
-                    fusedLocationClient.lastLocation.addOnSuccessListener { last: Location? ->
-                        if (last != null) {
-                            val latLng = LatLng(last.latitude, last.longitude)
-                            lastKnownLatLng = latLng
-                            scope.launch {
-                                cameraPositionState.animate(
-                                    CameraUpdateFactory.newLatLngZoom(latLng, 15f),
-                                    durationMs = 600
-                                )
+        try {
+            fusedLocationClient
+                ?.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cts.token)
+                ?.addOnSuccessListener { loc: Location? ->
+                    if (loc != null) {
+                        val latLng = LatLng(loc.latitude, loc.longitude)
+                        lastKnownLatLng = latLng
+                        scope.launch {
+                            cameraPositionState.animate(
+                                CameraUpdateFactory.newLatLngZoom(latLng, 15f),
+                                durationMs = 600
+                            )
+                        }
+                    } else {
+                        // 마지막 캐시 위치
+                        try {
+                            fusedLocationClient?.lastLocation?.addOnSuccessListener { last: Location? ->
+                                if (last != null) {
+                                    val latLng = LatLng(last.latitude, last.longitude)
+                                    lastKnownLatLng = latLng
+                                    scope.launch {
+                                        cameraPositionState.animate(
+                                            CameraUpdateFactory.newLatLngZoom(latLng, 15f),
+                                            durationMs = 600
+                                        )
+                                    }
+                                }
                             }
+                        } catch (_: SecurityException) {
                         }
                     }
                 }
-            }
+        } catch (_: SecurityException) {
+        }
     }
 
     // 권한이 허용되면 현재 위치로 카메라 이동
-    LaunchedEffect(fineLocationPermissionState.status.isGranted) {
-        if (fineLocationPermissionState.status.isGranted) {
+    LaunchedEffect(hasFineLocationPermission) {
+        if (isPreview) return@LaunchedEffect
+        if (hasFineLocationPermission) {
             requestAndMoveToMyLocation()
         }
     }
 
     val mapProperties = MapProperties(
-        isMyLocationEnabled = fineLocationPermissionState.status.isGranted
+        isMyLocationEnabled = hasFineLocationPermission
     )
     val mapUiSettings = MapUiSettings(
         myLocationButtonEnabled = false,
         zoomControlsEnabled = false, // 기본 줌인/줌아웃 버튼 숨김
     )
-
-    val isPreview = LocalInspectionMode.current
 
     // 상세가 생기면 바텀시트 열기
     LaunchedEffect(selectedPost?.postId) {
@@ -180,71 +207,39 @@ fun MapScreen(
     }
 
     Box(Modifier.fillMaxSize()) {
+        MapLayer(
+            isPreview = isPreview,
+            enableAutoLoad = enableAutoLoad,
+            cameraPositionState = cameraPositionState,
+            mapProperties = mapProperties,
+            mapUiSettings = mapUiSettings,
+            posts = posts,
+            onLoadNearby = onLoadNearby,
+            onSelectPost = onSelectPost,
+        )
 
-        if (isPreview) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0xFFEDEDED)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "Map Preview Placeholder", color = Color.DarkGray)
-            }
-        } else {
-            if (enableAutoLoad) {
-                LaunchedEffect(cameraPositionState) {
-                    snapshotFlow { cameraPositionState.isMoving }
-                        .distinctUntilChanged()
-                        .collect { moving ->
-                            if (!moving) {
-                                val c = cameraPositionState.position.target
-                                onLoadNearby(c.latitude, c.longitude)
-                            }
-                        }
-                }
-            }
-
-            GoogleMap(
-                modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState,
-                properties = mapProperties,
-                uiSettings = mapUiSettings,
-            ) {
-                posts.forEach { post ->
-                    Marker(
-                        state = MarkerState(LatLng(post.lat, post.lng)),
-                        onClick = {
-                            onSelectPost(post.postId)
-                            true
-                        }
-                    )
-                }
-            }
-        }
-
-        // 상단 검색바
-        MapSearchBar(
+        TopOverlay(
             keyword = keyword,
             onKeywordChange = onKeywordChange,
             onSearch = onSearch,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .padding(top = 16.dp)
-                .padding(horizontal = 16.dp)
+                .fillMaxWidth(),
+            onSearchBarBottomPxChange = { bottomPx ->
+                searchBarBottomPx = bottomPx
+            }
         )
 
-        // 우측 버튼들(예: 내 위치/줌)
-        Column(
+        RightControls(
             modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            CircleActionButton(text = "◎") {
+                .align(Alignment.TopEnd)
+                .padding(end = 16.dp)
+                .padding(top = rightControlsTop),
+            onMyLocationClick = {
                 // 내 위치로 이동
-                if (!fineLocationPermissionState.status.isGranted) {
-                    fineLocationPermissionState.launchPermissionRequest()
-                    return@CircleActionButton
+                if (!hasFineLocationPermission) {
+                    if (!isPreview) fineLocationPermissionState?.launchPermissionRequest()
+                    return@RightControls
                 }
 
                 // 캐시가 있으면 바로 이동, 없으면 현재 위치를 다시 요청
@@ -259,113 +254,150 @@ fun MapScreen(
                 } else {
                     requestAndMoveToMyLocation()
                 }
-            }
-            CircleActionButton(text = "+") {
-                // 줌 인
+            },
+            onZoomInClick = {
                 scope.launch {
                     cameraPositionState.animate(
                         CameraUpdateFactory.zoomIn(),
                         durationMs = 300
                     )
                 }
-            }
-            CircleActionButton(text = "–") {
-                // 줌 아웃
+            },
+            onZoomOutClick = {
                 scope.launch {
                     cameraPositionState.animate(
                         CameraUpdateFactory.zoomOut(),
                         durationMs = 300
                     )
                 }
-            }
-        }
+            },
+        )
     }
 
-    // 바텀시트 (선택된 포스트가 있을 때)
     if (selectedPost != null) {
         ModalBottomSheet(
             onDismissRequest = { onClearSelection() },
             sheetState = sheetState,
-            containerColor = Color(0xFF0B0B0B),
+            containerColor = Color(0xFF121212),
+            shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
+            dragHandle = {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp, bottom = 6.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(width = 44.dp, height = 4.dp)
+                            .background(Color(0xFF5A5A5A), RoundedCornerShape(999.dp))
+                    )
+                }
+            }
         ) {
-            MapPostBottomSheetContent(
+            MapPostBottomSheet(
                 detail = selectedPost,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 18.dp)
             )
         }
     }
 }
 
 @Composable
-private fun MapSearchBar(
+private fun MapLayer(
+    isPreview: Boolean,
+    enableAutoLoad: Boolean,
+    cameraPositionState: com.google.maps.android.compose.CameraPositionState,
+    mapProperties: MapProperties,
+    mapUiSettings: MapUiSettings,
+    posts: List<MapPostDto>,
+    onLoadNearby: (Double, Double) -> Unit,
+    onSelectPost: (Long) -> Unit,
+) {
+    if (isPreview) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFFEDEDED)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "Map Preview Placeholder", color = Color.DarkGray)
+        }
+        return
+    }
+
+    if (enableAutoLoad) {
+        LaunchedEffect(cameraPositionState) {
+            snapshotFlow { cameraPositionState.isMoving }
+                .distinctUntilChanged()
+                .collect { moving ->
+                    if (!moving) {
+                        val c = cameraPositionState.position.target
+                        onLoadNearby(c.latitude, c.longitude)
+                    }
+                }
+        }
+    }
+
+    GoogleMap(
+        modifier = Modifier.fillMaxSize(),
+        cameraPositionState = cameraPositionState,
+        properties = mapProperties,
+        uiSettings = mapUiSettings,
+    ) {
+        posts.forEach { post ->
+            Marker(
+                state = MarkerState(LatLng(post.lat, post.lng)),
+                onClick = {
+                    onSelectPost(post.postId)
+                    true
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun TopOverlay(
     keyword: String,
     onKeywordChange: (String) -> Unit,
     onSearch: () -> Unit,
     modifier: Modifier = Modifier,
+    onSearchBarBottomPxChange: (Float) -> Unit,
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(24.dp))
-            .padding(horizontal = 14.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "🔍", modifier = Modifier.padding(end = 8.dp))
-        BasicTextField(
-            value = keyword,
-            onValueChange = onKeywordChange,
-            modifier = Modifier.weight(1f),
-            singleLine = true
-        )
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = "검색",
-            modifier = Modifier
-                .clickable { onSearch() }
-                .padding(6.dp)
+        TopBar(showBell = false)
+        Spacer(modifier = Modifier.height(13.dp))
+        MapSearchBar(
+            keyword = keyword,
+            onKeywordChange = onKeywordChange,
+            onSearch = onSearch,
+            modifier = Modifier.padding(horizontal = 16.dp),
+            onBottomPxChange = onSearchBarBottomPxChange,
         )
     }
 }
 
 @Composable
-private fun CircleActionButton(
-    text: String,
-    onClick: () -> Unit,
-) {
-    Box(
-        modifier = Modifier
-            .size(48.dp)
-            .background(Color.White, CircleShape)
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Text(text = text, color = Color.Black)
-    }
-}
-
-@Composable
-private fun MapPostBottomSheetContent(
-    detail: MapPostDetailDto,
+private fun RightControls(
     modifier: Modifier = Modifier,
+    onMyLocationClick: () -> Unit,
+    onZoomInClick: () -> Unit,
+    onZoomOutClick: () -> Unit,
 ) {
-    Column(modifier) {
-        Text(text = detail.title, color = Color.White)
-        Spacer(Modifier.height(6.dp))
-        Text(text = detail.address, color = Color.White.copy(alpha = 0.7f))
-        Spacer(Modifier.height(10.dp))
-        Text(text = detail.date, color = Color.White.copy(alpha = 0.7f))
-        Spacer(Modifier.height(10.dp))
-
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            detail.colors.forEach { hex ->
-                Box(
-                    Modifier
-                        .size(18.dp)
-                        .background(Color(hex.toColorInt()), CircleShape)
-                )
-            }
-        }
-        Spacer(Modifier.height(18.dp))
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        CircleActionButton(iconRes = R.drawable.ic_location, onClick = onMyLocationClick)
+        CircleActionButton(iconRes = R.drawable.ic_zoom_in, onClick = onZoomInClick)
+        CircleActionButton(iconRes = R.drawable.ic_zoom_out, onClick = onZoomOutClick)
     }
 }
 

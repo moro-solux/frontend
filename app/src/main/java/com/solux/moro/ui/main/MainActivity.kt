@@ -8,9 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
 import com.solux.moro.core.designsystem.theme.MoroTheme
-import com.solux.moro.core.navigation.NavGraph
+import com.solux.moro.ui.map.MapScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,9 +19,18 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MoroTheme {
-//                SignUpScreen()
-                val navController = rememberNavController()
-                NavGraph(navController = navController)
+                MapScreen(
+                    posts = emptyList(),
+                    selectedPost = null,
+                    keyword = "",
+                    onKeywordChange = {},
+                    onSearch = {},
+                    onSelectPost = {},
+                    onClearSelection = {},
+                    onLoadNearby = { _, _ -> },
+                )
+//                val navController = rememberNavController()
+//                NavGraph(navController = navController)
             }
         }
     }
