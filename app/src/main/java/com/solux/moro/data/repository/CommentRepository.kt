@@ -1,13 +1,7 @@
-package com.solux.moro.ui.home
+package com.solux.moro.data.repository
 
+import com.solux.moro.data.model.CommentItem
 import kotlinx.coroutines.flow.Flow
-
-data class CommentItem(
-    val id: String,
-    val userNickname: String,
-    val content: String,
-    val createdAt: Long
-)
 
 interface CommentRepository {
 

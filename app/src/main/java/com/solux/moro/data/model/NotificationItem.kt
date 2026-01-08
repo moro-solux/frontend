@@ -1,8 +1,8 @@
-package com.solux.moro.ui.notification.component
+package com.solux.moro.data.model
 
 import java.time.Instant
 
-data class NotificationResponse(
+data class NotificationItem(
     val type: String,
     val name: String?,
     val content: String?,

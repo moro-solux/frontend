@@ -31,7 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.solux.moro.R
-import com.solux.moro.ui.home.FeedItem
+import com.solux.moro.data.model.FeedItem
 
 @SuppressLint("DiscouragedApi")
 @Composable

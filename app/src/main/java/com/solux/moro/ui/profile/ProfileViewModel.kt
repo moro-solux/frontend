@@ -3,6 +3,7 @@ package com.solux.moro.ui.profile
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.solux.moro.data.repository.UserRepository
 import com.solux.moro.ui.auth.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject

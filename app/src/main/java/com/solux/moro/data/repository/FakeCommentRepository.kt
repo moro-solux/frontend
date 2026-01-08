@@ -1,5 +1,6 @@
-package com.solux.moro.ui.home
+package com.solux.moro.data.repository
 
+import com.solux.moro.data.model.CommentItem
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
