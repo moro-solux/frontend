@@ -27,7 +27,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.solux.moro.R
 import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
@@ -38,7 +38,7 @@ import com.solux.moro.ui.profile.component.ColorGrid
 
 @Composable
 fun ProfileColorEditScreen(
-    viewModel: ProfileColorEditViewModel = viewModel(),
+    viewModel: ProfileColorEditViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
     color: Color = MoroTheme.colors.fontColor,
     style: TextStyle = MoroTheme.typography.titleBold24,

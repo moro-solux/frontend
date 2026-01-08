@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.play.services.maps)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.lifecycle.vm.compose)
+    // Navigation(Compose)
+    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -31,7 +31,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.core.designsystem.theme.Gray40
@@ -43,7 +43,7 @@ import com.solux.moro.ui.profile.component.ColorGrid
 
 @Composable
 fun PaletteEditScreen(
-    viewModel: PaletteEditViewModel = viewModel(),
+    viewModel: PaletteEditViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
     color: Color = MoroTheme.colors.fontColor,
     style: TextStyle = MoroTheme.typography.titleBold24,
@@ -66,7 +66,11 @@ fun PaletteEditScreen(
 
         val selectedColors by viewModel.paletteColors.collectAsState()
         val editingColorIndex by viewModel.editingColorIndex.collectAsState()
-        val editingColor =selectedColors[editingColorIndex]
+        val editingColor = if (selectedColors.isNotEmpty()) {
+            selectedColors[editingColorIndex]
+        } else {
+            Color.Transparent
+        }
 
         Column(Modifier
             .fillMaxWidth()

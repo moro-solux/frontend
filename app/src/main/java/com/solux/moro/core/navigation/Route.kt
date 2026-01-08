@@ -1,8 +1,8 @@
 package com.solux.moro.core.navigation
 
-import kotlinx.serialization.Serializable
-
-sealed interface Route
+sealed interface Route{
+    val route: String
+}
 
 sealed interface MainTabRoute : Route
 
@@ -25,3 +25,11 @@ sealed interface MainTabRoute : Route
 //data class MyMenu(
 //    val menuId: Long
 //) : Route
+
+data object Profile : Route {
+    override val route = "profile/{userId}"
+
+
+    fun createRoute(userId: String): String =
+        "profile/$userId"
+}

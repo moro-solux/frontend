@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.core.designsystem.theme.colorsOf
-import com.solux.moro.ui.profile.UserRepository
+import com.solux.moro.data.repository.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,8 +15,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
-class PaletteEditViewModel (
+@HiltViewModel
+class PaletteEditViewModel @Inject constructor(
     private val userRepository: UserRepository
 ): ViewModel() {
 

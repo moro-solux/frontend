@@ -3,6 +3,7 @@ package com.solux.moro.ui.notification.component
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.solux.moro.R
+import com.solux.moro.data.model.NotificationUiModel
 
 data class NotificationGroup(
     val title: String,              // "Today", "Yesterday"
