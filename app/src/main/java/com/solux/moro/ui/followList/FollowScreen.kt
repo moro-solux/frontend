@@ -41,7 +41,9 @@ import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
 
 @Composable
-fun FollowScreen(){
+fun FollowScreen(
+    //navController: NavHostController
+){
     Scaffold(
         bottomBar = { BottomBar() },
         topBar = { BackNavigationTopAppBar(null,{}) }

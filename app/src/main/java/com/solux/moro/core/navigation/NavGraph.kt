@@ -7,7 +7,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.solux.moro.screens.FollowScreen
 import com.solux.moro.ui.home.HomeScreen
+import com.solux.moro.ui.notification.NotificationScreen
 import com.solux.moro.ui.paletteEdit.PaletteEditScreen
 import com.solux.moro.ui.profile.ProfileScreen
 import com.solux.moro.ui.profile.ProfileViewModel
@@ -33,16 +35,20 @@ fun NavGraph(navController: NavHostController){
             ProfileScreen(navController, viewModel)
         }
 
-        composable(
-            "profileEdit",
-        ) {
+        composable("profileEdit" ) {
             ProfileEditScreen(navController = navController)
         }
 
-        composable(
-            "paletteEdit"
-        ) {
+        composable( "paletteEdit" ) {
             PaletteEditScreen()
+        }
+
+        composable( "follow" ) {
+            FollowScreen()//navController = navController)
+        }
+
+        composable( "notification" ) {
+            NotificationScreen(navController = navController)
         }
     }
 

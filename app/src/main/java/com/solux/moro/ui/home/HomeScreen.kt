@@ -32,6 +32,7 @@ import com.solux.moro.ui.home.component.Feed
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    //navController: NavHostController,
     viewModel: FeedViewModel = hiltViewModel()
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
