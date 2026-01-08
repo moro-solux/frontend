@@ -29,7 +29,9 @@ import com.solux.moro.ui.profile.component.toPxSp
 const val PIXEL_DENSITY = 2.625f
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar() {
+fun TopBar(
+    showBell: Boolean = true,
+) {
     Column {
         TopAppBar(
             windowInsets = WindowInsets(0),
@@ -61,20 +63,22 @@ fun TopBar() {
                 )
             },
             actions = {
-                IconButton(
-                    onClick = { },
-                    Modifier
-                        .width((126.72).toPxDp)
-                        .height((126.72).toPxDp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.icon_bell),
-                        modifier = Modifier
-                            .padding((0.15429).toPxDp)
-                            .width((60.48).toPxDp)
-                            .height((69.12).toPxDp),
-                        contentDescription = "More"
-                    )
+                if (showBell) {
+                    IconButton(
+                        onClick = { },
+                        Modifier
+                            .width((126.72).toPxDp)
+                            .height((126.72).toPxDp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.icon_bell),
+                            modifier = Modifier
+                                .padding((0.15429).toPxDp)
+                                .width((60.48).toPxDp)
+                                .height((69.12).toPxDp),
+                            contentDescription = "Notification"
+                        )
+                    }
                 }
             },
         )
@@ -85,8 +89,11 @@ fun TopBar() {
     }
 }
 
-@Preview (device = Devices.PIXEL_4A)
+@Preview(device = Devices.PIXEL_4A)
 @Composable
-fun TopBarPreview(){
-    TopBar()
+fun TopBarPreview() {
+    Column {
+        TopBar(showBell = true)
+        TopBar(showBell = false)
+    }
 }
