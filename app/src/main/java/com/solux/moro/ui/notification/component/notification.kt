@@ -50,17 +50,23 @@ fun Notification(
                 shape = RoundedCornerShape(size = 8.dp))
             .width(360.dp)
         .background(color = Color(0xFF262626), shape = RoundedCornerShape(size = 8.dp))
-        .padding(10.dp),
+        .padding(13.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(modifier = Modifier
-            .weight(1f, fill = false)) {
+            .weight(1f, fill = false)
+            .padding(top=5.dp)
+        ) {
+            Column (
+                modifier.padding(top=5.dp)
+            ){
             Image(
                 painter = painterResource(id = type.iconRes()),
                 contentDescription = "image description",
                 modifier = Modifier
-                    .size(40.dp)
-            )
+                    .size(40.dp))
+            }
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
@@ -111,19 +117,12 @@ fun Notification(
                         style = MoroTheme.typography.bodyRegular12,
                     )
                     Spacer(modifier.width(18.dp))
-                    if(type!=NotificationType.UNLOCK) {
-                        Text(
-                            text = "Reply",
-                            color = Color(0xFFA3A3A3),
-                            style = MoroTheme.typography.bodyRegular12,
-                        )
-                    }
                 }
             }
         }
         if (type != NotificationType.UNLOCK) {
             Column(
-                modifier = Modifier.padding(end = 10.dp),
+                modifier = Modifier.padding(end = 10.dp, top = 5.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top,
             ) {
@@ -140,23 +139,25 @@ fun Notification(
                 } else if (type == NotificationType.LIKE) {
                     PhotoImage(null)
                 } else if (type == NotificationType.FOLLOW) {
-                    Button(
-                        onClick = {},
-                        modifier = Modifier
-                            .width(70.dp)
-                            .height(25.dp),
-                        shape = ButtonDefaults.shape,
-                        colors = ButtonDefaults.buttonColors(
-                            Color.White,
-                            Color.Black
-                        ),
-                        contentPadding = PaddingValues(all = 0.dp),
-                    ) {
-                        Text(
-                            "Follow",
-                            color = Color.Black,
-                            style = MoroTheme.typography.bodyRegular12,
-                        )
+                    Column (modifier= Modifier){
+                        Button(
+                            onClick = {},
+                            modifier = Modifier
+                                .width(70.dp)
+                                .height(25.dp),
+                            shape = ButtonDefaults.shape,
+                            colors = ButtonDefaults.buttonColors(
+                                Color.White,
+                                Color.Black
+                            ),
+                            contentPadding = PaddingValues(all = 0.dp),
+                        ) {
+                            Text(
+                                "Follow",
+                                color = Color.Black,
+                                style = MoroTheme.typography.bodyRegular12,
+                            )
+                        }
                     }
 
                 }
@@ -190,6 +191,11 @@ fun PhotoImage(
     */
 }
 
+@Preview(device = Devices.PIXEL_4)
+@Composable
+fun NotificationItemPreview(){
+        Notification()
+}
 
 @Preview(device = Devices.PIXEL_4)
 @Composable
