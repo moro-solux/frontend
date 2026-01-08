@@ -32,7 +32,7 @@ import com.solux.moro.core.designsystem.theme.MoroTheme
 import java.time.Instant
 
 @Composable
-fun NotificationItem(
+fun Notification(
     type: NotificationType = NotificationType.COMMENT,
     name:String ?= "_sjwneooo",
     id:String ?= "@uzinnss",
@@ -193,12 +193,12 @@ fun PhotoImage(
 
 @Preview(device = Devices.PIXEL_4)
 @Composable
-fun NotificationItemPreview(){
+fun NotificationPreview(){
     Column (verticalArrangement=Arrangement.spacedBy(5.dp)){
-        NotificationItem()
-        NotificationItem(NotificationType.LIKE)
-        NotificationItem(type = NotificationType.FOLLOW)
-        NotificationItem(NotificationType.MISSION,null,null)
-        NotificationItem(type = NotificationType.UNLOCK)
+        Notification()
+        Notification(NotificationType.LIKE)
+        Notification(type = NotificationType.FOLLOW)
+        Notification(NotificationType.MISSION,null,null)
+        Notification(type = NotificationType.UNLOCK)
     }
 }

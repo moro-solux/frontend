@@ -1,4 +1,4 @@
-package com.solux.moro.ui.profile
+package com.solux.moro.data.model
 
 data class User(
     val id: String,
@@ -6,7 +6,7 @@ data class User(
     val nickname: String,
     val colorPalette: UserColorPalette,
 
-)
+    )
 
 data class UserStats(
     val colorsCount: Int,

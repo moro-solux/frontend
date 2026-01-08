@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.theme.MoroTheme
-import com.solux.moro.ui.notification.component.NotificationItem
+import com.solux.moro.ui.notification.component.Notification
 import com.solux.moro.ui.notification.component.NotificationType
 
 @Composable
@@ -58,29 +58,29 @@ fun NotificationScreen(
                     style = style
                 )
             }
-            NotificationItem(
+            Notification(
                 type= NotificationType.COMMENT,
                 name= "_sjwneooo",
                 id= "@uzinnss",
                 content="헐 잘 찍었따",)
-            NotificationItem(
+            Notification(
                 type= NotificationType.LIKE,
                 name= "_sjwneooo",
                 id= "@uzinnss",
                 content=null,)
-            NotificationItem(
+            Notification(
                 type= NotificationType.FOLLOW,
                 name= "_sjwneooo",
                 id= "@uzinnss",
                 content=null,
             )
-            NotificationItem(
+            Notification(
                 type= NotificationType.UNLOCK,
                 name= null,
                 id= null,
                 content=null,
             )
-            NotificationItem(
+            Notification(
                 type= NotificationType.MISSION,
                 name= null,
                 id= null,

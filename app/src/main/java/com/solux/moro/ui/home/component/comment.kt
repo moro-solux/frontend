@@ -40,7 +40,7 @@ import com.solux.moro.R
 import com.solux.moro.core.designsystem.theme.Gray20
 import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.core.designsystem.theme.MoroTheme.colors
-import com.solux.moro.ui.home.CommentItem
+import com.solux.moro.data.model.CommentItem
 import com.solux.moro.ui.home.CommentViewModel
 
 @Composable

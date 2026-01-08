@@ -1,9 +1,12 @@
-package com.solux.moro.ui.profile
+package com.solux.moro.data.repository
 
 import androidx.compose.ui.graphics.Color
 import com.solux.moro.core.designsystem.theme.MoroPalette
 import com.solux.moro.core.designsystem.theme.MoroThemeType
-import com.solux.moro.ui.home.FeedItem
+import com.solux.moro.data.model.FeedItem
+import com.solux.moro.data.model.User
+import com.solux.moro.data.model.UserColorPalette
+import com.solux.moro.data.model.UserStats
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +24,7 @@ class FakeUserRepository @Inject constructor() : UserRepository {
             nickname = "테스트유저",
             colorPalette = UserColorPalette(
                 theme = MoroThemeType.Pastel,
-                userColor =MoroPalette.Pastel.Purple400,
+                userColor = MoroPalette.Pastel.Purple400,
                 paletteColors = listOf(
                     MoroPalette.Pastel.Purple400,
                     MoroPalette.Pastel.Yellow300,
@@ -68,24 +71,11 @@ class FakeUserRepository @Inject constructor() : UserRepository {
     }
     override fun getUserPosts(userId: String): Flow<List<FeedItem>> = flow {
         val fakePosts = listOf(
-                FeedItem(
-                    id = "post_1",
-                    authorId = userId,
-                    authorNickname = "ColorHunter",
-                    authorProfileColor = Color.Magenta,
-                    hexCodes = listOf("#FF5733", "#33FF57"),
-                    contentColors = listOf(Color(0xFFFF5733), Color(0xFF33FF57)),
-                    imageUrl = null,
-                    commentCount = 5,
-                    likeCount = 12,
-                    isLiked = true,
-                    createdAt = System.currentTimeMillis()
-                ),
             FeedItem(
                 id = "post_1",
                 authorId = userId,
                 authorNickname = "ColorHunter",
-                authorProfileColor = Color.Magenta,
+                authorProfileColor = Color.Companion.Magenta,
                 hexCodes = listOf("#FF5733", "#33FF57"),
                 contentColors = listOf(Color(0xFFFF5733), Color(0xFF33FF57)),
                 imageUrl = null,
@@ -98,7 +88,7 @@ class FakeUserRepository @Inject constructor() : UserRepository {
                 id = "post_1",
                 authorId = userId,
                 authorNickname = "ColorHunter",
-                authorProfileColor = Color.Magenta,
+                authorProfileColor = Color.Companion.Magenta,
                 hexCodes = listOf("#FF5733", "#33FF57"),
                 contentColors = listOf(Color(0xFFFF5733), Color(0xFF33FF57)),
                 imageUrl = null,
@@ -107,19 +97,32 @@ class FakeUserRepository @Inject constructor() : UserRepository {
                 isLiked = true,
                 createdAt = System.currentTimeMillis()
             ),
-        FeedItem(
-            id = "post_2",
-            authorId = userId,
-            authorNickname = "ColorHunter",
-            authorProfileColor = Color.Magenta,
-            hexCodes = listOf("#000000", "#FFFFFF"),
-            contentColors = listOf(Color.Black, Color.White),
-            imageUrl = null,
-            commentCount = 2,
-            likeCount = 30,
-            isLiked = false,
-            createdAt = System.currentTimeMillis() - 86400000
-        )
+            FeedItem(
+                id = "post_1",
+                authorId = userId,
+                authorNickname = "ColorHunter",
+                authorProfileColor = Color.Companion.Magenta,
+                hexCodes = listOf("#FF5733", "#33FF57"),
+                contentColors = listOf(Color(0xFFFF5733), Color(0xFF33FF57)),
+                imageUrl = null,
+                commentCount = 5,
+                likeCount = 12,
+                isLiked = true,
+                createdAt = System.currentTimeMillis()
+            ),
+            FeedItem(
+                id = "post_2",
+                authorId = userId,
+                authorNickname = "ColorHunter",
+                authorProfileColor = Color.Companion.Magenta,
+                hexCodes = listOf("#000000", "#FFFFFF"),
+                contentColors = listOf(Color.Companion.Black, Color.Companion.White),
+                imageUrl = null,
+                commentCount = 2,
+                likeCount = 30,
+                isLiked = false,
+                createdAt = System.currentTimeMillis() - 86400000
+            )
         )
         emit(fakePosts)
     }

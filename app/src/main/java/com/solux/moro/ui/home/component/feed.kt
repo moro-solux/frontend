@@ -46,7 +46,7 @@ import coil.request.ImageRequest
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.theme.MoroPalette
 import com.solux.moro.core.designsystem.theme.MoroTheme
-import com.solux.moro.ui.home.FeedItem
+import com.solux.moro.data.model.FeedItem
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
 

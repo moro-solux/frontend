@@ -1,13 +1,10 @@
-package com.solux.moro.repository
+package com.solux.moro.data.repository
 
 import com.solux.moro.ui.auth.AuthRepository
 import com.solux.moro.ui.auth.component.FakeAuthRepository
-import com.solux.moro.ui.home.CommentRepository
-import com.solux.moro.ui.home.FakeCommentRepository
-import com.solux.moro.ui.home.FakeFeedRepository
-import com.solux.moro.ui.home.FeedRepository
-import com.solux.moro.ui.profile.FakeUserRepository
-import com.solux.moro.ui.profile.UserRepository
+import com.solux.moro.data.repository.FakeCommentRepository
+import com.solux.moro.data.repository.FakeFeedRepository
+import com.solux.moro.data.repository.FeedRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

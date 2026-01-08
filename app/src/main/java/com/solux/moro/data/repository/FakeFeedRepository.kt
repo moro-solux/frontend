@@ -1,6 +1,7 @@
-package com.solux.moro.ui.home
+package com.solux.moro.data.repository
 
 import com.solux.moro.core.designsystem.theme.MoroPalette
+import com.solux.moro.data.model.FeedItem
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,13 +21,13 @@ class FakeFeedRepository @Inject constructor(): FeedRepository {
                     "#4537AF",
                     "#7587BF",
                     "#0327CF",
-                    ),
-                contentColors= listOf(
+                ),
+                contentColors = listOf(
                     MoroPalette.Pastel.Purple400,
                     MoroPalette.Pastel.Orange300,
                     MoroPalette.Pastel.Cyan400,
                     MoroPalette.Pastel.Gray400,
-                    ),
+                ),
                 imageUrl = null,
                 commentCount = 10,
                 likeCount = 12,
