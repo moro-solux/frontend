@@ -2,6 +2,8 @@ package com.solux.moro.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -39,11 +42,15 @@ import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.ui.followList.component.FollowUserItem
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
-
+enum class FollowTabType {
+    FOLLOWER, FOLLOWING
+}
 @Composable
 fun FollowScreen(
     //navController: NavHostController
 ){
+    var selectedTab by remember { mutableStateOf(FollowTabType.FOLLOWER) }
+
     Scaffold(
         bottomBar = { BottomBar() },
         topBar = { BackNavigationTopAppBar(null,{}) }
@@ -70,8 +77,16 @@ fun FollowScreen(
                     horizontalArrangement = Arrangement.spacedBy(57.60000228881836.toPxDp, Alignment.Start),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    FollowTab("Followers",true,{})
-                    FollowTab("Following",false,{})
+                    FollowTab(
+                        text = "Followers",
+                        selected = selectedTab == FollowTabType.FOLLOWER,
+                        onClick = { selectedTab = FollowTabType.FOLLOWER }
+                    )
+                    FollowTab(
+                        text = "Following",
+                        selected = selectedTab == FollowTabType.FOLLOWING,
+                        onClick = { selectedTab = FollowTabType.FOLLOWING }
+                    )
                 }
                 TextFiled()
             }
@@ -92,6 +107,15 @@ private fun TextFiled(){
     TextField(
         value = text,
         onValueChange = { text = it },
+        singleLine = true,
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                // 검색
+                println("검색 실행: $text")
+
+                // focusManager.clearFocus()
+            }
+        ),
         placeholder = {
             Text("Search followers...",
                 color = Color(0xFFA5A5A5),
@@ -103,7 +127,7 @@ private fun TextFiled(){
                 contentDescription = "image description",
                 tint=Color(0xFFBDBDBD)
             )
-            },
+        },
         modifier = Modifier
             .width(987.84003.toPxDp)
             .border(width = 2.88.toPxDp,
@@ -112,10 +136,15 @@ private fun TextFiled(){
         textStyle= TextStyle.Default,
         colors = TextFieldDefaults.colors(
             focusedContainerColor = Color(0xFF121212),
-            unfocusedContainerColor = Color(0xFF121212)
+            unfocusedContainerColor = Color(0xFF121212),
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            errorIndicatorColor = Color.Transparent,
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
         )
     )
-
 }
 
 @Composable
@@ -138,7 +167,12 @@ private fun FollowTab(
     Column(
         modifier = Modifier
             .width(206.toPxDp)
-            .height(80.64.toPxDp),
+            .height(80.64.toPxDp)
+            .clickable(
+                onClick = onClick,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -160,6 +194,16 @@ private fun FollowTab(
 
 }
 
+
+@Preview
+@Composable
+fun FollowTabPreview(){
+    FollowTab(
+        text = "Followers",
+        selected = true,
+        onClick = {}
+    )
+}
 @Preview(device = Devices.PIXEL_4)
 @Composable
 fun FollowScreenPreview(){
