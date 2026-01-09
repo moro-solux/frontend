@@ -2,9 +2,6 @@ package com.solux.moro.data.repository
 
 import com.solux.moro.ui.auth.AuthRepository
 import com.solux.moro.ui.auth.component.FakeAuthRepository
-import com.solux.moro.data.repository.FakeCommentRepository
-import com.solux.moro.data.repository.FakeFeedRepository
-import com.solux.moro.data.repository.FeedRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -34,6 +31,10 @@ abstract class RepositoryModule {
         impl: FakeFeedRepository
     ): FeedRepository
 
+    @Binds
+    abstract fun bindNotificationRepository(
+        impl: FakeNotificationRepository
+    ): NotificationRepository
 
 }
 

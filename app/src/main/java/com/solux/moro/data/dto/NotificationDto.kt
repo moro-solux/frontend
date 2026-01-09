@@ -11,6 +11,6 @@ data class NotificationDto(
     val id: Long,
     val type: String,
     val content: Map<String, Any?>?,
-    val read: Boolean,
+    val isRead: Boolean,
     val createdAt: String
 )

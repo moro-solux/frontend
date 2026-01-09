@@ -32,7 +32,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.theme.MoroTheme
-import com.solux.moro.data.model.NotificationType
 import com.solux.moro.data.model.NotificationUiModel
 
 @Composable
@@ -81,7 +80,7 @@ fun Notification(
             .padding(top=5.dp)
         ) {
             Column (
-                Modifier.padding(top=5.dp)
+                //Modifier.padding(top=5.dp)
             ){
             Image(
                 painter = painterResource(id = notification.type.iconRes()),
@@ -95,7 +94,7 @@ fun Notification(
                     .padding(horizontal = 10.dp)
                     .weight(1f, fill = false)
             ) {
-                val text = when (notification) {
+                val text = when (notification) {  //제목 텍스트
                     is NotificationUiModel.Comment -> {
                         stringResource(notification.type.messageRes(), notification.userName)
                     }
@@ -106,10 +105,10 @@ fun Notification(
                         stringResource(notification.type.messageRes(), notification.userName)
                     }
                     is NotificationUiModel.ColorUnlocked -> {
-                        stringResource(notification.type.messageRes())
+                        stringResource(notification.type.messageRes(), notification.content)
                     }
                     is NotificationUiModel.Mission -> {
-                        stringResource(notification.type.messageRes())
+                        stringResource(notification.type.messageRes(), notification.content)
                     }
 
                 }
@@ -120,10 +119,10 @@ fun Notification(
                     style = style,
                 )
 
-                val contentText = when (notification) {
-                    is NotificationUiModel.Comment -> stringResource(notification.type.contentRes(), notification.content)
-                    is NotificationUiModel.Mission -> stringResource(notification.type.contentRes(), notification.content)
-                    is NotificationUiModel.ColorUnlocked -> stringResource(notification.type.contentRes(), notification.content)
+                val contentText = when (notification) { //본문 텍스트
+                    is NotificationUiModel.Comment -> stringResource(notification.type.contentRes(),notification.content)
+                    is NotificationUiModel.Mission -> stringResource(notification.type.contentRes(), notification.content) //시간 계산..???
+                    is NotificationUiModel.ColorUnlocked -> stringResource(notification.type.contentRes(),) //notification.content)
                     else -> ""
                 }
 
@@ -139,7 +138,7 @@ fun Notification(
 
                 Row(
                     modifier = Modifier
-                        .padding(top = 5.dp)
+                        .padding(top = 8.dp)
                 ) {
                     Text(
                         text = notification.createdAt,
@@ -155,7 +154,6 @@ fun Notification(
 }
 @Composable
 fun NotificationSide(notification: NotificationUiModel){
-if (notification.type != NotificationType.COLOR_UNLOCKED) {
     Column(
         modifier = Modifier.padding(end = 10.dp, top = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -168,7 +166,7 @@ if (notification.type != NotificationType.COLOR_UNLOCKED) {
             is NotificationUiModel.Mission -> { //읽음 표시
                 ReadIcon(notification.isRead)
             }
-            is NotificationUiModel.ColorUnlocked -> {
+            is NotificationUiModel.ColorUnlocked -> {//읽음 표시
                 ReadIcon(notification.isRead)
             }
             is NotificationUiModel.Liked -> { //사진
@@ -199,7 +197,6 @@ if (notification.type != NotificationType.COLOR_UNLOCKED) {
         }
     }
 }
-}
 
 @Composable
 fun ReadIcon(read: Boolean){
@@ -209,7 +206,7 @@ fun ReadIcon(read: Boolean){
             .padding(7.dp)
             .background(
                 shape = RoundedCornerShape(size = 8.dp),
-                color = if (read) Color(0xFF737373) else Color.Transparent,
+                color = if (!read) Color(0xFF737373) else Color.Transparent,
             ),
     ) {}
 }
@@ -218,17 +215,17 @@ fun PhotoImage(
     imageUrl: String?,
     modifier: Modifier = Modifier
 ) {
-    if (imageUrl == null) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .build(),
-            placeholder = painterResource(R.drawable.img_feed),
-            contentDescription = null,
-            modifier = modifier
-                .size(50.dp),
-            contentScale = ContentScale.Crop,
-        )
-    }
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUrl)
+            .build(),
+        placeholder = painterResource(R.drawable.img_feed),
+        error = painterResource(R.drawable.img_feed),
+        fallback = painterResource(R.drawable.img_feed),
+        contentDescription = null,
+        modifier = modifier
+            .size(50.dp),
+        contentScale = ContentScale.Crop,
+    )
 }
 

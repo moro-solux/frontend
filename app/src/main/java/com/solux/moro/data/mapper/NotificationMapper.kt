@@ -12,24 +12,36 @@ fun NotificationDto.toUiModel(): NotificationUiModel {
         NotificationType.LIKED -> NotificationUiModel.Liked(
             userName = content?.get("userName") as? String ?: "",
             imageUrl = content?.get("imageUrl") as? String?: "",
-            createdAt = this.createdAt
+            createdAt = this.createdAt,
+            isRead = this.isRead,
+            postId = content?.get("postId") as? Long ?: -1,
+            id = content?.get("id") as? Long ?: -1,
         )
         NotificationType.COMMENT -> NotificationUiModel.Comment(
             userName = content?.get("userName") as? String ?: "",
             content = content?.get("commentPreview") as? String ?: "",
-            createdAt = this.createdAt
+            createdAt = this.createdAt,
+            isRead = this.isRead,
+            postId = content?.get("postId") as? Long ?: -1,
+            id = content?.get("id") as? Long ?: -1,
         )
         NotificationType.FOLLOWING -> NotificationUiModel.Following(
             userName = content?.get("userName") as? String ?: "",
-            createdAt = this.createdAt
+            createdAt = this.createdAt,
+            isRead = this.isRead,
+            id = content?.get("id") as? Long ?: -1,
         )
         NotificationType.COLOR_UNLOCKED -> NotificationUiModel.ColorUnlocked(
             content = content?.get("content") as? String ?: "",
-            createdAt = this.createdAt
+            createdAt = this.createdAt,
+            isRead = this.isRead,
+            id = content?.get("id") as? Long ?: -1,
         )
         NotificationType.MISSION -> NotificationUiModel.Mission(
             content = content?.get("content") as? String ?: "",
-            createdAt = this.createdAt
+            createdAt = this.createdAt,
+            isRead = this.isRead,
+            id = content?.get("id") as? Long ?: -1,
         )
     }
 }

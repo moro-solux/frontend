@@ -33,10 +33,10 @@ enum class NotificationType(
     @StringRes
     fun contentRes(): Int = when (this) {
         COMMENT -> R.string.notification_comment_content
-        LIKED    -> TODO()
-        FOLLOWING  -> TODO()
+        LIKED    -> R.string.notification_like_content
+        FOLLOWING  ->R.string.notification_follow_content
         MISSION -> R.string.notification_mission_content
-        COLOR_UNLOCKED  -> TODO()
+        COLOR_UNLOCKED  -> R.string.notification_unlock_content
     }
 }
 
@@ -60,7 +60,7 @@ sealed class NotificationUiModel {
     data class Comment(
         override val id: Long,
         val userName: String,
-        val postId: Int,
+        val postId: Long,
         val content: String,
         override val createdAt: String,
         override val type: NotificationType = NotificationType.COMMENT,
@@ -70,8 +70,8 @@ sealed class NotificationUiModel {
     data class Liked(
         override val id: Long,
         val userName: String,
-        val postId: Int,
-        val imageUrl: String,
+        val postId: Long,
+        val imageUrl: String?,
         override val createdAt: String,
         override val type: NotificationType = NotificationType.LIKED,
         override var isRead: Boolean = false
