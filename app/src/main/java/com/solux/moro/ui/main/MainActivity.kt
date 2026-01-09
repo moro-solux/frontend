@@ -11,6 +11,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.core.navigation.NavGraph
+import com.solux.moro.ui.map.MapScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,7 +21,20 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MoroTheme {
-//                SignUpScreen()
+//                MapScreen(
+//                    posts = emptyList(),
+//                    selectedPost = null,
+//                    keyword = "",
+//                    onKeywordChange = {},
+//                    onSearch = {},
+//                    onSelectPost = {},
+//                    onClearSelection = {},
+//                    onLoadNearby = { _, _ -> },
+//                    hasFineLocationPermission = false,
+//                    lastKnownLatLng = null,
+//                    onLocationPermissionChanged = {},
+//                    onUpdateLastKnownLocation = {},
+//                )
                 val navController = rememberNavController()
                 NavGraph(navController = navController)
             }
