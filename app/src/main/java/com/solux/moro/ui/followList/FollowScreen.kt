@@ -13,10 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -60,6 +58,7 @@ enum class FollowTabType {
 @Composable
 fun FollowScreen(
     viewModel: FollowingViewModel = hiltViewModel(),
+    userName:String="noonsong",
     navController: NavHostController
 ){
     val uiState by viewModel.uiState.collectAsState()
@@ -71,15 +70,13 @@ fun FollowScreen(
 
     Scaffold(
         bottomBar = { BottomBar() },
-        topBar = { BackNavigationTopAppBar(null,{}) }
+        topBar = { BackNavigationTopAppBar(userName,{}) }
     ) {innerPadding ->
-        val scrollState = rememberScrollState()
         Column(
             Modifier
                 .fillMaxSize()
                 .background(color = Color(0xFF121212))
-                .padding(innerPadding)
-                .verticalScroll(scrollState),
+                .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
             horizontalAlignment = Alignment.Start,
         ) {

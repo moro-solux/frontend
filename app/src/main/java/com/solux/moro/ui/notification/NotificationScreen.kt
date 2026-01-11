@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.solux.moro.R
 import com.solux.moro.components.BackNavigationTopAppBar
@@ -34,7 +35,7 @@ import com.solux.moro.ui.notification.component.Notification
 
 @Composable
 fun NotificationScreen(
-    //viewModel: NotificationViewModel= hiltViewModel(),
+    viewModel: NotificationViewModel= hiltViewModel(),
     navController: NavHostController,
     color: Color = Color(0xFFA3A3A3),
     style: TextStyle = MoroTheme.typography.bodyRegular14

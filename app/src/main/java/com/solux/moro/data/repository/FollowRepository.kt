@@ -6,7 +6,11 @@ interface FollowRepository {
 
     suspend fun getFollowers(): List<FollowUserInfo>
     suspend fun getFollowings(): List<FollowUserInfo>
-    //팔로잉 목록에서 삭제
+
+    suspend fun getFollowRequest(): List<FollowUserInfo>
+    suspend fun acceptFollowRequest(userId: Long)
+    suspend fun rejectFollowRequest(userId: Long)
+
     suspend fun unFollow(userId: Long)
     //언팔로우 (팔로잉 목록에서 following -> follow
     suspend fun deleteFollower(userId: Long)

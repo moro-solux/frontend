@@ -29,6 +29,12 @@ data class FollowUiState(
     val filteredFollowings: List<FollowUserInfo> = emptyList(),
     val isLoading: Boolean = false
 )
+
+data class FollowRequestUiState(
+    val filteredFollowRequests: List<FollowUserInfo> = emptyList(),
+    val isLoading: Boolean = false
+)
+
 @HiltViewModel
 class FollowingViewModel @Inject constructor(
     private val followRepository: FollowRepository
