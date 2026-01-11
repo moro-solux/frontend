@@ -1,6 +1,6 @@
 package com.solux.moro.data.repository
 
-import com.solux.moro.ui.followList.FollowUserInfo
+import com.solux.moro.ui.followlist.FollowUserInfo
 
 interface FollowRepository {
 

@@ -47,8 +47,8 @@ import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserColorPalette
 import com.solux.moro.data.model.UserStats
-import com.solux.moro.ui.followList.FollowingViewModel
-import com.solux.moro.ui.followList.component.FollowUserItem
+import com.solux.moro.ui.followlist.FollowingViewModel
+import com.solux.moro.ui.followlist.component.FollowUserItem
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
 

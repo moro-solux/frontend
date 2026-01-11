@@ -1,4 +1,4 @@
-package com.solux.moro.ui.followList
+package com.solux.moro.ui.followlist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,7 +26,7 @@ import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserColorPalette
 import com.solux.moro.data.model.UserStats
-import com.solux.moro.ui.followList.component.FollowRequestUserItem
+import com.solux.moro.ui.followlist.component.FollowRequestUserItem
 import com.solux.moro.ui.profile.component.toPxDp
 
 @Composable

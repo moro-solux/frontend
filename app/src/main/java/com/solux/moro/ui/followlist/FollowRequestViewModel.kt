@@ -1,4 +1,4 @@
-package com.solux.moro.ui.followList
+package com.solux.moro.ui.followlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
