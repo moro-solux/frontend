@@ -32,7 +32,6 @@ fun NotificationDto.toUiModel(): NotificationUiModel {
             id = content?.get("id") as? Long ?: -1,
         )
         NotificationType.COLOR_UNLOCKED -> NotificationUiModel.ColorUnlocked(
-            content = content?.get("content") as? String ?: "",
             createdAt = this.createdAt,
             isRead = this.isRead,
             id = content?.get("id") as? Long ?: -1,

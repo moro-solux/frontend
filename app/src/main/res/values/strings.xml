@@ -14,7 +14,7 @@
     <string name="notification_mission_message">오늘의 미션이 %1$s시간 남았어요!</string>
 
     <!-- Notification - Unlock -->
-    <string name="notification_unlock_message">%1$s</string>
+    <string name="notification_unlock_message">새로운 색이 열렸어요! 지금 만나보세요.</string>
 
 
     <!-- Notification - Content - Comment -->

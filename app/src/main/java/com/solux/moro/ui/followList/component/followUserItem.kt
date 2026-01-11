@@ -10,9 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,11 +31,19 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.R
+import com.solux.moro.data.model.User
+import com.solux.moro.data.model.UserStats
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
 
 @Composable
-fun FollowUserItem() {
+fun FollowUserItem(
+    user: User,
+    stats: UserStats,
+    isFollowTab: Boolean,
+    onActionClick: () -> Unit,
+    ) {
+
     Column() {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -54,11 +66,10 @@ fun FollowUserItem() {
                     contentScale = ContentScale.None
                 )
                 Text(
-                    text = "@sarahjohnson",
+                    text = user.nickname,
                     style = TextStyle(
                         fontSize = 46.08.toPxSp,
                         lineHeight = 64.51.toPxSp,
-                        //               fontFamily = FontFamily(Font(R.font.inter)),
                         fontWeight = FontWeight(400),
                         color = Color(0xFFF2F2F2),
                     ),
@@ -67,24 +78,40 @@ fun FollowUserItem() {
                         .height(65.toPxDp)
                 )
             }
-            followButton(true,{})
+            if(isFollowTab) {
+                FollowButton(onActionClick)
+            }
+            else{
+                FollowingButton(stats.isFollowing, onActionClick)
+            }
         }
     }
     HorizontalDivider(thickness = (2.88 ).toPxDp, color = Color(0xFF262626))
 }
 
-
 @Composable
-private fun followButton(
-    isFollow: Boolean,
-    onClick: () -> Unit
+private fun FollowButton(
+    onFollowClick: () -> Unit
+) {
+    IconButton(onClick = onFollowClick) {
+        Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = "Remove Follower",
+            tint = Color(0xFFF2F2F2)
+        )
+    }
+}
+@Composable
+private fun FollowingButton(
+    following: Boolean,
+    onFollowingClick: () -> Unit
 ){
     var containerColor = Color(0xFF262626)
     var contentColor = Color(0xFFF2F2F2)
     var borderColor=Color(0xFF404040)
     var text="Following"
 
-    if(isFollow){
+    if(following){
         containerColor = Color(0xFF262626)
         contentColor = Color(0xFFF2F2F2)
         borderColor=Color(0xFF404040)
@@ -97,7 +124,7 @@ private fun followButton(
         text="Follow"
     }
     Button(
-        onClick = {},
+        onClick = onFollowingClick,
         modifier = Modifier
             .width(259.20001.toPxDp)
             .height(97.92.toPxDp), colors = ButtonDefaults.buttonColors(
@@ -114,18 +141,16 @@ private fun followButton(
             text = text,
             style = TextStyle(
                 fontSize = 40.32.toPxSp,
-//                        fontFamily = FontFamily(Font(R.font.inter)),
                 fontWeight = FontWeight(400),
-
                 textAlign = TextAlign.Center,
             )
         )
     }
 }
 
-@Preview(
-    device = Devices.PIXEL_4A)
+
+@Preview( device = Devices.PIXEL_4A)
 @Composable
 fun FollowUserItemPreview(){
-    FollowUserItem()
+    //FollowUserItem()
 }

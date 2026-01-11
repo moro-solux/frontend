@@ -30,7 +30,6 @@ class FakeNotificationRepository @Inject constructor() : NotificationRepository 
         "어제" to listOf(
             NotificationUiModel.ColorUnlocked(
                 id = 3L,
-                content = "파스텔 블루 색상이 해제되었습니다. 지금 확인해보세요!",
                 createdAt = "오후 10:30",
                 isRead = false
             ),

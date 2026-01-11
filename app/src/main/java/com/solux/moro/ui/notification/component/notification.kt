@@ -105,7 +105,7 @@ fun Notification(
                         stringResource(notification.type.messageRes(), notification.userName)
                     }
                     is NotificationUiModel.ColorUnlocked -> {
-                        stringResource(notification.type.messageRes(), notification.content)
+                        stringResource(notification.type.messageRes())
                     }
                     is NotificationUiModel.Mission -> {
                         stringResource(notification.type.messageRes(), notification.content)

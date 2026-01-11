@@ -87,7 +87,6 @@ sealed class NotificationUiModel {
 
     data class ColorUnlocked(
         override val id: Long,
-        val content: String,
         override val createdAt: String,
         override val type: NotificationType = NotificationType.COLOR_UNLOCKED,
         override var isRead: Boolean = false

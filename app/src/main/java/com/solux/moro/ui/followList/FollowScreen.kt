@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -22,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,20 +39,35 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.solux.moro.R
 import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
+import com.solux.moro.core.designsystem.theme.MoroPalette
+import com.solux.moro.core.designsystem.theme.MoroThemeType
+import com.solux.moro.data.model.User
+import com.solux.moro.data.model.UserColorPalette
+import com.solux.moro.data.model.UserStats
+import com.solux.moro.ui.followList.FollowingViewModel
 import com.solux.moro.ui.followList.component.FollowUserItem
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
+
 enum class FollowTabType {
     FOLLOWER, FOLLOWING
 }
 @Composable
 fun FollowScreen(
-    //navController: NavHostController
+    viewModel: FollowingViewModel = hiltViewModel(),
+    navController: NavHostController
 ){
-    var selectedTab by remember { mutableStateOf(FollowTabType.FOLLOWER) }
+    val uiState by viewModel.uiState.collectAsState()
+
+    val selectedTab = uiState.selectedTab
+    val followers = uiState.filteredFollowers
+    val followings = uiState.filteredFollowings
+
 
     Scaffold(
         bottomBar = { BottomBar() },
@@ -80,22 +98,38 @@ fun FollowScreen(
                     FollowTab(
                         text = "Followers",
                         selected = selectedTab == FollowTabType.FOLLOWER,
-                        onClick = { selectedTab = FollowTabType.FOLLOWER }
+                        onClick = { viewModel.switchTab(selectedTab) }
                     )
                     FollowTab(
                         text = "Following",
                         selected = selectedTab == FollowTabType.FOLLOWING,
-                        onClick = { selectedTab = FollowTabType.FOLLOWING }
+                        onClick = { viewModel.switchTab(selectedTab) }
                     )
                 }
                 TextFiled()
             }
-            Column(
+            LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 46.08.toPxDp, end = 46.08.toPxDp)
             ) {
-                FollowUserItem()
-                FollowUserItem()
+                val currentList = if (selectedTab == FollowTabType.FOLLOWING) followings else followers
+                items(
+                    items = currentList,
+                    key = { it.user.id }
+                ) { item ->
+                    FollowUserItem(
+                        user = item.user,
+                        stats = item.stats,
+                        isFollowTab = selectedTab == FollowTabType.FOLLOWING,
+                        onActionClick = {
+                            if (selectedTab == FollowTabType.FOLLOWING) {
+                                viewModel.unFollow(item.user.id)
+                            } else {
+                                viewModel.removeFollower(item.user.id)
+                            }
+                        }
+                    )
+                }
             }
         }
     }
@@ -180,7 +214,6 @@ private fun FollowTab(
             text = text,
             style = TextStyle(
                 fontSize = 46.08.toPxSp,
-//           fontFamily = FontFamily(Font(R.font.inter)),
                 fontWeight = FontWeight(400),
                 color = textColor,
                 textAlign = TextAlign.Center,
@@ -207,5 +240,87 @@ fun FollowTabPreview(){
 @Preview(device = Devices.PIXEL_4)
 @Composable
 fun FollowScreenPreview(){
-    FollowScreen()
+    Column {
+        FollowUserItem(
+            user = User(
+                id = 1,
+                email = "test@test.com",
+                nickname = "테스트유저",
+                colorPalette = UserColorPalette(
+                    theme = MoroThemeType.Pastel,
+                    userColor = MoroPalette.Pastel.Purple400,
+                    paletteColors = listOf(
+                        MoroPalette.Pastel.Purple400,
+                        MoroPalette.Pastel.Yellow300,
+                        MoroPalette.Pastel.Green200,
+                        MoroPalette.Pastel.Cyan200,
+                        MoroPalette.Pastel.Indigo500,
+                        MoroPalette.Pastel.Gray400
+                    )
+                )
+            ),
+            stats = UserStats(
+                colorsCount = 1,
+                followerCount = 1,
+                followingCount = 1,
+                isFollowing = true
+            ),
+            isFollowTab = true,
+            onActionClick = {}
+        )
+        FollowUserItem(
+            user = User(
+                id = 2,
+                email = "test2@test.com",
+                nickname = "테스트유저2",
+                colorPalette = UserColorPalette(
+                    theme = MoroThemeType.Pastel,
+                    userColor = MoroPalette.Pastel.Purple400,
+                    paletteColors = listOf(
+                        MoroPalette.Pastel.Purple400,
+                        MoroPalette.Pastel.Yellow300,
+                        MoroPalette.Pastel.Green200,
+                        MoroPalette.Pastel.Cyan200,
+                        MoroPalette.Pastel.Indigo500,
+                        MoroPalette.Pastel.Gray400
+                    )
+                )
+            ),
+            stats = UserStats(
+                colorsCount = 1,
+                followerCount = 1,
+                followingCount = 1,
+                isFollowing = true
+            ),
+            isFollowTab = false,
+            onActionClick = {}
+        )
+        FollowUserItem(
+            user = User(
+                id = 2,
+                email = "test2@test.com",
+                nickname = "테스트유저2",
+                colorPalette = UserColorPalette(
+                    theme = MoroThemeType.Pastel,
+                    userColor = MoroPalette.Pastel.Purple400,
+                    paletteColors = listOf(
+                        MoroPalette.Pastel.Purple400,
+                        MoroPalette.Pastel.Yellow300,
+                        MoroPalette.Pastel.Green200,
+                        MoroPalette.Pastel.Cyan200,
+                        MoroPalette.Pastel.Indigo500,
+                        MoroPalette.Pastel.Gray400
+                    )
+                )
+            ),
+            stats = UserStats(
+                colorsCount = 1,
+                followerCount = 1,
+                followingCount = 1,
+                isFollowing = false
+            ),
+            isFollowTab = false,
+            onActionClick = {}
+        )
+    }
 }

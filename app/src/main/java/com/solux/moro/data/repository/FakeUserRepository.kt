@@ -19,7 +19,7 @@ class FakeUserRepository @Inject constructor() : UserRepository {
 
     private val _user = MutableStateFlow<User?>(
         User(
-            id = "1",
+            id = 1,
             email = "test@test.com",
             nickname = "테스트유저",
             colorPalette = UserColorPalette(
