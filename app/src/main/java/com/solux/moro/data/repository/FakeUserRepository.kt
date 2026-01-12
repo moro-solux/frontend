@@ -91,11 +91,11 @@ class FakeUserRepository @Inject constructor() : UserRepository {
             user?.copy(nickname = nickname)
         }
     }
-    override fun getUserPosts(userId: String): Flow<List<FeedItem>> = flow {
+    override fun getUserPosts(userId: Long): Flow<List<FeedItem>> = flow {
         val fakePosts = listOf(
             FeedItem(
-                id = "post_1",
-                authorId = userId,
+                id = 1,
+                authorId = userId ,
                 authorNickname = "ColorHunter",
                 authorProfileColor = Color.Companion.Magenta,
                 hexCodes = listOf("#FF5733", "#33FF57"),
@@ -107,8 +107,8 @@ class FakeUserRepository @Inject constructor() : UserRepository {
                 createdAt = System.currentTimeMillis()
             ),
             FeedItem(
-                id = "post_1",
-                authorId = userId,
+                id = 2,
+                authorId = userId ,
                 authorNickname = "ColorHunter",
                 authorProfileColor = Color.Companion.Magenta,
                 hexCodes = listOf("#FF5733", "#33FF57"),
@@ -120,8 +120,8 @@ class FakeUserRepository @Inject constructor() : UserRepository {
                 createdAt = System.currentTimeMillis()
             ),
             FeedItem(
-                id = "post_1",
-                authorId = userId,
+                id = 3,
+                authorId = userId ,
                 authorNickname = "ColorHunter",
                 authorProfileColor = Color.Companion.Magenta,
                 hexCodes = listOf("#FF5733", "#33FF57"),
@@ -133,7 +133,7 @@ class FakeUserRepository @Inject constructor() : UserRepository {
                 createdAt = System.currentTimeMillis()
             ),
             FeedItem(
-                id = "post_2",
+                id = 5,
                 authorId = userId,
                 authorNickname = "ColorHunter",
                 authorProfileColor = Color.Companion.Magenta,

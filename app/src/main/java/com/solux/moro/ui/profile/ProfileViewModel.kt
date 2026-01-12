@@ -73,9 +73,9 @@ class ProfileViewModel @Inject constructor(
                 0
             )
 
-    private val profileUserId: String =
-        savedStateHandle["userId"] ?: "1"
-    val myUserId: String = authRepository.myUserId()
+    private val profileUserId: Long =
+        savedStateHandle["userId"] ?: 1
+    val myUserId: Long = authRepository.myUserId().toLong()
 
     val isMyProfile: StateFlow<Boolean> =
         flowOf(profileUserId == myUserId)
@@ -111,7 +111,7 @@ class ProfileViewModel @Inject constructor(
                 "팔로우"
             )
 
-    val userPosts = userRepository.getUserPosts(profileUserId)
+    val userPosts = userRepository.getUserPosts(profileUserId.toLong())
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

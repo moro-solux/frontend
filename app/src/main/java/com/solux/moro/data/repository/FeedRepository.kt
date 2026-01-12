@@ -7,11 +7,11 @@ interface FeedRepository {
 
     fun getHomeFeed(): Flow<List<FeedItem>>
 
-    fun getUserFeed(userId: String): Flow<List<FeedItem>>
+    fun getUserFeed(userId: Long): Flow<List<FeedItem>>
 
     suspend fun refreshHomeFeed()
 
-    suspend fun likeFeed(feedId: String)
+    suspend fun likeFeed(feedId: Long)
 
-    suspend fun unlikeFeed(feedId: String)
+    suspend fun unlikeFeed(feedId: Long)
 }

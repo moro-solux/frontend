@@ -37,7 +37,7 @@ fun HomeScreen(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedPostId by remember { mutableStateOf<String?>(null) }
+    var selectedPostId by remember { mutableStateOf<Long?>(null) }
 
     Scaffold(
         bottomBar = { BottomBar() },

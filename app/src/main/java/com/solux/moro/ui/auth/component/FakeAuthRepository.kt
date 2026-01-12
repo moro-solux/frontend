@@ -14,15 +14,15 @@ class FakeAuthRepository @Inject constructor()  : AuthRepository {
     override val authState: StateFlow<AuthState> =
         _authState.asStateFlow()
 
-    private var currentUserId: String? = null
+    private var currentUserId: Long? = null
 
-    override fun myUserId(): String = "test-user-id"
+    override fun myUserId(): Long = 111
 
     override suspend fun login(
         email: String,
         password: String
     ) {
-        currentUserId = "fake_user_id_123"
+        currentUserId = 123
         _authState.value = AuthState.Authenticated
     }
 

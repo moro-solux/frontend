@@ -18,14 +18,14 @@ class CommentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _postId = MutableStateFlow<String?>(null)
+    private val _postId = MutableStateFlow<Long?>(null)
 
     val comments = _postId.flatMapLatest { id ->
         if (id == null) flowOf(emptyList())
         else commentRepository.observeComments(id)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    fun setPostId(id: String) {
+    fun setPostId(id: Long) {
         _postId.value = id
         viewModelScope.launch {
             commentRepository.loadComments(id)
@@ -39,7 +39,7 @@ class CommentViewModel @Inject constructor(
         }
     }
 
-    fun onDeleteComment(commentId: String) {
+    fun onDeleteComment(commentId: Long) {
         viewModelScope.launch {
             commentRepository.deleteComment(commentId)
         }

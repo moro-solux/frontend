@@ -17,7 +17,7 @@ interface UserRepository {
 
     suspend fun loadUser()
     suspend fun getUserTheme(): MoroThemeType
-    fun getUserPosts(userId: String): Flow<List<FeedItem>>
+    fun getUserPosts(userId: Long): Flow<List<FeedItem>>
 
     suspend fun updateUserColorPalette(
         palette: UserColorPalette

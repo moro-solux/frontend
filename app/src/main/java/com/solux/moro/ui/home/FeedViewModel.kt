@@ -24,7 +24,7 @@ class FeedViewModel @Inject constructor(
                 emptyList()
             )
 
-    fun onLikeClick(feedId: String) {
+    fun onLikeClick(feedId: Long) {
         viewModelScope.launch {
             feedRepository.likeFeed(feedId)
         }
