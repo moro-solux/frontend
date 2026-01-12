@@ -1,5 +1,6 @@
 package com.solux.moro.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +35,8 @@ fun BackNavigationTopAppBar(  title: String ?= "colornoonsong",
         Row(
             modifier = Modifier
                 .height(76.57.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(Color.Black),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

@@ -15,6 +15,7 @@ class FakeFollowRepository @Inject constructor() : FollowRepository {
                 id = 1,
                 email = "test@test.com",
                 nickname = "테스트유저1",
+                userColorHex ="#11111",
                 colorPalette = UserColorPalette(
                     theme = MoroThemeType.Pastel,
                     userColor = MoroPalette.Pastel.Purple400,
@@ -40,6 +41,7 @@ class FakeFollowRepository @Inject constructor() : FollowRepository {
                 id = 2,
                 email = "test@test.com",
                 nickname = "테스트유저2",
+                userColorHex ="#222222",
                 colorPalette = UserColorPalette(
                     theme = MoroThemeType.Pastel,
                     userColor = MoroPalette.Pastel.Purple400,
@@ -65,6 +67,7 @@ class FakeFollowRepository @Inject constructor() : FollowRepository {
                 id = 3,
                 email = "test@test.com",
                 nickname = "테스트유저3",
+                userColorHex ="#33333",
                 colorPalette = UserColorPalette(
                     theme = MoroThemeType.Pastel,
                     userColor = MoroPalette.Pastel.Purple400,
@@ -92,6 +95,7 @@ class FakeFollowRepository @Inject constructor() : FollowRepository {
                 id = 4,
                 email = "test@test.com",
                 nickname = "테스트유저4",
+                userColorHex ="#44444",
                 colorPalette = UserColorPalette(
                     theme = MoroThemeType.Pastel,
                     userColor = MoroPalette.Pastel.Purple400,

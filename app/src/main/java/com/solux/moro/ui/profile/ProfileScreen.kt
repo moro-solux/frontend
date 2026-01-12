@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.solux.moro.R
+import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.core.designsystem.theme.MoroTheme
@@ -61,7 +62,7 @@ fun ProfileScreen(
     val stats by viewModel.stats.collectAsState()
 
     val nickname by viewModel.nickname.collectAsState()
-    val userColor by viewModel.userColor.collectAsState()
+    val userColorHex by viewModel.userColorHex.collectAsState()
     val colorsCount by viewModel.colorsCount.collectAsState()
     val followerCount by viewModel.followerCount.collectAsState()
     val isFollowing by viewModel.isFollowing.collectAsState()
@@ -73,7 +74,9 @@ fun ProfileScreen(
 
     Scaffold(
         bottomBar = { BottomBar() },
-        topBar = { TopBar() }
+        topBar = { if(isMyProfile){TopBar()}
+        else{BackNavigationTopAppBar(nickname,onBackClick = {
+            navController.popBackStack()})}}
     ) { innerPadding ->
         val scrollState = rememberScrollState()
         val panelWidthPx = with(LocalDensity.current) { 280.dp.toPx() }
@@ -97,9 +100,8 @@ fun ProfileScreen(
                 ) {
                     Column() {
                         Profile(
-
                             nickname,
-                            userColor,
+                            userColorHex,
                             followerCount,
                             followingCount,
                             colorsCount,

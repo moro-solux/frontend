@@ -36,8 +36,8 @@ class ProfileViewModel @Inject constructor(
                 "@colorhunter"
             )
 
-    val userColor=
-        user.map { it?.colorPalette?.userColor.toString() }
+    val userColorHex=
+        user.map { it?.userColorHex }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),

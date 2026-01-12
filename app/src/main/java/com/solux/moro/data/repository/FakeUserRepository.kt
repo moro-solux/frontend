@@ -26,6 +26,7 @@ class FakeUserRepository @Inject constructor() : UserRepository {
             email = "test@test.com",
             nickname = "테스트유저",
             visible = false,
+            userColorHex="#tset12",
             colorPalette = UserColorPalette(
                 theme = MoroThemeType.Pastel,
                 userColor = MoroPalette.Pastel.Purple400,

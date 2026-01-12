@@ -4,6 +4,7 @@ data class User(
     val id: Long,
     val email: String,
     val nickname: String,
+    val userColorHex: String?,
     val colorPalette: UserColorPalette,
     val visible: Boolean = true
     )

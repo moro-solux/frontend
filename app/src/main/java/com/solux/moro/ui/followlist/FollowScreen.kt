@@ -33,7 +33,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -41,11 +40,6 @@ import androidx.navigation.NavHostController
 import com.solux.moro.R
 import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
-import com.solux.moro.core.designsystem.theme.MoroPalette
-import com.solux.moro.core.designsystem.theme.MoroThemeType
-import com.solux.moro.data.model.User
-import com.solux.moro.data.model.UserColorPalette
-import com.solux.moro.data.model.UserStats
 import com.solux.moro.ui.followlist.FollowingViewModel
 import com.solux.moro.ui.followlist.component.FollowUserItem
 import com.solux.moro.ui.profile.component.toPxDp
@@ -241,90 +235,90 @@ fun FollowTabPreview(){
         onClick = {}
     )
 }
-@Preview(device = Devices.PIXEL_4)
-@Composable
-fun FollowScreenPreview(){
-    Column {
-        FollowUserItem(
-            user = User(
-                id = 1,
-                email = "test@test.com",
-                nickname = "테스트유저",
-                colorPalette = UserColorPalette(
-                    theme = MoroThemeType.Pastel,
-                    userColor = MoroPalette.Pastel.Purple400,
-                    paletteColors = listOf(
-                        MoroPalette.Pastel.Purple400,
-                        MoroPalette.Pastel.Yellow300,
-                        MoroPalette.Pastel.Green200,
-                        MoroPalette.Pastel.Cyan200,
-                        MoroPalette.Pastel.Indigo500,
-                        MoroPalette.Pastel.Gray400
-                    )
-                )
-            ),
-            stats = UserStats(
-                colorsCount = 1,
-                followerCount = 1,
-                followingCount = 1,
-                isFollowing = true
-            ),
-            isFollowTab = true,
-            onActionClick = {}
-        )
-        FollowUserItem(
-            user = User(
-                id = 2,
-                email = "test2@test.com",
-                nickname = "테스트유저2",
-                colorPalette = UserColorPalette(
-                    theme = MoroThemeType.Pastel,
-                    userColor = MoroPalette.Pastel.Purple400,
-                    paletteColors = listOf(
-                        MoroPalette.Pastel.Purple400,
-                        MoroPalette.Pastel.Yellow300,
-                        MoroPalette.Pastel.Green200,
-                        MoroPalette.Pastel.Cyan200,
-                        MoroPalette.Pastel.Indigo500,
-                        MoroPalette.Pastel.Gray400
-                    )
-                )
-            ),
-            stats = UserStats(
-                colorsCount = 1,
-                followerCount = 1,
-                followingCount = 1,
-                isFollowing = true
-            ),
-            isFollowTab = false,
-            onActionClick = {}
-        )
-        FollowUserItem(
-            user = User(
-                id = 2,
-                email = "test2@test.com",
-                nickname = "테스트유저2",
-                colorPalette = UserColorPalette(
-                    theme = MoroThemeType.Pastel,
-                    userColor = MoroPalette.Pastel.Purple400,
-                    paletteColors = listOf(
-                        MoroPalette.Pastel.Purple400,
-                        MoroPalette.Pastel.Yellow300,
-                        MoroPalette.Pastel.Green200,
-                        MoroPalette.Pastel.Cyan200,
-                        MoroPalette.Pastel.Indigo500,
-                        MoroPalette.Pastel.Gray400
-                    )
-                )
-            ),
-            stats = UserStats(
-                colorsCount = 1,
-                followerCount = 1,
-                followingCount = 1,
-                isFollowing = false
-            ),
-            isFollowTab = false,
-            onActionClick = {}
-        )
-    }
-}
+//@Preview(device = Devices.PIXEL_4)
+//@Composable
+//fun FollowScreenPreview(){
+//    Column {
+//        FollowUserItem(
+//            user = User(
+//                id = 1,
+//                email = "test@test.com",
+//                nickname = "테스트유저",
+//                colorPalette = UserColorPalette(
+//                    theme = MoroThemeType.Pastel,
+//                    userColor = MoroPalette.Pastel.Purple400,
+//                    paletteColors = listOf(
+//                        MoroPalette.Pastel.Purple400,
+//                        MoroPalette.Pastel.Yellow300,
+//                        MoroPalette.Pastel.Green200,
+//                        MoroPalette.Pastel.Cyan200,
+//                        MoroPalette.Pastel.Indigo500,
+//                        MoroPalette.Pastel.Gray400
+//                    )
+//                )
+//            ),
+//            stats = UserStats(
+//                colorsCount = 1,
+//                followerCount = 1,
+//                followingCount = 1,
+//                isFollowing = true
+//            ),
+//            isFollowTab = true,
+//            onActionClick = {}
+//        )
+//        FollowUserItem(
+//            user = User(
+//                id = 2,
+//                email = "test2@test.com",
+//                nickname = "테스트유저2",
+//                colorPalette = UserColorPalette(
+//                    theme = MoroThemeType.Pastel,
+//                    userColor = MoroPalette.Pastel.Purple400,
+//                    paletteColors = listOf(
+//                        MoroPalette.Pastel.Purple400,
+//                        MoroPalette.Pastel.Yellow300,
+//                        MoroPalette.Pastel.Green200,
+//                        MoroPalette.Pastel.Cyan200,
+//                        MoroPalette.Pastel.Indigo500,
+//                        MoroPalette.Pastel.Gray400
+//                    )
+//                )
+//            ),
+//            stats = UserStats(
+//                colorsCount = 1,
+//                followerCount = 1,
+//                followingCount = 1,
+//                isFollowing = true
+//            ),
+//            isFollowTab = false,
+//            onActionClick = {}
+//        )
+//        FollowUserItem(
+//            user = User(
+//                id = 2,
+//                email = "test2@test.com",
+//                nickname = "테스트유저2",
+//                colorPalette = UserColorPalette(
+//                    theme = MoroThemeType.Pastel,
+//                    userColor = MoroPalette.Pastel.Purple400,
+//                    paletteColors = listOf(
+//                        MoroPalette.Pastel.Purple400,
+//                        MoroPalette.Pastel.Yellow300,
+//                        MoroPalette.Pastel.Green200,
+//                        MoroPalette.Pastel.Cyan200,
+//                        MoroPalette.Pastel.Indigo500,
+//                        MoroPalette.Pastel.Gray400
+//                    )
+//                )
+//            ),
+//            stats = UserStats(
+//                colorsCount = 1,
+//                followerCount = 1,
+//                followingCount = 1,
+//                isFollowing = false
+//            ),
+//            isFollowTab = false,
+//            onActionClick = {}
+//        )
+//    }
+//}

@@ -37,7 +37,7 @@ val Number.toPxSp: TextUnit get() = (this.toDouble() / PIXEL_DENSITY).sp
 @Composable
 fun Profile(
     nickname: String,
-    colorCode: String,
+    userColorHex: String?,
 
     colorsCnt: Int,
     followerCnt: Int,
@@ -66,7 +66,7 @@ fun Profile(
     ) {
         ProfileHeader(
             nickname,
-            colorCode,
+            userColorHex,
         )
 
         Column(
