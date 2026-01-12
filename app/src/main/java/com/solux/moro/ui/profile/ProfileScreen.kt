@@ -61,6 +61,8 @@ fun ProfileScreen(
     val user by viewModel.user.collectAsState()
     val stats by viewModel.stats.collectAsState()
 
+    val palette = user?.colorPalette?.paletteColors
+
     val nickname by viewModel.nickname.collectAsState()
     val userColorHex by viewModel.userColorHex.collectAsState()
     val colorsCount by viewModel.colorsCount.collectAsState()
@@ -159,7 +161,9 @@ fun ProfileScreen(
                 ) {
                 Palette(
                     modifier = Modifier,
-                    navController = navController
+                    navController = navController,
+                    isMyProfile = isMyProfile,
+                    paletteColors =palette
                 )
             }
 
