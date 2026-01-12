@@ -5,7 +5,7 @@ data class User(
     val email: String,
     val nickname: String,
     val colorPalette: UserColorPalette,
-
+    val visible: Boolean = true
     )
 
 data class UserStats(

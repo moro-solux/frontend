@@ -74,7 +74,7 @@ class ProfileViewModel @Inject constructor(
             )
 
     private val profileUserId: String =
-        savedStateHandle["userId"] ?: authRepository.myUserId()
+        savedStateHandle["userId"] ?: "1"
     val myUserId: String = authRepository.myUserId()
 
     val isMyProfile: StateFlow<Boolean> =

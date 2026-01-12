@@ -12,9 +12,9 @@ class FakeFeedRepository @Inject constructor(): FeedRepository {
     private val _homeFeed = MutableStateFlow(
         listOf(
             FeedItem(
-                id = "1",
+                id = "2",
                 authorId = "user1",
-                authorNickname = "테스트유저",
+                authorNickname = "테스트유저2",
                 authorProfileColor = MoroPalette.Pastel.Cyan200,
                 hexCodes = listOf(
                     "#3357FF",
