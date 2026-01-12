@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.solux.moro.data.mapper.toDomain
 import com.solux.moro.data.model.SearchUser
 import com.solux.moro.data.repository.UserRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -25,6 +26,7 @@ data class SearchUiState(
     val filteredSearchRequests: List<SearchUser> = emptyList(),
     val isLoading: Boolean = false
 )
+@HiltViewModel
 class SearchUserViewModel @Inject constructor(
     private val userRepository: UserRepository,
     val savedStateHandle: SavedStateHandle
@@ -33,8 +35,6 @@ class SearchUserViewModel @Inject constructor(
     val searchResults = _searchResults.asStateFlow()
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState.asStateFlow()
-
-    val userNickName: String = checkNotNull(savedStateHandle["userNickname"])
 
     private var searchJob: Job? = null
 
