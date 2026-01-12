@@ -58,7 +58,6 @@ enum class FollowTabType {
 @Composable
 fun FollowScreen(
     viewModel: FollowingViewModel = hiltViewModel(),
-    userName:String="noonsong",
     navController: NavHostController
 ){
     val uiState by viewModel.uiState.collectAsState()
@@ -66,11 +65,11 @@ fun FollowScreen(
     val selectedTab = uiState.selectedTab
     val followers = uiState.filteredFollowers
     val followings = uiState.filteredFollowings
-
+    val userId = viewModel.userId
 
     Scaffold(
         bottomBar = { BottomBar() },
-        topBar = { BackNavigationTopAppBar(userName,{}) }
+        topBar = { BackNavigationTopAppBar(userId,{}) }
     ) {innerPadding ->
         Column(
             Modifier

@@ -3,22 +3,20 @@ package com.solux.moro.core.navigation
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.solux.moro.screens.FollowScreen
 import com.solux.moro.ui.home.HomeScreen
 import com.solux.moro.ui.notification.NotificationScreen
-import com.solux.moro.ui.paletteEdit.PaletteEditScreen
+import com.solux.moro.ui.paletteedit.PaletteEditScreen
 import com.solux.moro.ui.profile.ProfileScreen
 import com.solux.moro.ui.profile.ProfileViewModel
-import com.solux.moro.ui.profileEdit.ProfileEditScreen
+import com.solux.moro.ui.profileedit.ProfileEditScreen
 
 @Composable
 fun NavGraph(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination ="profile_test") {
+    NavHost(navController = navController, startDestination ="notification") {
         composable("home") {
             HomeScreen()
         }
@@ -28,9 +26,7 @@ fun NavGraph(navController: NavHostController){
         }
 
         composable(Profile.route,
-            arguments = listOf(
-                navArgument("userId") { type = NavType.StringType })
-        ) { backStackEntry ->
+        ) {
             val viewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(navController, viewModel)
         }
@@ -43,12 +39,21 @@ fun NavGraph(navController: NavHostController){
             PaletteEditScreen()
         }
 
-        composable( "follow" ) {
-            FollowScreen()//navController = navController)
+        composable( route = "follow",
+            ) {
+            //val viewModel: FollowingViewModel = hiltViewModel()
+            FollowScreen(
+                navController = navController,
+                //viewModel = viewModel
+            )
         }
 
-        composable( "notification" ) {
-            NotificationScreen(navController = navController)
+        composable( "notification" ){
+            //val viewModel: NotificationViewModel = hiltViewModel()
+            NotificationScreen(
+                navController = navController,
+                //viewModel = viewModel
+                )
         }
     }
 

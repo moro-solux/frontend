@@ -1,5 +1,6 @@
 package com.solux.moro.ui.followlist
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.data.model.User
@@ -37,13 +38,16 @@ data class FollowRequestUiState(
 
 @HiltViewModel
 class FollowingViewModel @Inject constructor(
-    private val followRepository: FollowRepository
+    private val followRepository: FollowRepository,
+    val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private var allFollowers = listOf<FollowUserInfo>()
     private var allFollowings = listOf<FollowUserInfo>()
 
     private val _uiState = MutableStateFlow(FollowUiState())
     val uiState: StateFlow<FollowUiState> = _uiState.asStateFlow()
+
+    val userId: String = checkNotNull(savedStateHandle["userId"])
 
     init {
         loadFollowData()

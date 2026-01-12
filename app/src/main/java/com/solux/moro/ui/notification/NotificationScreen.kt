@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,8 +32,10 @@ import com.solux.moro.R
 import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.theme.MoroTheme
+import com.solux.moro.core.navigation.Profile
 import com.solux.moro.data.model.NotificationUiModel
 import com.solux.moro.ui.notification.component.Notification
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun NotificationScreen(
@@ -56,8 +60,8 @@ fun NotificationScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            FollowNavigationItem(navController)
-            //val notifications by viewModel.notifications.collectAsState(initial = emptyMap())
+            FollowNavigationItem(userNickname = viewModel.nickname, navController = navController)
+            val notifications by viewModel.notifications.collectAsState(initial = emptyMap())
             val mock  = mapOf(
                 "Today" to listOf(
                     NotificationUiModel.Comment(
@@ -118,7 +122,7 @@ fun NotificationScreen(
                     )
                 )
             )
-            val notifications = mock
+            val notificationList = mock
             Box(modifier = Modifier.weight(1f)) {
                 NotificationList(
                     navController = navController,
@@ -166,11 +170,12 @@ fun NotificationList(
 
 
 @Composable
-fun FollowNavigationItem(navController: NavHostController){
+fun FollowNavigationItem(navController: NavHostController, userNickname: StateFlow<String>){
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(16.dp)
-        .clickable { navController.navigate("follow") },
+        .clickable {
+            navController.navigate(Profile.createRoute(userNickname.value))},
         horizontalArrangement = Arrangement.spacedBy(10.dp,Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
         ){
