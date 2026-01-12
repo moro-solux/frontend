@@ -1,4 +1,4 @@
-package com.solux.moro.ui.profileEdit
+package com.solux.moro.ui.profileedit
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

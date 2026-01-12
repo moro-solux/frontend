@@ -46,7 +46,7 @@ import com.solux.moro.ui.home.CommentViewModel
 @Composable
 fun Comment(
     item: CommentItem= CommentItem(
-        id = "1",
+        id = 1,
         userNickname = "테스트유저2",
         content = "테스트 댓글",
         createdAt = System.currentTimeMillis()
@@ -122,7 +122,7 @@ fun CommentList(
 
 @Composable
 fun CommentWindow(
-    postId: String="1",
+    postId: Long =1,
     viewModel: CommentViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
 ){
@@ -224,7 +224,7 @@ fun CommentInputPreview(){
 fun CommentPreview(){
     Comment(
         item = CommentItem(
-            id = "1",
+            id = 1,
             userNickname = "@creativedev",
             content = "Mind if I use this as inspiration for my next project?",
             createdAt = System.currentTimeMillis()

@@ -54,8 +54,8 @@ import com.solux.moro.ui.profile.component.toPxSp
 @Composable
 fun Feed(
     item: FeedItem = FeedItem(
-        id = "",
-        authorId = "",
+        id = 1 ,
+        authorId = 1,
         authorNickname = "",
         authorProfileColor = Color.Black,
         hexCodes = listOf<String>("3357FF","3357FF"),

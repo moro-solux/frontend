@@ -1,4 +1,4 @@
-package com.solux.moro.ui.paletteEdit
+package com.solux.moro.ui.paletteedit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

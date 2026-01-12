@@ -3,6 +3,7 @@ package com.solux.moro.ui.notification.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,27 +22,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.theme.MoroTheme
-import java.time.Instant
+import com.solux.moro.data.model.NotificationUiModel
 
 @Composable
 fun Notification(
-    type: NotificationType = NotificationType.COMMENT,
-    name:String ?= "_sjwneooo",
-    id:String ?= "@uzinnss",
-    content:String ?="헐 잘 찍었따",
-    createdAt: Instant?= Instant.parse("2025-12-26T10:30:20Z"),
-
-    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    notification: NotificationUiModel,
     color: Color = MoroTheme.colors.fontColor,
-    style: TextStyle = MoroTheme.typography.bodyRegular16
+    style: TextStyle = MoroTheme.typography.bodyRegular16,
+    onReadClick: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -49,97 +48,132 @@ fun Notification(
                 color = Color(0xFF404040),
                 shape = RoundedCornerShape(size = 8.dp))
             .width(360.dp)
-        .background(color = Color(0xFF262626), shape = RoundedCornerShape(size = 8.dp))
-        .padding(10.dp),
+            .background(color = Color(0xFF262626), shape = RoundedCornerShape(size = 8.dp))
+            .padding(13.dp)
+            .clickable(
+                onClick = {
+                    onReadClick()
+                    when (notification) {
+                        is NotificationUiModel.Comment -> {
+                            //navController.navigate(notification.) 해당 게시물로 이동
+                        }
+                        is NotificationUiModel.Liked -> {
+                            //navController.navigate()  해당 게시물로 이동
+                        }
+                        is NotificationUiModel.Following -> {
+                            navController.navigate("follow")
+                        }
+                        is NotificationUiModel.ColorUnlocked -> {
+                            //navController.navigate("colorMap")
+                        }
+                        is NotificationUiModel.Mission -> {
+                            //navController.navigate("mission")
+                        }
+                    }
+
+                }
+            ),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(modifier = Modifier
-            .weight(1f, fill = false)) {
+            .weight(1f, fill = false)
+            .padding(top=5.dp)
+        ) {
+            Column (
+                //Modifier.padding(top=5.dp)
+            ){
             Image(
-                painter = painterResource(id = type.iconRes()),
+                painter = painterResource(id = notification.type.iconRes()),
                 contentDescription = "image description",
                 modifier = Modifier
-                    .size(40.dp)
-            )
+                    .size(40.dp))
+            }
+
             Column(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)
                     .weight(1f, fill = false)
             ) {
-                val notification = if (type.needsName && name != null) {
-                    stringResource(type.messageRes(), name)
-                } else {
-                    stringResource(type.messageRes())
+                val text = when (notification) {  //제목 텍스트
+                    is NotificationUiModel.Comment -> {
+                        stringResource(notification.type.messageRes(), notification.userName)
+                    }
+                    is NotificationUiModel.Liked -> {
+                        stringResource(notification.type.messageRes(), notification.userName)
+                    }
+                    is NotificationUiModel.Following -> {
+                        stringResource(notification.type.messageRes(), notification.userName)
+                    }
+                    is NotificationUiModel.ColorUnlocked -> {
+                        stringResource(notification.type.messageRes())
+                    }
+                    is NotificationUiModel.Mission -> {
+                        stringResource(notification.type.messageRes(), notification.content)
+                    }
+
                 }
 
                 Text(
-                    text = notification,
+                    text = text,
                     color = color,
                     style = style,
                 )
 
-                if (type.needsContent) {// && id != null && content != null) {
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 5.dp)
-                            .width(200.dp)
-                            //.height(18.dp)
-                    ) {
-                        var contentText=""
-                        if(type == NotificationType.MISSION){
-                            contentText= stringResource(type.contentRes())
-                        }else{
-                            contentText= stringResource(type.contentRes(),
-                                id?:"", content?:"")
-                        }
+                val contentText = when (notification) { //본문 텍스트
+                    is NotificationUiModel.Comment -> stringResource(notification.type.contentRes(),notification.content)
+                    is NotificationUiModel.Mission -> stringResource(notification.type.contentRes(), notification.content) //시간 계산..???
+                    is NotificationUiModel.ColorUnlocked -> stringResource(notification.type.contentRes(),) //notification.content)
+                    else -> ""
+                }
+
+                if (contentText.isNotEmpty()) {
+                    Row(modifier = Modifier.padding(top = 5.dp).width(200.dp)) {
                         Text(
                             text = contentText,
                             color = Color(0xFFA3A3A3),
                             style = MoroTheme.typography.bodyRegular14,
                         )
-
                     }
                 }
 
                 Row(
                     modifier = Modifier
-                        .padding(top = 5.dp)
+                        .padding(top = 8.dp)
                 ) {
                     Text(
-                        text = "28m ago",
+                        text = notification.createdAt,
                         color = Color(0xFF737373),
                         style = MoroTheme.typography.bodyRegular12,
                     )
-                    Spacer(modifier.width(18.dp))
-                    if(type!=NotificationType.UNLOCK) {
-                        Text(
-                            text = "Reply",
-                            color = Color(0xFFA3A3A3),
-                            style = MoroTheme.typography.bodyRegular12,
-                        )
-                    }
+                    Spacer(Modifier.width(18.dp))
                 }
             }
         }
-        if (type != NotificationType.UNLOCK) {
-            Column(
-                modifier = Modifier.padding(end = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top,
-            ) {
-                if (type == NotificationType.COMMENT || type == NotificationType.MISSION) {
-                    Column(
-                        modifier = Modifier
-                            .size(21.dp)
-                            .padding(7.dp)
-                            .background(
-                                shape = RoundedCornerShape(size = 8.dp),
-                                color = Color(0xFF737373),
-                            ),
-                    ) {}
-                } else if (type == NotificationType.LIKE) {
-                    PhotoImage(null)
-                } else if (type == NotificationType.FOLLOW) {
+        NotificationSide(notification)
+    }
+}
+@Composable
+fun NotificationSide(notification: NotificationUiModel){
+    Column(
+        modifier = Modifier.padding(end = 10.dp, top = 5.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top,
+    ) {
+        when (notification) {
+            is NotificationUiModel.Comment -> { //읽음 표시
+                ReadIcon(notification.isRead)
+            }
+            is NotificationUiModel.Mission -> { //읽음 표시
+                ReadIcon(notification.isRead)
+            }
+            is NotificationUiModel.ColorUnlocked -> {//읽음 표시
+                ReadIcon(notification.isRead)
+            }
+            is NotificationUiModel.Liked -> { //사진
+                PhotoImage(notification.imageUrl)
+            }
+            is NotificationUiModel.Following -> { //버튼
+                Column (modifier= Modifier){
                     Button(
                         onClick = {},
                         modifier = Modifier
@@ -158,47 +192,40 @@ fun Notification(
                             style = MoroTheme.typography.bodyRegular12,
                         )
                     }
-
                 }
-
             }
         }
     }
 }
 
 @Composable
+fun ReadIcon(read: Boolean){
+    Column(
+        modifier = Modifier
+            .size(21.dp)
+            .padding(7.dp)
+            .background(
+                shape = RoundedCornerShape(size = 8.dp),
+                color = if (!read) Color(0xFF737373) else Color.Transparent,
+            ),
+    ) {}
+}
+@Composable
 fun PhotoImage(
     imageUrl: String?,
     modifier: Modifier = Modifier
 ) {
-    if (imageUrl == null) {
-        Image(
-            painter = painterResource(R.drawable.img_feed),
-            contentDescription = null,
-            modifier = modifier
-                .size(50.dp),
-            contentScale = ContentScale.Crop
-        )
-    } /*else {
-        AsyncImage(
-            model = imageUrl,
-            contentDescription = null,
-            modifier = modifier,
-            contentScale = ContentScale.Crop
-        )
-    }
-    */
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(imageUrl)
+            .build(),
+        placeholder = painterResource(R.drawable.img_feed),
+        error = painterResource(R.drawable.img_feed),
+        fallback = painterResource(R.drawable.img_feed),
+        contentDescription = null,
+        modifier = modifier
+            .size(50.dp),
+        contentScale = ContentScale.Crop,
+    )
 }
 
-
-@Preview(device = Devices.PIXEL_4)
-@Composable
-fun NotificationPreview(){
-    Column (verticalArrangement=Arrangement.spacedBy(5.dp)){
-        Notification()
-        Notification(NotificationType.LIKE)
-        Notification(type = NotificationType.FOLLOW)
-        Notification(NotificationType.MISSION,null,null)
-        Notification(type = NotificationType.UNLOCK)
-    }
-}

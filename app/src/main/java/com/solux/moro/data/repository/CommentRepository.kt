@@ -5,18 +5,18 @@ import kotlinx.coroutines.flow.Flow
 
 interface CommentRepository {
 
-    fun observeComments(postId: String): Flow<List<CommentItem>>
+    fun observeComments(postId: Long): Flow<List<CommentItem>>
 
     suspend fun loadComments(
-        postId: String,
+        postId: Long,
         cursor: String? = null
     )
 
     suspend fun addComment(
-        postId: String,
+        postId: Long,
         content: String
     )
 
-    suspend fun deleteComment(commentId: String)
+    suspend fun deleteComment(commentId: Long)
 }
 

@@ -33,7 +33,7 @@ import com.solux.moro.R
 @Composable
 fun ProfileHeader(
     nickname: String,
-    colorCode: String,
+    colorCode: String?="null",
 ){
     Column(
         Modifier
@@ -132,7 +132,7 @@ fun ProfileHeader(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = colorCode,
+                    text = colorCode?:"null",
                     style = TextStyle(
                         fontSize = 40.32.toPxSp,
                         lineHeight = 56.45.toPxSp,

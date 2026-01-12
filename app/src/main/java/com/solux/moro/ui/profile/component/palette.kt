@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -22,8 +23,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.solux.moro.R
+import com.solux.moro.core.designsystem.theme.MoroTheme
 import kotlin.math.cos
 import kotlin.math.sin
+
 class SidePanelState(
     initialOffset: Float
 ) {
@@ -49,7 +52,9 @@ fun rememberSidePanelState(
 @Composable
 fun Palette(
     modifier: Modifier,
-    navController: NavHostController
+    navController: NavHostController,
+    isMyProfile: Boolean = false,
+    paletteColors: List<Color>? = emptyList(),
 ) {
     Box(
         contentAlignment = Alignment.CenterStart
@@ -62,28 +67,42 @@ fun Palette(
                 .clip(CircleShape)
                 .background(Color(0xFF8EEAF4)),
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.icon_edit),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(28.dp)
-                    .offset(x = 25.dp)
-                    .clickable(
-                        onClick = {
-                            navController.navigate("paletteEdit")
-                        }
-                    ),
+            if(!isMyProfile)
+            {
+                Text(text="ALL",
+                    style=MoroTheme.typography.bodyBold16,
+                    color=Color.Black,
+                    modifier = Modifier
+                        .size(35.dp)
+                        .offset(x = 35.dp,y=8.dp)
 
-            )
+                        .clickable(
+                            onClick = {
+                                //navController.navigate()
+                                //게시글로 이동
+                            }
+                        ),
+
+                )
+            }
+            else {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_edit),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(28.dp)
+                        .offset(x = 25.dp)
+                        .clickable(
+                            onClick = {
+                                navController.navigate("paletteEdit")
+                            }
+                        ),
+
+                    )
+            }
         }
         SemiCircleItems(
-            itemColors = listOf(
-                Color(0xFF929DF7),
-                Color(0xFF93CBF5),
-                Color(0xFF7D48DA),
-                Color(0xFF4934BF),
-                Color(0xFF631577)
-            )
+            itemColors = paletteColors
         )
     }
 }
@@ -93,7 +112,8 @@ fun SemiCircleItems(
     itemCount: Int = 6,
     radius: Dp = 478.07999.toPxDp,
     itemSize: Dp = 175.97812.toPxDp,
-    itemColors: List<Color> = mutableListOf(Color(0x00000000), Color(0x00000000), Color(0x00000000),Color(0x00000000), Color(0x00000000), Color(0x00000000)),
+    itemColors: List<Color>? = emptyList()
+    ,
 ) {
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -110,7 +130,7 @@ fun SemiCircleItems(
             val x = radius * cos(angleRad).toFloat()
             val y = radius * sin(angleRad).toFloat()
 
-            val color = itemColors.getOrNull(index) ?: Color.Transparent
+            val color = itemColors?.getOrNull(index) ?: Color.Transparent
 
             if(color==Color.Transparent){
                 Box(

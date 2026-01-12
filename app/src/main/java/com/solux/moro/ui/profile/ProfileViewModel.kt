@@ -36,8 +36,8 @@ class ProfileViewModel @Inject constructor(
                 "@colorhunter"
             )
 
-    val userColor=
-        user.map { it?.colorPalette?.userColor.toString() }
+    val userColorHex=
+        user.map { it?.userColorHex }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
@@ -73,9 +73,9 @@ class ProfileViewModel @Inject constructor(
                 0
             )
 
-    private val profileUserId: String =
-        savedStateHandle["userId"] ?: authRepository.myUserId()
-    val myUserId: String = authRepository.myUserId()
+    private val profileUserId: Long =
+        savedStateHandle["userId"] ?: 1
+    val myUserId: Long = authRepository.myUserId().toLong()
 
     val isMyProfile: StateFlow<Boolean> =
         flowOf(profileUserId == myUserId)

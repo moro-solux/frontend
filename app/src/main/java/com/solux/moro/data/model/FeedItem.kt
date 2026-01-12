@@ -3,8 +3,8 @@ package com.solux.moro.data.model
 import androidx.compose.ui.graphics.Color
 
 data class FeedItem(
-    val id: String,
-    val authorId: String,
+    val id: Long,
+    val authorId: Long,
     val authorNickname: String,
     val authorProfileColor: Color,
     val hexCodes: List<String>,

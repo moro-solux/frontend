@@ -12,9 +12,9 @@ class FakeFeedRepository @Inject constructor(): FeedRepository {
     private val _homeFeed = MutableStateFlow(
         listOf(
             FeedItem(
-                id = "1",
-                authorId = "user1",
-                authorNickname = "테스트유저",
+                id = 2,
+                authorId = 2,
+                authorNickname = "테스트유저2",
                 authorProfileColor = MoroPalette.Pastel.Cyan200,
                 hexCodes = listOf(
                     "#3357FF",
@@ -39,14 +39,14 @@ class FakeFeedRepository @Inject constructor(): FeedRepository {
 
     override fun getHomeFeed(): Flow<List<FeedItem>> = _homeFeed
 
-    override fun getUserFeed(userId: String): Flow<List<FeedItem>> =
+    override fun getUserFeed(userId: Long): Flow<List<FeedItem>> =
         _homeFeed.map { list -> list.filter { it.authorId == userId } }
 
     override suspend fun refreshHomeFeed() {
         //
     }
 
-    override suspend fun likeFeed(feedId: String) {
+    override suspend fun likeFeed(feedId: Long) {
         _homeFeed.update { list ->
             list.map {
                 if (it.id == feedId)
@@ -59,7 +59,7 @@ class FakeFeedRepository @Inject constructor(): FeedRepository {
         }
     }
 
-    override suspend fun unlikeFeed(feedId: String) {
+    override suspend fun unlikeFeed(feedId: Long) {
         _homeFeed.update { list ->
             list.map {
                 if (it.id == feedId)

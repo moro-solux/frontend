@@ -1,4 +1,4 @@
-package com.solux.moro.ui.ProfileColorEdit
+package com.solux.moro.ui.profilecoloredit
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel

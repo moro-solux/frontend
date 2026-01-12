@@ -3,6 +3,9 @@ package com.solux.moro.data.repository
 import androidx.compose.ui.graphics.Color
 import com.solux.moro.core.designsystem.theme.MoroPalette
 import com.solux.moro.core.designsystem.theme.MoroThemeType
+import com.solux.moro.data.dto.UserSearchBaseResponse
+import com.solux.moro.data.dto.UserSearchDto
+import com.solux.moro.data.dto.UserSearchResponseDto
 import com.solux.moro.data.model.FeedItem
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserColorPalette
@@ -19,9 +22,11 @@ class FakeUserRepository @Inject constructor() : UserRepository {
 
     private val _user = MutableStateFlow<User?>(
         User(
-            id = "1",
+            id = 1,
             email = "test@test.com",
             nickname = "테스트유저",
+            visible = false,
+            userColorHex="#tset12",
             colorPalette = UserColorPalette(
                 theme = MoroThemeType.Pastel,
                 userColor = MoroPalette.Pastel.Purple400,
@@ -45,7 +50,24 @@ class FakeUserRepository @Inject constructor() : UserRepository {
             )
         )
     )
-
+    override suspend fun searchUsers(
+        query: String,
+        page: Int
+    ): Result<UserSearchBaseResponse<UserSearchResponseDto>> {
+        // 테스트용 가짜 응답 데이터 생성
+        val fakeResponse = UserSearchBaseResponse(
+            success = true,
+            status = 200,
+            message = "성공",
+            data = UserSearchResponseDto(
+                content = listOf(UserSearchDto(userId = 1, userName = "가짜모로")),
+                currentPage = 0,
+                totalPages = 1,
+                hasNext = false
+            )
+        )
+        return Result.success(fakeResponse)
+    }
     override val user: StateFlow<User?> = _user.asStateFlow()
     private val _userStats = MutableStateFlow<UserStats?>(null)
     override val userStats: StateFlow<UserStats?> = _userStats
@@ -69,11 +91,11 @@ class FakeUserRepository @Inject constructor() : UserRepository {
             user?.copy(nickname = nickname)
         }
     }
-    override fun getUserPosts(userId: String): Flow<List<FeedItem>> = flow {
+    override fun getUserPosts(userId: Long): Flow<List<FeedItem>> = flow {
         val fakePosts = listOf(
             FeedItem(
-                id = "post_1",
-                authorId = userId,
+                id = 1,
+                authorId = userId ,
                 authorNickname = "ColorHunter",
                 authorProfileColor = Color.Companion.Magenta,
                 hexCodes = listOf("#FF5733", "#33FF57"),
@@ -85,8 +107,8 @@ class FakeUserRepository @Inject constructor() : UserRepository {
                 createdAt = System.currentTimeMillis()
             ),
             FeedItem(
-                id = "post_1",
-                authorId = userId,
+                id = 2,
+                authorId = userId ,
                 authorNickname = "ColorHunter",
                 authorProfileColor = Color.Companion.Magenta,
                 hexCodes = listOf("#FF5733", "#33FF57"),
@@ -98,8 +120,8 @@ class FakeUserRepository @Inject constructor() : UserRepository {
                 createdAt = System.currentTimeMillis()
             ),
             FeedItem(
-                id = "post_1",
-                authorId = userId,
+                id = 3,
+                authorId = userId ,
                 authorNickname = "ColorHunter",
                 authorProfileColor = Color.Companion.Magenta,
                 hexCodes = listOf("#FF5733", "#33FF57"),
@@ -111,7 +133,7 @@ class FakeUserRepository @Inject constructor() : UserRepository {
                 createdAt = System.currentTimeMillis()
             ),
             FeedItem(
-                id = "post_2",
+                id = 5,
                 authorId = userId,
                 authorNickname = "ColorHunter",
                 authorProfileColor = Color.Companion.Magenta,

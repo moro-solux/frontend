@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface AuthRepository {
     val authState: StateFlow<AuthState>
 
-    fun myUserId(): String
+    fun myUserId(): Long
 
     suspend fun login(
         email: String,
