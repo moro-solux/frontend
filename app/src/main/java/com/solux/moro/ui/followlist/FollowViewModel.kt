@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserStats
 import com.solux.moro.data.repository.FollowRepository
+import com.solux.moro.data.repository.UserRepository
 import com.solux.moro.screens.FollowTabType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -39,6 +40,7 @@ data class FollowRequestUiState(
 @HiltViewModel
 class FollowingViewModel @Inject constructor(
     private val followRepository: FollowRepository,
+    private val userRepository: UserRepository,
     val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private var allFollowers = listOf<FollowUserInfo>()
@@ -47,8 +49,8 @@ class FollowingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(FollowUiState())
     val uiState: StateFlow<FollowUiState> = _uiState.asStateFlow()
 
-    //val userNickName: String = checkNotNull(savedStateHandle["userNickName"])
-    val userNickName: String ="채은"
+    val userNickName: String? = userRepository.user.value?.nickname
+
     init {
         loadFollowData()
     }

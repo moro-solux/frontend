@@ -111,7 +111,7 @@ class ProfileViewModel @Inject constructor(
                 "팔로우"
             )
 
-    val userPosts = userRepository.getUserPosts(profileUserId.toLong())
+    val userPosts = userRepository.getUserPosts(profileUserId)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
