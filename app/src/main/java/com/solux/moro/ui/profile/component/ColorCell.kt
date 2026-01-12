@@ -11,7 +11,11 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
@@ -19,14 +23,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.core.designsystem.theme.colorsOf
+import com.solux.moro.core.util.figmaDp
 
 data class ColorCellData(
     val color: Color,
-    val isSelected: Boolean
+    val isSelected: Boolean,
+    val isLocked: Boolean = false
 )
 @Composable
 fun ColorCell(
     color: Color,
+    isLocked: Boolean = false,
     isSelected: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -36,10 +43,33 @@ fun ColorCell(
             .background(color, shape = RoundedCornerShape(8.dp))
             .border(
                 width = if (isSelected) 3.dp else 1.dp,
-                color =if (isSelected||color==Color.Black) Color.White else Color.Black,
+                color = if (isSelected || color == Color.Black) Color.White else Color.Black,
                 shape = RoundedCornerShape(8.dp)
             )
     )
+
+    if (isLocked) {
+        Box(
+            modifier = modifier
+                .size(50.dp)
+                .background( Color(0x80000000), shape = RoundedCornerShape(8.dp))
+                .border(
+                    width = if (isSelected) 3.dp else 1.dp,
+                    color = if (isSelected || color == Color.Black) Color.White else Color.Black,
+                    shape = RoundedCornerShape(8.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.Lock,
+                contentDescription = null,
+                tint = Color(0xFF2E2E2E),
+                modifier = Modifier.size(figmaDp(16f))
+            )
+        }
+    }
+
+
 }
 
 @Composable
@@ -64,7 +94,7 @@ fun ColorGrid(
 
 @Composable
 fun ColorCellItem(cell: ColorCellData) {
-    ColorCell(cell.color,cell.isSelected)
+    ColorCell(color=cell.color,isLocked = cell.isLocked, isSelected = cell.isSelected)
 }
 
 @Preview()
@@ -75,7 +105,8 @@ fun ColorGridPreview() {
     val colorCells = colors.map {
         ColorCellData(
             color = it,
-            isSelected = if(colors.indexOf(it)==10) true else false
+            isSelected = if(colors.indexOf(it)==10) true else false,
+            isLocked = if(colors.indexOf(it)==11) true else false
         )
     }
 
@@ -96,5 +127,5 @@ fun ColorCellItemPreview() {
 @Preview()
 @Composable
 fun ColorCellPreview(){
-    ColorCell(Color.Red, true)
+    ColorCell(Color.Red, true,true)
 }
