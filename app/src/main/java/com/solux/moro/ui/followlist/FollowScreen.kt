@@ -24,12 +24,11 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -65,11 +64,13 @@ fun FollowScreen(
     val selectedTab = uiState.selectedTab
     val followers = uiState.filteredFollowers
     val followings = uiState.filteredFollowings
-    val userId = viewModel.userId
+    val userId = viewModel.userNickName
 
     Scaffold(
         bottomBar = { BottomBar() },
-        topBar = { BackNavigationTopAppBar(userId,{}) }
+        topBar = { BackNavigationTopAppBar(userId,{
+            navController.popBackStack()
+        }) }
     ) {innerPadding ->
         Column(
             Modifier
@@ -94,15 +95,21 @@ fun FollowScreen(
                     FollowTab(
                         text = "Followers",
                         selected = selectedTab == FollowTabType.FOLLOWER,
-                        onClick = { viewModel.switchTab(selectedTab) }
+                        onClick = { viewModel.switchTab(FollowTabType.FOLLOWER) }
                     )
                     FollowTab(
                         text = "Following",
                         selected = selectedTab == FollowTabType.FOLLOWING,
-                        onClick = { viewModel.switchTab(selectedTab) }
+                        onClick = { viewModel.switchTab(FollowTabType.FOLLOWING) }
                     )
                 }
-                TextFiled()
+                TextSearchField(
+                    query = if (selectedTab == FollowTabType.FOLLOWER) uiState.followerSearchQuery else uiState.followingSearchQuery,
+                    onQueryChange = {
+                        if (selectedTab == FollowTabType.FOLLOWER) viewModel.updateFollowerSearch(it)
+                        else viewModel.updateFollowingSearch(it)
+                    }
+                )
             }
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -132,18 +139,19 @@ fun FollowScreen(
 }
 
 @Composable
-private fun TextFiled(){
-    var text by remember { mutableStateOf("") }
+private fun TextSearchField(
+    query: String,
+    onQueryChange: (String) -> Unit
+){
+    val focusManager = LocalFocusManager.current
     TextField(
-        value = text,
-        onValueChange = { text = it },
+        value = query,
+        onValueChange = { onQueryChange(it) },
         singleLine = true,
         keyboardActions = KeyboardActions(
             onSearch = {
-                // 검색
-                println("검색 실행: $text")
-
-                // focusManager.clearFocus()
+                focusManager.clearFocus()
+                println("검색 실행: $query")
             }
         ),
         placeholder = {

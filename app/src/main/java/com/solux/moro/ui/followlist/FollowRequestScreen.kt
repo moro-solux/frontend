@@ -30,7 +30,7 @@ import com.solux.moro.ui.followlist.component.FollowRequestUserItem
 import com.solux.moro.ui.profile.component.toPxDp
 
 @Composable
-fun FollowRequestScreen(
+    fun FollowRequestScreen(
     viewModel: FollowRequestViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
@@ -39,7 +39,9 @@ fun FollowRequestScreen(
 
     Scaffold(
         bottomBar = { BottomBar() },
-        topBar = { BackNavigationTopAppBar("팔로우 요청",{}) }
+        topBar = { BackNavigationTopAppBar("팔로우 요청",onBackClick = {
+            navController.popBackStack()
+        })}
     ) {innerPadding ->
         Column(
             Modifier

@@ -3,6 +3,9 @@ package com.solux.moro.data.repository
 import androidx.compose.ui.graphics.Color
 import com.solux.moro.core.designsystem.theme.MoroPalette
 import com.solux.moro.core.designsystem.theme.MoroThemeType
+import com.solux.moro.data.dto.UserSearchBaseResponse
+import com.solux.moro.data.dto.UserSearchDto
+import com.solux.moro.data.dto.UserSearchResponseDto
 import com.solux.moro.data.model.FeedItem
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserColorPalette
@@ -45,7 +48,24 @@ class FakeUserRepository @Inject constructor() : UserRepository {
             )
         )
     )
-
+    override suspend fun searchUsers(
+        query: String,
+        page: Int
+    ): Result<UserSearchBaseResponse<UserSearchResponseDto>> {
+        // 테스트용 가짜 응답 데이터 생성
+        val fakeResponse = UserSearchBaseResponse(
+            success = true,
+            status = 200,
+            message = "성공",
+            data = UserSearchResponseDto(
+                content = listOf(UserSearchDto(userId = 1, userName = "가짜모로")),
+                currentPage = 0,
+                totalPages = 1,
+                hasNext = false
+            )
+        )
+        return Result.success(fakeResponse)
+    }
     override val user: StateFlow<User?> = _user.asStateFlow()
     private val _userStats = MutableStateFlow<UserStats?>(null)
     override val userStats: StateFlow<UserStats?> = _userStats

@@ -1,6 +1,7 @@
 package com.solux.moro.ui.profile.component
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.solux.moro.core.designsystem.component.PIXEL_DENSITY
 import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.ui.profile.ProfileAction
@@ -41,6 +43,8 @@ fun Profile(
     followerCnt: Int,
     followingCnt: Int,
     action: ProfileAction,
+    navController: NavController,
+
     onEditProfile: () -> Unit,
     onFollow: () -> Unit,
 ) {
@@ -79,7 +83,9 @@ fun Profile(
             ProfileInfo(
                 colorsCnt,
                 followerCnt,
-                followingCnt
+                followingCnt,
+                action = action,
+                navController = navController
             )
         }
     }
@@ -90,7 +96,9 @@ fun Profile(
 fun ProfileInfo(
     user_colors_cnt: Int = 124,
     user_photos_cnt: Int = 1200,
-    user_following_cnt: Int = 89
+    user_following_cnt: Int = 89,
+    action: ProfileAction,
+    navController: NavController
 ){
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -99,9 +107,28 @@ fun ProfileInfo(
             .width(688.77002.toPxDp)
             .height(115.2.toPxDp)
     ) {
-        ProfileStatItem(user_colors_cnt, "Colors")
-        ProfileStatItem(user_photos_cnt, "Follower")
-        ProfileStatItem(user_following_cnt, "Following")
+        ProfileStatItem(user_colors_cnt,
+            "Colors",
+            onClick = {}
+            )
+        ProfileStatItem(user_photos_cnt,
+            "Follower",
+            onClick = {
+                when (action) {
+                    ProfileAction.EditProfile -> navController.navigate("follow")
+                    ProfileAction.Follow -> {}
+                }
+            }
+        )
+        ProfileStatItem(user_following_cnt,
+            "Following",
+            onClick = {
+                when (action) {
+                    ProfileAction.EditProfile -> navController.navigate("follow")
+                    ProfileAction.Follow -> {}
+                }
+            }
+        )
     }
 }
 
@@ -141,12 +168,15 @@ fun ProfileActionButton(
 }
 
 @Composable
-fun ProfileStatItem(cnt: Int, title: String){
+fun ProfileStatItem(cnt: Int, title: String,onClick: () -> Unit){
     Column(
         verticalArrangement = Arrangement.spacedBy(5.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .width(183.50999.toPxDp)
+            .clickable{
+                onClick()
+            }
     ) {
         cnt.toDouble()
         Text(
@@ -184,24 +214,8 @@ fun ProfileStatItem(cnt: Int, title: String){
 @Composable
 fun ProfileActionButtonPreview(){
     ProfileActionButton(
-        action = ProfileAction.Follow,
+        action = ProfileAction.EditProfile,
         onEditProfile = {},
         onFollow = {}
-    )
-}
-
-
-
-@Preview(device = Devices.PIXEL_4A)
-@Composable
-fun ProfilePreview(){
-    Profile("@colorhunter",
-        "#3366FF",
-        124,
-        1200,
-        89,
-        ProfileAction.Follow,
-        {},
-        {}
     )
 }

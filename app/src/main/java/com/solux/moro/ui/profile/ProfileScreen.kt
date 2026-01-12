@@ -93,11 +93,12 @@ fun ProfileScreen(
                             followingCount,
                             colorsCount,
                             action,
+                            navController,
                             onEditProfile = {
                                 navController.navigate("profileEdit")
                             },
                             onFollow = {
-
+                        // 팔로우 동작
                             },
                         )
                         Captures(posts)

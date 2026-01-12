@@ -32,10 +32,8 @@ import com.solux.moro.R
 import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.theme.MoroTheme
-import com.solux.moro.core.navigation.Profile
 import com.solux.moro.data.model.NotificationUiModel
 import com.solux.moro.ui.notification.component.Notification
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun NotificationScreen(
@@ -47,7 +45,9 @@ fun NotificationScreen(
 
     val navController= navController
     Scaffold(
-        topBar = { BackNavigationTopAppBar("알림",{}) },
+        topBar = { BackNavigationTopAppBar("알림",{
+            navController.popBackStack()
+        }) },
         bottomBar = { BottomBar() }
     ) {innerPadding ->
         Column(
@@ -60,7 +60,7 @@ fun NotificationScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            FollowNavigationItem(userNickname = viewModel.nickname, navController = navController)
+            FollowNavigationItem( navController = navController)
             val notifications by viewModel.notifications.collectAsState(initial = emptyMap())
             val mock  = mapOf(
                 "Today" to listOf(
@@ -170,12 +170,12 @@ fun NotificationList(
 
 
 @Composable
-fun FollowNavigationItem(navController: NavHostController, userNickname: StateFlow<String>){
+fun FollowNavigationItem(navController: NavHostController){
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(16.dp)
         .clickable {
-            navController.navigate(Profile.createRoute(userNickname.value))},
+            navController.navigate("follow_request")},
         horizontalArrangement = Arrangement.spacedBy(10.dp,Alignment.Start),
         verticalAlignment = Alignment.CenterVertically,
         ){

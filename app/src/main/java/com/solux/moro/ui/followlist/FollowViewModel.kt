@@ -47,8 +47,8 @@ class FollowingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(FollowUiState())
     val uiState: StateFlow<FollowUiState> = _uiState.asStateFlow()
 
-    val userId: String = checkNotNull(savedStateHandle["userId"])
-
+    //val userNickName: String = checkNotNull(savedStateHandle["userNickName"])
+    val userNickName: String ="채은"
     init {
         loadFollowData()
     }

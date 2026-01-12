@@ -36,5 +36,9 @@ abstract class RepositoryModule {
         impl: FakeNotificationRepository
     ): NotificationRepository
 
+    @Binds
+    abstract fun bindFollowRepository(
+        impl: FakeFollowRepository
+    ): FollowRepository
 }
 
