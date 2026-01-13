@@ -10,6 +10,8 @@ import com.solux.moro.ui.followlist.FollowRequestScreen
 import com.solux.moro.ui.followlist.FollowRequestViewModel
 import com.solux.moro.ui.followlist.FollowingViewModel
 import com.solux.moro.ui.home.HomeScreen
+import com.solux.moro.ui.menu.ColorMapScreen
+import com.solux.moro.ui.menu.MenuScreen
 import com.solux.moro.ui.notification.NotificationScreen
 import com.solux.moro.ui.notification.NotificationViewModel
 import com.solux.moro.ui.paletteedit.PaletteEditScreen
@@ -25,6 +27,12 @@ fun NavGraph(navController: NavHostController){
     NavHost(navController = navController, startDestination ="profile_test") {
         composable("home") { //홈 화면
             HomeScreen()
+        }
+        composable("menu") {
+            MenuScreen(navController = navController)
+        }
+        composable("colormap") {
+            ColorMapScreen(navController = navController)
         }
         composable("profile_test") {
             val viewModel: ProfileViewModel = hiltViewModel()

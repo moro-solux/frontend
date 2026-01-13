@@ -40,6 +40,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavHostController
 import com.solux.moro.core.util.figmaDp
 
 
@@ -53,7 +54,7 @@ data class ColorItem(
 typealias ColorGrid = List<List<ColorItem>>
 
 @Composable
-fun ColorMapScreen() {
+fun ColorMapScreen(navController: NavHostController) {
     var isNumberOn by remember { mutableStateOf(true) }
     var currentTheme by remember {
         mutableStateOf(ColorThemeType.PASTEL)
@@ -596,8 +597,4 @@ fun ColorCell(
 
 
 
-@Preview
-@Composable
-fun ColorMapScreenPreview() {
-    ColorMapScreen()
-}
+

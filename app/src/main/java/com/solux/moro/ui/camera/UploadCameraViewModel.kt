@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
-class CameraViewModel : ViewModel() {
+class UploadCameraViewModel : ViewModel() {
 
     // 다이얼로그 표시 여부
     var showConfirmDialog by mutableStateOf(false)
