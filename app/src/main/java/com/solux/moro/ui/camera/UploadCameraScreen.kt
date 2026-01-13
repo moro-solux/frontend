@@ -28,7 +28,7 @@ import java.io.File
 
 @Composable
 fun UploadCameraScreen(
-    viewModel: CameraViewModel = viewModel()
+    viewModel: UploadCameraViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
