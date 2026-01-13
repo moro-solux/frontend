@@ -19,12 +19,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.solux.moro.ui.camera.CameraLayout
-import com.solux.moro.ui.camera.CameraViewModel
+import com.solux.moro.ui.camera.UploadCameraViewModel
 import java.io.File
 
 @Composable
 fun MissionCameraScreen(
-    viewModel: CameraViewModel = viewModel(),
+    viewModel: UploadCameraViewModel = viewModel(),
     onMissionComplete: (Uri) -> Unit = {} // 최종 선택된 사진 1장만
 ) {
     val context = LocalContext.current
