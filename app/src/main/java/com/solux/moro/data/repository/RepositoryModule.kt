@@ -9,7 +9,6 @@ import com.solux.moro.test.repository.FakeCommentRepository
 import com.solux.moro.test.repository.FakeFeedRepository
 import com.solux.moro.test.repository.FakeFollowRepository
 import com.solux.moro.test.repository.FakeNotificationRepository
-import com.solux.moro.test.repository.FakeUserRepository
 import com.solux.moro.ui.auth.AuthRepository
 import com.solux.moro.ui.auth.component.FakeAuthRepository
 import dagger.Binds
@@ -23,7 +22,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindUserRepository(
-        impl: FakeUserRepository
+        impl: UserRepositoryImpl
     ): UserRepository
 
     @Binds
@@ -50,5 +49,7 @@ abstract class RepositoryModule {
     abstract fun bindFollowRepository(
         impl: FakeFollowRepository
     ): FollowRepository
+
+
 }
 

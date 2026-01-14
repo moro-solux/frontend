@@ -9,20 +9,21 @@ data class UserProfileResponse<T>(
 
 data class UserProfileEditRequest(
     val userName: String,
-    val userColorId: Long,
+    val userColorId: Int,
     val userColorHex: String?
 )
 data class MainColorEditRequest(
-    val colorIds: List<Long>
+    val colorIds: List<Int>
 )
 data class UserProfileDto(
     val userId: Long,
     val userName: String,
     val userColorHex: String?,
     val colorCount: Int,
+    val followingStatus:String,
     val followerCount: Int,
     val followingCount: Int,
-    val colorCodes: List<ColorCodeDto>,
+    val colorCodes: List<String>,
     val currentUser: Boolean,
     val visible: Boolean
 )

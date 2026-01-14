@@ -4,5 +4,5 @@ data class BaseResponse<T>(
     val success: Boolean,
     val status: Int,
     val message: String,
-    val data: T? = null
+    val data: T
 )

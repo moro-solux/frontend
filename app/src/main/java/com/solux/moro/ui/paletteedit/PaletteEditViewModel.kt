@@ -21,14 +21,8 @@ class PaletteEditViewModel @Inject constructor(
 ): ViewModel() {
 
     val user = userRepository.user
-    val selectedTheme =
-        user.map { it?.colorPalette?.theme ?: MoroThemeType.Pastel }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.Companion.WhileSubscribed(5_000),
-                MoroThemeType.Pastel
-            )
-
+    private val _selectedTheme = MutableStateFlow(MoroThemeType.Pastel)
+    val selectedTheme: StateFlow<MoroThemeType> = _selectedTheme.asStateFlow()
     private val _editingColorIndex =
         MutableStateFlow<Int>(0)
 
@@ -58,6 +52,10 @@ class PaletteEditViewModel @Inject constructor(
         }
     }
 
+
+    fun onThemeSelected(theme: MoroThemeType) {
+        _selectedTheme.value = theme
+    }
 
     fun updatePaletteColor(index: Int, color: Color) { // 팔레트 업데이트
         viewModelScope.launch {

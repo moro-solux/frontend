@@ -29,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.R
+import com.solux.moro.data.mapper.ColorMapper
 
 @Composable
 fun ProfileHeader(
@@ -53,7 +54,9 @@ fun ProfileHeader(
                     .height(460.79999.toPxDp)
                     .background(
                         brush = Brush.radialGradient(
-                            colors = listOf(Color(0xFF3366FF), Color(0x003D9900)),
+                            colors = listOf(
+                                ColorMapper.toColorFromHex(colorCode),
+                                Color(0x003D9900)),
                             center = Offset.Unspecified, // 기본값은 중앙
                             radius = Float.POSITIVE_INFINITY // 기본값은 컴포넌트 크기에 맞춤
                         )

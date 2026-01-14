@@ -21,7 +21,7 @@ class ProfileEditViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            userRepository.loadUser()
+            userRepository.loadUser(user.value.id)
         }
     }
 
@@ -31,9 +31,8 @@ class ProfileEditViewModel @Inject constructor(
 
     fun onSaveNickname() {
         viewModelScope.launch {
-            if (nicknameInput.isBlank()) return@launch
-
-            userRepository.updateNickname(nicknameInput)
+            userRepository.updateProfile(nicknameInput,
+                null,null)
         }
     }
 }
