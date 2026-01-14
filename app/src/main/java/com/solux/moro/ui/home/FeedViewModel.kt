@@ -3,7 +3,7 @@ package com.solux.moro.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.data.model.FeedItem
-import com.solux.moro.data.repository.FeedRepository
+import com.solux.moro.core.domain.FeedRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted

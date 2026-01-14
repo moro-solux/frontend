@@ -1,9 +1,10 @@
 package com.solux.moro.ui.profile
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.solux.moro.data.repository.UserRepository
+import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.ui.auth.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 sealed class ProfileAction {
     object EditProfile : ProfileAction()
@@ -28,8 +30,19 @@ class ProfileViewModel @Inject constructor(
     val user = userRepository.user
     val stats = userRepository.userStats
 
+    private val profileUserId: Long =
+        savedStateHandle["userId"] ?: 1
+    val myUserId: Long = authRepository.myUserId().toLong()
+
+    init {
+        viewModelScope.launch {
+            userRepository.loadUser(profileUserId)
+            Log.d("ProfileViewModel", "profileUserId: $profileUserId")
+        }
+    }
+
     val nickname =
-        user.map { it?.nickname.orEmpty() }
+        user.map { it.nickname.orEmpty() }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
@@ -41,11 +54,11 @@ class ProfileViewModel @Inject constructor(
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
-                "#3366FF"
+                "#B1271A"
             )
 
     val colorsCount=//   컬러맵 해금 사이즈 필요
-        user.map{it?.colorPalette?.paletteColors?.size?:0}
+        user.map{it.colorPalette.paletteColors.size?:0}
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
@@ -73,9 +86,6 @@ class ProfileViewModel @Inject constructor(
                 0
             )
 
-    private val profileUserId: Long =
-        savedStateHandle["userId"] ?: 1
-    val myUserId: Long = authRepository.myUserId().toLong()
 
     val isMyProfile: StateFlow<Boolean> =
         flowOf(profileUserId == myUserId)
@@ -112,10 +122,10 @@ class ProfileViewModel @Inject constructor(
             )
 
     val userPosts = userRepository.getUserPosts(profileUserId)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = emptyList() // 초기값은 빈 리스트
-        )
+//        .stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5_000),
+//            initialValue = emptyList() // 초기값 빈 리스트
+//        )
 
 }

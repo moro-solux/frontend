@@ -3,8 +3,8 @@ package com.solux.moro.ui.notification
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.data.model.NotificationUiModel
-import com.solux.moro.data.repository.NotificationRepository
-import com.solux.moro.data.repository.UserRepository
+import com.solux.moro.core.domain.NotificationRepository
+import com.solux.moro.core.domain.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -3,9 +3,8 @@ package com.solux.moro.ui.search
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.solux.moro.data.mapper.toDomain
+import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.data.model.SearchUser
-import com.solux.moro.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.Job
@@ -59,7 +58,7 @@ class SearchUserViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
 
             userRepository.searchUsers(query).onSuccess { response ->
-                val domainUsers = response.data.content.map { it.toDomain() }
+                val domainUsers = response.users
 
                 _uiState.update { it.copy(
                     filteredSearchRequests = domainUsers,

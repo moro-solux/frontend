@@ -61,16 +61,16 @@ fun ProfileScreen(
     val user by viewModel.user.collectAsState()
     val stats by viewModel.stats.collectAsState()
 
-    val palette = user?.colorPalette?.paletteColors
+    val palette = user.colorPalette.paletteColors
+    val nickname = user.nickname ?: "@colorhunter"
+    val userColorHex = user.userColorHex ?: "#FFFFFF"
+    val colorsCount = user.colorPalette?.paletteColors?.size ?: 0
 
-    val nickname by viewModel.nickname.collectAsState()
-    val userColorHex by viewModel.userColorHex.collectAsState()
-    val colorsCount by viewModel.colorsCount.collectAsState()
     val followerCount by viewModel.followerCount.collectAsState()
     val isFollowing by viewModel.isFollowing.collectAsState()
     val followingCount by viewModel.followingCount.collectAsState()
 
-    val posts by viewModel.userPosts.collectAsState()
+    val posts by viewModel.userPosts.collectAsState(emptyList())
 
 
 

@@ -2,7 +2,6 @@ package com.solux.moro.data.model
 
 data class User(
     val id: Long,
-    val email: String,
     val nickname: String,
     val userColorHex: String?,
     val colorPalette: UserColorPalette,

@@ -77,7 +77,7 @@ fun ProfileColorEditScreen(
 
                 Button(
                     onClick = {
-                        viewModel::updateUserColor
+                        viewModel::onSaveUserColor
                     },
                     Modifier
                         .height(55.dp)

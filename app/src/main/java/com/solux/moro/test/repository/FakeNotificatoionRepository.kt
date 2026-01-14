@@ -1,7 +1,8 @@
-package com.solux.moro.data.repository
+package com.solux.moro.test.repository
 
 import android.util.Log
 import com.solux.moro.data.model.NotificationUiModel
+import com.solux.moro.core.domain.NotificationRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

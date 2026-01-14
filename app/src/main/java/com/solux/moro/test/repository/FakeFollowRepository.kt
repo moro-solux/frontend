@@ -1,7 +1,7 @@
-package com.solux.moro.data.repository
+package com.solux.moro.test.repository
 
 import com.solux.moro.core.designsystem.theme.MoroPalette
-import com.solux.moro.core.designsystem.theme.MoroThemeType
+import com.solux.moro.core.domain.FollowRepository
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserColorPalette
 import com.solux.moro.data.model.UserStats
@@ -13,11 +13,9 @@ class FakeFollowRepository @Inject constructor() : FollowRepository {
         FollowUserInfo(
             user = User(
                 id = 1,
-                email = "test@test.com",
                 nickname = "테스트유저1",
-                userColorHex ="#11111",
+                userColorHex = "#11111",
                 colorPalette = UserColorPalette(
-                    theme = MoroThemeType.Pastel,
                     userColor = MoroPalette.Pastel.Purple400,
                     paletteColors = listOf(
                         MoroPalette.Pastel.Purple400,
@@ -39,11 +37,9 @@ class FakeFollowRepository @Inject constructor() : FollowRepository {
         FollowUserInfo(
             user = User(
                 id = 2,
-                email = "test@test.com",
                 nickname = "테스트유저2",
-                userColorHex ="#222222",
+                userColorHex = "#222222",
                 colorPalette = UserColorPalette(
-                    theme = MoroThemeType.Pastel,
                     userColor = MoroPalette.Pastel.Purple400,
                     paletteColors = listOf(
                         MoroPalette.Pastel.Purple400,
@@ -65,11 +61,9 @@ class FakeFollowRepository @Inject constructor() : FollowRepository {
         FollowUserInfo(
             user = User(
                 id = 3,
-                email = "test@test.com",
                 nickname = "테스트유저3",
-                userColorHex ="#33333",
+                userColorHex = "#33333",
                 colorPalette = UserColorPalette(
-                    theme = MoroThemeType.Pastel,
                     userColor = MoroPalette.Pastel.Purple400,
                     paletteColors = listOf(
                         MoroPalette.Pastel.Purple400,
@@ -93,11 +87,9 @@ class FakeFollowRepository @Inject constructor() : FollowRepository {
         FollowUserInfo(
             user = User(
                 id = 4,
-                email = "test@test.com",
                 nickname = "테스트유저4",
-                userColorHex ="#44444",
+                userColorHex = "#44444",
                 colorPalette = UserColorPalette(
-                    theme = MoroThemeType.Pastel,
                     userColor = MoroPalette.Pastel.Purple400,
                     paletteColors = listOf(
                         MoroPalette.Pastel.Purple400,
