@@ -8,9 +8,9 @@ data class UserProfileResponse<T>(
 )
 
 data class UserProfileEditRequest(
-    val userName: String,
-    val userColorId: Int,
-    val userColorHex: String?
+    val userName: String? = null,
+    val userColorId: Int? = null,
+    val userColorHex: String? = null
 )
 data class MainColorEditRequest(
     val colorIds: List<Int>
@@ -32,3 +32,4 @@ data class ColorCodeDto(
     val colorId: Long,
     val hexCode: String
 )
+

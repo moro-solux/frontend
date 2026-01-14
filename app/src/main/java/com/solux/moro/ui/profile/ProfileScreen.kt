@@ -63,7 +63,7 @@ fun ProfileScreen(
 
     val palette = user.colorPalette.paletteColors
     val nickname = user.nickname ?: "@colorhunter"
-    val userColorHex = user.userColorHex ?: "#B1271A"
+    val userColorHex = user.userColorHex ?: "#FFFFFF"
     val colorsCount = user.colorPalette?.paletteColors?.size ?: 0
 
     val followerCount by viewModel.followerCount.collectAsState()

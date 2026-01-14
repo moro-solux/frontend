@@ -166,14 +166,14 @@ object ColorMapper {
         idMap[id]
 
     fun toColorFromHex(hex: String?): Color {
+        if (hex.isNullOrBlank()) return Color(0xFFFFFFFF)
         return try {
-            if(hex==null) return Color(0xFFFFFFFF)
             val cleanedHex = hex.removePrefix("#")
             val colorLong = cleanedHex.toLong(16).or(0xFF000000)
             Color(colorLong)
         } catch (e: Exception) {
-            null
-        }!!
+            Color(0xFFFFFFFF)
+        }
     }
     fun toIdFromHex(hex: String): Int =
         hexMap[hex.uppercase()]!!.id

@@ -54,8 +54,11 @@ fun Palette(
     modifier: Modifier,
     navController: NavHostController,
     isMyProfile: Boolean = false,
+    userColor: Color? = Color.White,
     paletteColors: List<Color>? = emptyList(),
 ) {
+    val finalColor = userColor ?: Color.White
+
     Box(
         contentAlignment = Alignment.CenterStart
     ) {
@@ -65,7 +68,7 @@ fun Palette(
                 .size(478.07999.toPxDp)
                 .offset(x=-60.dp)
                 .clip(CircleShape)
-                .background(Color(0xFF8EEAF4)),
+                .background(finalColor),
         ) {
             if(!isMyProfile)
             {

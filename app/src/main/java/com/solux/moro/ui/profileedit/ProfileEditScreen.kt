@@ -1,5 +1,6 @@
 package com.solux.moro.ui.profileedit
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -134,7 +135,8 @@ fun ProfileEditScreen(
                 }
                 Button(
                     onClick = {
-                        viewModel::onSaveNickname
+                        Log.d("ProfileEditScreen", "닉네임 변경 버튼 클릭")
+                        viewModel.onSaveNickname()
                     },
                     Modifier
                         .height(55.dp)

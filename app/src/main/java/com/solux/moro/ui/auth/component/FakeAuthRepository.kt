@@ -16,13 +16,13 @@ class FakeAuthRepository @Inject constructor()  : AuthRepository {
 
     private var currentUserId: Long? = null
 
-    override fun myUserId(): Long = 111
+    override fun myUserId(): Long = 1
 
     override suspend fun login(
         email: String,
         password: String
     ) {
-        currentUserId = 123
+        currentUserId = 1
         _authState.value = AuthState.Authenticated
     }
 

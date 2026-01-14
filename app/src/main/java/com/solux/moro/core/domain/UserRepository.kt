@@ -25,7 +25,7 @@ interface UserRepository {
         nickname: String?,
         userColorId: Int?,
         userColorHex: String?
-    )
+    ): Result<Unit>
 
     suspend fun searchUsers(
         query: String,

@@ -42,6 +42,7 @@ class UserRepositoryImpl @Inject constructor(
             val response = userService.getUserProfile(userId = userId)
             Log.d("loadUserTest", "서버 응답 성공 여부: ${response.success}")
             if (response.success) {
+                Log.d("loadUserTest", "서버가 보내준 실제 이름: ${response.data.userName}")
                 _user.value = response.data.toDomain()
                 Log.d("loadUserTest", "데이터 매핑 완료: ${_user.value.nickname}")
             }
@@ -87,33 +88,26 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     //프로필 수정
-    override suspend fun updateProfile(nickname: String?, userColorId: Int?,userColorHex: String?) {
-        val currentData = _user.value
-        val finalUserName = nickname
-            ?: currentData?.nickname
-            ?: ""
-
-        val finalColorId = userColorId
-            ?: ColorMapper.toIdFromComposeColor(currentData?.colorPalette?.userColor)
-            ?: 0
-
-        val finalColorHex = userColorHex
-            ?: ColorMapper.toHexFromId(finalColorId)
-            ?: ""
+    override suspend fun updateProfile(nickname: String?, userColorId: Int?,userColorHex: String?)
+            : Result<Unit>{
 
         val request = UserProfileEditRequest(
-            userName = finalUserName,
-            userColorId = finalColorId,
-            userColorHex = finalColorHex
+            userName = nickname,
+            userColorId = userColorId,
+            userColorHex = userColorHex
         )
 
-        try {
+        return try {
             val response = userService.profileEdit(request)
             if (response.success) {
-                loadUser()
+                loadUser(user.value.id)
+                Result.success(Unit)
+            }
+            else {
+                Result.failure(Exception("응답 에러: ${response.message}"))
             }
         } catch (e: Exception) {
-            // 에러
+            Result.failure(e)
         }
     }
 
