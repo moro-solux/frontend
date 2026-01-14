@@ -1,4 +1,4 @@
-package com.solux.moro.data.Network
+package com.solux.moro.data.network
 
 import com.google.gson.GsonBuilder
 import com.solux.moro.data.service.UserService
