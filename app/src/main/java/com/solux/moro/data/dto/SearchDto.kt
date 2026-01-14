@@ -13,6 +13,7 @@ data class UserSearchResponseDto (
     val totalPages: Int,
     val hasNext: Boolean
 )
+
 data class UserSearchDto(
     val userId: Long,
     val userName: String

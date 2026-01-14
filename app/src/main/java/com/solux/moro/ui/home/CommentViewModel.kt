@@ -3,7 +3,7 @@ package com.solux.moro.ui.home
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.solux.moro.data.repository.CommentRepository
+import com.solux.moro.core.domain.CommentRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

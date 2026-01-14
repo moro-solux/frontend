@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserStats
-import com.solux.moro.data.repository.FollowRepository
-import com.solux.moro.data.repository.UserRepository
+import com.solux.moro.core.domain.FollowRepository
+import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.screens.FollowTabType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
