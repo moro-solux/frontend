@@ -1,4 +1,4 @@
-package com.solux.moro.data.repository
+package com.solux.moro.core.domain
 
 import com.solux.moro.data.model.CommentItem
 import kotlinx.coroutines.flow.Flow
