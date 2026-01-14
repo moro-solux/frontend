@@ -1,4 +1,4 @@
-package com.solux.moro.data.repository
+package com.solux.moro.test.repository
 
 import androidx.compose.ui.graphics.Color
 import com.solux.moro.core.designsystem.theme.MoroPalette
@@ -10,6 +10,7 @@ import com.solux.moro.data.model.FeedItem
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserColorPalette
 import com.solux.moro.data.model.UserStats
+import com.solux.moro.core.domain.UserRepository
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
