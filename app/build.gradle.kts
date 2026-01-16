@@ -13,6 +13,7 @@ android {
     namespace = "com.solux.moro"
     compileSdk = 36
 
+
     defaultConfig {
         applicationId = "com.solux.moro"
         minSdk = 26
@@ -28,6 +29,8 @@ android {
         }
 
         manifestPlaceholders["MAPS_API_KEY"] = props.getProperty("MAPS_API_KEY") ?: ""
+        manifestPlaceholders["PLACES_API_KEY"] = props.getProperty("PLACES_API_KEY") ?: ""
+        buildConfigField("String", "PLACES_API_KEY", "\"${props.getProperty("PLACES_API_KEY")}\"")
     }
 
     buildTypes {
@@ -48,10 +51,12 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
+
     // Lifecycle /Viewmodel
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -79,12 +84,20 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // 로그 확인용 라이브러리
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Google Places 라이브러리
+    implementation("com.google.android.libraries.places:places:3.3.0")
     // CameraX (카메라 기능)
     val cameraVersion = "1.3.1"
     implementation("androidx.camera:camera-core:${cameraVersion}")
     implementation("androidx.camera:camera-camera2:${cameraVersion}")
     implementation("androidx.camera:camera-lifecycle:${cameraVersion}")
     implementation("androidx.camera:camera-view:${cameraVersion}")
+
+    // GPS 결과를 코루틴으로 (.await() 함수용)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
     // coil (사진 파일(Uri)을 화면에 보여주기 기능)
     implementation("io.coil-kt:coil-compose:2.5.0")
