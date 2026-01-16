@@ -5,6 +5,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
@@ -18,9 +20,18 @@ object MenuNetworkModule {
     @Singleton
     @Named("MenuRetrofit")
     fun provideMenuRetrofit(): Retrofit {
+        val logging = HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
+
         return Retrofit.Builder()
-            .baseUrl("http://moro-be.store") // Swagger 서버 주소
+            .baseUrl("https://moro-be.store") // Swagger 주소
             .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
             .build()
     }
 

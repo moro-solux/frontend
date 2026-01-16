@@ -1,11 +1,16 @@
 package com.solux.moro.core.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.solux.moro.screens.FollowScreen
+import com.solux.moro.ui.camera.UploadCameraScreen
+import com.solux.moro.ui.camera.UploadPostScreen
 import com.solux.moro.ui.followlist.FollowRequestScreen
 import com.solux.moro.ui.followlist.FollowRequestViewModel
 import com.solux.moro.ui.followlist.FollowingViewModel
@@ -24,7 +29,40 @@ import com.solux.moro.ui.search.SearchUserViewModel
 @Composable
 fun NavGraph(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination ="profile_test") {
+    NavHost(navController = navController, startDestination ="camera") {
+
+        // 카메라 화면
+        composable("camera") {
+            UploadCameraScreen(
+                onNavigateToPost = { uri ->
+                    val encodedUri = Uri.encode(uri.toString())
+                    navController.navigate("post/$encodedUri")
+                }
+            )
+        }
+
+        // 업로드 화면
+        composable(
+            route = "post/{uri}",
+            arguments = listOf(
+                navArgument("uri") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val uriString = backStackEntry.arguments?.getString("uri")
+
+            val uri = uriString?.let { Uri.parse(it) }
+
+            if (uri != null) {
+                UploadPostScreen(
+                    capturedUri = uri,
+                    onNavigateHome = {
+                        // TODO: 완료 후 홈으로
+                        navController.popBackStack("camera", inclusive = true)
+                    }
+                )
+            }
+        }
+
         composable("home") { //홈 화면
             HomeScreen()
         }
@@ -34,6 +72,7 @@ fun NavGraph(navController: NavHostController){
         composable("colormap") {
             ColorMapScreen(navController = navController)
         }
+
         composable("profile_test") {
             val viewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(navController, viewModel)
