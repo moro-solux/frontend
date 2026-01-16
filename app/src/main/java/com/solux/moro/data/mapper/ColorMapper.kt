@@ -181,8 +181,8 @@ object ColorMapper {
     fun toHexFromId(id: Int): String=
         idMap[id]!!.hex
 
-    fun toIdFromComposeColor(color: Color?): Int? {
-        if (color == null) return null
+    fun toIdFromComposeColor(color: Color?): Int {
+        if (color == null) return 1
 
         val hexString = String.format(
             "#%02X%02X%02X",

@@ -1,6 +1,9 @@
 package com.solux.moro.ui.profilecoloredit
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -19,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -33,15 +36,13 @@ import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.theme.Gray40
 import com.solux.moro.core.designsystem.theme.MoroTheme
-import com.solux.moro.ui.profile.component.ColorCellData
+import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.ui.profile.component.ColorGrid
 
 @Composable
 fun ProfileColorEditScreen(
-    viewModel: ProfileColorEditViewModel = hiltViewModel(),
     modifier: Modifier = Modifier,
-    color: Color = MoroTheme.colors.fontColor,
-    style: TextStyle = MoroTheme.typography.titleBold24,
+    viewModel: ProfileColorEditViewModel = hiltViewModel(),
     ) {
     Scaffold(
         bottomBar = { BottomBar() },
@@ -50,25 +51,17 @@ fun ProfileColorEditScreen(
             onBackClick = {}
         )}
     ) { innerPadding ->
-        val selectedTheme by viewModel.selectedTheme.collectAsState()
         val colors by viewModel.colors.collectAsState()
 
-        val colorCells = remember(colors) {
-            colors.map { color ->
-                ColorCellData(
-                    color = color,
-                    isSelected = false
-                )
-            }
-        }
+        val colorCells = colors
 
         Column(Modifier
             .fillMaxWidth()
             .background(color = Color(0xFF121212))
             .padding(innerPadding)) {
 
-            SelectedThemeRow()
-            ColorGrid(colorCells)
+            SelectedThemeRow(modifier,viewModel)
+            ColorGrid(colorCells,{color -> viewModel.updateUserColor(color)})
 
             Row(modifier
                 .fillMaxWidth()
@@ -77,7 +70,7 @@ fun ProfileColorEditScreen(
 
                 Button(
                     onClick = {
-                        viewModel::onSaveUserColor
+                        viewModel.onSaveUserColor()
                     },
                     Modifier
                         .height(55.dp)
@@ -104,9 +97,11 @@ fun ProfileColorEditScreen(
 @Composable
 fun SelectedThemeRow(
     modifier: Modifier = Modifier,
+    viewModel: ProfileColorEditViewModel = hiltViewModel(),
     color: Color = MoroTheme.colors.fontColor,
     style: TextStyle = MoroTheme.typography.titleBold24,
 ) {
+    val selectedTheme by viewModel.selectedTheme.collectAsState()
     Column(
         modifier=modifier
             .fillMaxWidth()
@@ -128,22 +123,38 @@ fun SelectedThemeRow(
         ) {
             Icon(painterResource(
                 R.drawable.icon_theme_vivid),
-                    contentDescription = "Vivid",
-                modifier.size(55.dp),
-                tint = Color.Unspecified
+                    contentDescription = "Pastel",
+                modifier
+                    .size(55.dp)
+                    .border(if(selectedTheme== MoroThemeType.Pastel) BorderStroke(3.dp, Color.White) else BorderStroke(0.dp, Color.Black),shape = CircleShape)
+                    .clickable{
+                        viewModel.onThemeSelected(MoroThemeType.Pastel)
+                    },
+                tint = Color.Unspecified,
+
             )
             Spacer(modifier = Modifier.width(16.dp))
             Icon(painterResource(
                 R.drawable.icon_theme_nature),
-                contentDescription = "Nature",
-                modifier.size(55.dp),
+                contentDescription = "Vivid",
+                modifier
+                    .size(55.dp)
+                    .border(if(selectedTheme== MoroThemeType.Vivid) BorderStroke(3.dp, Color.White) else BorderStroke(0.dp, Color.Black),shape = CircleShape)
+                    .clickable{
+                        viewModel.onThemeSelected(MoroThemeType.Vivid)
+                    },
                 tint = Color.Unspecified
             )
             Spacer(modifier = Modifier.width(16.dp))
             Icon(painterResource(
                 R.drawable.icon_theme_pastel),
-                contentDescription = "Pastel",
-                modifier.size(55.dp),
+                contentDescription = "Nature",
+                modifier
+                    .size(55.dp)
+                    .border(border =  if(selectedTheme== MoroThemeType.Nature) BorderStroke(3.dp, Color.White) else BorderStroke(0.dp, Color.Black),shape = CircleShape)
+                    .clickable{
+                        viewModel.onThemeSelected(MoroThemeType.Nature)
+                    },
                 tint = Color.Unspecified
             )
         }

@@ -80,7 +80,7 @@ fun PaletteEditScreen(
                 colors = selectedColors,
                 editingColor=editingColor
             )
-            ColorGrid(colorCells)
+            ColorGrid(colorCells,{color -> viewModel.updatePaletteColor(editingColorIndex,color)})
             SelectedButton()
         }
 

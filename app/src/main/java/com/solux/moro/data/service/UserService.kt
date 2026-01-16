@@ -1,6 +1,7 @@
 package com.solux.moro.data.service
 
 import com.solux.moro.data.dto.BaseResponse
+import com.solux.moro.data.dto.ColorThemeDto
 import com.solux.moro.data.dto.FollowRequestDto
 import com.solux.moro.data.dto.MainColorEditRequest
 import com.solux.moro.data.dto.UserProfileDto
@@ -57,4 +58,7 @@ interface UserService {
     suspend fun deleteFollower(
         @Path("targetUserId") targetUserId: Long
     ): BaseResponse<Unit>
+
+    @GET("api/colormaps")
+    suspend fun getColorUnlockInfo():BaseResponse<List<ColorThemeDto>>
 }

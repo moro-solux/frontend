@@ -2,6 +2,7 @@ package com.solux.moro.ui.profile.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,10 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.solux.moro.core.designsystem.theme.MoroThemeType
-import com.solux.moro.core.designsystem.theme.colorsOf
 import com.solux.moro.core.util.figmaDp
 
 data class ColorCellData(
@@ -35,6 +33,7 @@ fun ColorCell(
     color: Color,
     isLocked: Boolean = false,
     isSelected: Boolean,
+    onColorClick: (Color) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -46,6 +45,9 @@ fun ColorCell(
                 color = if (isSelected || color == Color.Black) Color.White else Color.Black,
                 shape = RoundedCornerShape(8.dp)
             )
+            .clickable {
+                onColorClick(color)
+            }
     )
 
     if (isLocked) {
@@ -75,6 +77,7 @@ fun ColorCell(
 @Composable
 fun ColorGrid(
     colorCells: List<ColorCellData>,
+    onColorClick: (Color) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
@@ -87,45 +90,52 @@ fun ColorGrid(
         items = colorCells,
         key = { it.color.toArgb() }
     ) { cell ->
-        ColorCellItem(cell)
+        ColorCellItem(onColorClick,cell)
     }
     }
 }
 
 @Composable
-fun ColorCellItem(cell: ColorCellData) {
-    ColorCell(color=cell.color,isLocked = cell.isLocked, isSelected = cell.isSelected)
-}
-
-@Preview()
-@Composable
-fun ColorGridPreview() {
-    val colors = colorsOf(MoroThemeType.Pastel)
-
-    val colorCells = colors.map {
-        ColorCellData(
-            color = it,
-            isSelected = if(colors.indexOf(it)==10) true else false,
-            isLocked = if(colors.indexOf(it)==11) true else false
-        )
-    }
-
-    ColorGrid(colorCells = colorCells)
-}
-
-@Preview
-@Composable
-fun ColorCellItemPreview() {
-    ColorCellItem(
-        cell = ColorCellData(
-            color = Color(0xFFF5D8E0),
-            isSelected = true
-        )
+fun ColorCellItem(
+    onColorClick: (Color) -> Unit,
+    cell: ColorCellData) {
+    ColorCell(
+        color=cell.color
+        ,isLocked = cell.isLocked,
+        isSelected = cell.isSelected,
+        onColorClick=onColorClick,
     )
 }
 
-@Preview()
-@Composable
-fun ColorCellPreview(){
-    ColorCell(Color.Red, true,true)
-}
+//@Preview()
+//@Composable
+//fun ColorGridPreview() {
+//    val colors = colorsOf(MoroThemeType.Pastel)
+//
+//    val colorCells = colors.map {
+//        ColorCellData(
+//            color = it,
+//            isSelected = if(colors.indexOf(it)==10) true else false,
+//            isLocked = if(colors.indexOf(it)==11) true else false
+//        )
+//    }
+//
+//    ColorGrid(colorCells = colorCells)
+//}
+//
+//@Preview
+//@Composable
+//fun ColorCellItemPreview() {
+//    ColorCellItem(
+//        cell = ColorCellData(
+//            color = Color(0xFFF5D8E0),
+//            isSelected = true
+//        )
+//    )
+//}
+
+//@Preview()
+//@Composable
+//fun ColorCellPreview(){
+//    ColorCell(Color.Red, true,true, viewModel)
+//}

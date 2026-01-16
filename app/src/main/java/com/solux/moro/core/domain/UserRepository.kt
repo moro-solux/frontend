@@ -1,5 +1,6 @@
 package com.solux.moro.core.domain
 
+import com.solux.moro.data.dto.ColorThemeDto
 import com.solux.moro.data.model.FeedItem
 import com.solux.moro.data.model.SearchResultPage
 import com.solux.moro.data.model.User
@@ -16,6 +17,8 @@ interface UserRepository {
     suspend fun loadUser(userId:Long=0)
 
     fun getUserPosts(userId: Long): Flow<List<FeedItem>>
+
+    suspend fun getColorUnlockInfo():Result<List<ColorThemeDto>>
 
     suspend fun updateUserColorPalette(
         palette: UserColorPalette

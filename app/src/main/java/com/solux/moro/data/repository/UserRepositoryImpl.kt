@@ -2,6 +2,7 @@ package com.solux.moro.data.repository
 
 import android.util.Log
 import com.solux.moro.core.domain.UserRepository
+import com.solux.moro.data.dto.ColorThemeDto
 import com.solux.moro.data.dto.MainColorEditRequest
 import com.solux.moro.data.dto.UserProfileEditRequest
 import com.solux.moro.data.mapper.ColorMapper
@@ -111,6 +112,18 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getColorUnlockInfo(): Result<List<ColorThemeDto>> {
+        return try {
+            val response = userService.getColorUnlockInfo()
+            if (response.success) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
     //유저 검색
     override suspend fun searchUsers(
         query: String,
