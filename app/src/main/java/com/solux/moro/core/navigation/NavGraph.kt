@@ -1,6 +1,7 @@
 package com.solux.moro.core.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -17,6 +18,8 @@ import com.solux.moro.ui.notification.NotificationViewModel
 import com.solux.moro.ui.paletteedit.PaletteEditScreen
 import com.solux.moro.ui.profile.ProfileScreen
 import com.solux.moro.ui.profile.ProfileViewModel
+import com.solux.moro.ui.profilecoloredit.ProfileColorEditScreen
+import com.solux.moro.ui.profilecoloredit.ProfileColorEditViewModel
 import com.solux.moro.ui.profileedit.ProfileEditScreen
 import com.solux.moro.ui.search.SearchUserScreen
 import com.solux.moro.ui.search.SearchUserViewModel
@@ -47,6 +50,10 @@ fun NavGraph(navController: NavHostController){
 
         composable("profileEdit" ) { // 프로필 설정 화면
             ProfileEditScreen(navController = navController)
+        }
+        composable("profileColorEdit" ) { // 유저 대표 색 설정 화면
+            val viewModel: ProfileColorEditViewModel = hiltViewModel()
+            ProfileColorEditScreen(modifier= Modifier,viewModel)
         }
 
         composable( "paletteEdit" ) { // 팔레트 설정 화면
