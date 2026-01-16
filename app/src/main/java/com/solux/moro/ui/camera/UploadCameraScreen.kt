@@ -3,6 +3,7 @@ package com.solux.moro.ui.camera
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -22,18 +23,17 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import android.net.Uri
 import java.io.File
-
 
 @Composable
 fun UploadCameraScreen(
-    viewModel: UploadCameraViewModel = viewModel()
+    viewModel: UploadCameraViewModel = viewModel(),
+    onNavigateToPost: (Uri) -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    // 1. 카메라 권한 체크
+    //  카메라 권한 체크
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
@@ -51,27 +51,34 @@ fun UploadCameraScreen(
         }
     }
 
-    // 2. 카메라 엔진 준비
+    // 카메라 엔진 준비
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
     val previewView = remember { PreviewView(context) }
     val imageCapture = remember { ImageCapture.Builder().build() } // 사진 찍는 도구
 
-    // 3. UI와 기능 연결
+    // UI와 기능 연결
     if (hasCameraPermission) {
         CameraLayout(
             showShotCount = false,
             showConfirmDialog = viewModel.showConfirmDialog,
-            capturedImageUri = viewModel.capturedUri, // 뷰모델의 사진 전달
-            onConfirm = viewModel::onConfirm,
+            capturedImageUri = viewModel.capturedUri,
+
+            onConfirm = {
+                viewModel.onConfirm()
+                viewModel.capturedUri?.let { uri ->
+                    onNavigateToPost(uri)
+                }
+            },
+
             onRetry = viewModel::onRetry,
 
             onCameraClick = {
                 takePhoto(context, imageCapture) { uri ->
-                    viewModel.onPhotoCaptured(uri) // 찍히면 뷰모델에 알림
+                    viewModel.onPhotoCaptured(uri)
                 }
             },
 
-            // cameraContent 카메라 미리보기 채워넣기
+            // 카메라 미리보기 화면 채워넣기
             cameraContent = {
                 AndroidView(
                     factory = {
@@ -99,23 +106,23 @@ fun UploadCameraScreen(
             }
         )
     } else {
-        // 권한 없을 때 (검은 화면 등 처리)
     }
 }
 
+// 사진 촬영 로직
 private fun takePhoto(
     context: Context,
     imageCapture: ImageCapture,
     onPhotoCaptured: (Uri) -> Unit
 ) {
-    // 1. 파일 만들기
+    // 임시 파일
     val photoFile = File.createTempFile(
         "temp_image",
         ".jpg",
         context.externalCacheDir
     )
 
-    // 2. CameraX에 "이 파일에 저장해!" 라고 설정
+    // CameraX에 파일 저장 설정
     val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
     imageCapture.takePicture(
@@ -123,10 +130,10 @@ private fun takePhoto(
         ContextCompat.getMainExecutor(context),
         object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                // 3. 사진 저장이 성공하면, 그 파일의 주소(Uri)를 만들어서 보냄
+                // 파일의 주소
                 val savedUri = FileProvider.getUriForFile(
                     context,
-                    "${context.packageName}.fileprovider",
+                    "${context.packageName}.fileprovider", // AndroidManifest의 provider와 일치해야 함
                     photoFile
                 )
                 onPhotoCaptured(savedUri)
@@ -137,18 +144,5 @@ private fun takePhoto(
                 Toast.makeText(context, "사진 촬영 실패", Toast.LENGTH_SHORT).show()
             }
         }
-    )
-}
-
-fun Context.createImageUri(): Uri {
-    val file = File.createTempFile(
-        "temp_image",
-        ".jpg",
-        this.externalCacheDir
-    )
-    return FileProvider.getUriForFile(
-        this,
-        "${this.packageName}.fileprovider",
-        file
     )
 }

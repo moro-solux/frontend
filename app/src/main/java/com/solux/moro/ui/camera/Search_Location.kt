@@ -1,14 +1,14 @@
 package com.solux.moro.ui.camera
 
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
@@ -17,31 +17,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.solux.moro.R
 import com.solux.moro.core.util.figmaDp
 
+
 data class PlaceData(
     val name: String,
-    val address: String
+    val address: String,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+    val placeId: String? = null
 )
+
 @Composable
 fun LocationBottomSheet(
     onClose: () -> Unit,
-    onPlaceSelected: (String) -> Unit,
-    selectedLocation: String, // [2] 현재 선택된 위치 이름 (체크 표시용)
-    nearbyPlaces: List<PlaceData> = listOf( // [3] 가짜 데이터 (나중에 백엔드 데이터로 교체될 곳)
-        PlaceData("숙명여자대학교", "Seoul, South Korea"),
-        PlaceData("N서울타워", "Seoul, South Korea"),
-        PlaceData("경복궁", "Seoul, South Korea"),
-        PlaceData("북촌한옥마을", "Seoul, South Korea"),
-        PlaceData("명동성당", "Seoul, South Korea")
-    )
+    onPlaceSelected: (PlaceData) -> Unit,
+    onSearch: (String) -> Unit,
+    selectedLocation: String,
+    nearbyPlaces: List<PlaceData> = emptyList()
 ) {
+    // 검색어 상태 관리
+    var searchText by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .shadow(
@@ -63,69 +67,42 @@ fun LocationBottomSheet(
         verticalArrangement = Arrangement.spacedBy(figmaDp(8f), Alignment.CenterVertically),
         horizontalAlignment = Alignment.Start,
     ) {
-        //위치
+        // 상단 핸들 및 제목 영역
         Column(
             verticalArrangement = Arrangement.spacedBy(figmaDp(0f), Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            // 드래그 핸들
             Column(
                 modifier = Modifier
                     .width(figmaDp(377f))
                     .height(figmaDp(36f))
-                    .padding(
-                        start = figmaDp(16f),
-                        top = figmaDp(16f),
-                        end = figmaDp(16f),
-                        bottom = figmaDp(16f)
-                    ),
+                    .padding(figmaDp(16f)),
                 verticalArrangement = Arrangement.spacedBy(figmaDp(8f), Alignment.Top),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Row(
+                Box(
                     modifier = Modifier
-                        .border(
-                            width = figmaDp(0f),
-                            color = Color(0xFFE5E7EB),
-                            shape = RoundedCornerShape(size = figmaDp(9999f))
-                        )
                         .width(figmaDp(41f))
                         .height(figmaDp(4f))
                         .background(
                             color = Color(0xFFA5A5A5),
                             shape = RoundedCornerShape(size = figmaDp(9999f))
                         )
-                        .padding(
-                            start = figmaDp(8f),
-                            top = figmaDp(8f),
-                            end = figmaDp(8f),
-                            bottom = figmaDp(8f)
-                        ),
-                    horizontalArrangement = Arrangement.spacedBy(figmaDp(8f), Alignment.Start),
-                    verticalAlignment = Alignment.Top,
-                ) {
-                }
+                )
             }
 
-            //위치+취소
+            // 제목 (위치 + 취소)
             Row(
                 modifier = Modifier
                     .width(figmaDp(375f))
                     .height(figmaDp(28f))
-                    .padding(
-                        start = figmaDp(20f),
-                        end = figmaDp(20f)
-                    ),
+                    .padding(horizontal = figmaDp(20f)),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-
-                // 왼쪽
-                Box(
-                    modifier = Modifier
-                        .width(figmaDp(30f))
-                        .height(figmaDp(28f)),
-                    contentAlignment = Alignment.Center
-                ) {
+                // 아이콘
+                Box(modifier = Modifier.size(figmaDp(28f)), contentAlignment = Alignment.Center) {
                     Image(
                         modifier = Modifier.size(figmaDp(22f)),
                         painter = painterResource(id = R.drawable.map),
@@ -133,29 +110,21 @@ fun LocationBottomSheet(
                     )
                 }
 
-                // 텍스트
+                // 제목 텍스트
                 Text(
-                    modifier = Modifier.height(figmaDp(28f)),
                     text = "위치",
                     fontSize = 18.sp,
-                    lineHeight = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFFF2F2F2),
                     textAlign = TextAlign.Center,
                 )
 
-                // 오른쪽
-                Box(
-                    modifier = Modifier
-                        .width(figmaDp(30f))
-                        .height(figmaDp(28f)),
-                    contentAlignment = Alignment.Center
-                ) {
+                // 취소 버튼
+                Box(modifier = Modifier.size(figmaDp(28f)), contentAlignment = Alignment.Center) {
                     Text(
                         modifier = Modifier.clickable { onClose() },
                         text = "취소",
                         fontSize = 16.sp,
-                        lineHeight = 28.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFFF2F2F2),
                         textAlign = TextAlign.Center,
@@ -163,7 +132,7 @@ fun LocationBottomSheet(
                 }
             }
 
-            //search
+            // 검색창 영역
             Column(
                 modifier = Modifier
                     .width(figmaDp(375f))
@@ -185,59 +154,53 @@ fun LocationBottomSheet(
                             color = Color(0xFF2E2E2E),
                             shape = RoundedCornerShape(size = figmaDp(10f))
                         )
-                        .padding(
-                            start = figmaDp(16f),
-                            top = figmaDp(4f),
-                            end = figmaDp(16f),
-                            bottom = figmaDp(4f)
-                        ),
-                    horizontalArrangement = Arrangement.spacedBy(figmaDp(0f), Alignment.Start),
+                        .padding(horizontal = figmaDp(16f)),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .width(figmaDp(311f))
-                            .height(figmaDp(40f)),
-                        horizontalArrangement = Arrangement.spacedBy(figmaDp(0f), Alignment.Start),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            modifier = Modifier
-                                .width(figmaDp(16f))
-                                .height(figmaDp(16f)),
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = "Search",
-                            tint = Color.White
-                        )
+                    Icon(
+                        modifier = Modifier.size(figmaDp(16f)),
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = "Search",
+                        tint = Color.White
+                    )
 
-                        Row(
-                            modifier = Modifier
-                                .width(figmaDp(295f))
-                                .height(figmaDp(40f))
-                                .padding(
-                                    start = figmaDp(8f),
-                                    top = figmaDp(8f),
-                                    end = figmaDp(8f),
-                                    bottom = figmaDp(8f)
-                                ),
-                            horizontalArrangement = Arrangement.spacedBy(figmaDp(8f), Alignment.Start),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = "Search location",
-                                style = androidx.compose.ui.text.TextStyle(
-                                    fontSize = 16.sp,
-                                    lineHeight = 24.sp,
-                                    //fontFamily = FontFamily(Font(R.font.inter)),
-                                    fontWeight = FontWeight(400),
-                                    color = Color(0xFFD5D5D5),
+                    Spacer(modifier = Modifier.width(figmaDp(8f)))
+
+
+                    BasicTextField(
+                        value = searchText,
+                        onValueChange = {
+                            searchText = it
+                            onSearch(it)
+                        },
+                        textStyle = TextStyle(
+                            fontSize = 16.sp,
+                            lineHeight = 24.sp,
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFD5D5D5),
+                        ),
+                        singleLine = true,
+                        cursorBrush = SolidColor(Color.White),
+                        decorationBox = { innerTextField ->
+                            if (searchText.isEmpty()) {
+                                Text(
+                                    text = "Search location",
+                                    style = TextStyle(
+                                        fontSize = 16.sp,
+                                        lineHeight = 24.sp,
+                                        fontWeight = FontWeight(400),
+                                        color = Color(0xFFD5D5D5).copy(alpha = 0.5f),
+                                    )
                                 )
-                            )
-                        }
-                    }
+                            }
+                            innerTextField()
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
 
+            // 리스트 영역
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -245,28 +208,22 @@ fun LocationBottomSheet(
                 verticalArrangement = Arrangement.spacedBy(figmaDp(12f)),
                 contentPadding = PaddingValues(vertical = figmaDp(8f))
             ) {
-                // items()를 사용하여 리스트만큼 반복 생성
                 items(nearbyPlaces) { place ->
                     PlaceItem(
-                        // 현재 이 아이템의 이름이 선택된 이름과 같으면 체크 표시
                         isSelected = (place.name == selectedLocation),
                         name = place.name,
                         address = place.address,
-                        onClick = { onPlaceSelected(place.name) } // 클릭 시 이름 전달
+                        onClick = { onPlaceSelected(place) } // [수정] PlaceData 객체 전달
                     )
                 }
             }
 
+            //위치 추가
             Column(
                 modifier = Modifier
                     .width(figmaDp(375f))
                     .height(figmaDp(76f))
-                    .padding(
-                        start = figmaDp(16f),
-                        top = figmaDp(16f),
-                        end = figmaDp(16f),
-                        bottom = figmaDp(16f)
-                    ),
+                    .padding(figmaDp(16f)),
                 verticalArrangement = Arrangement.spacedBy(figmaDp(8f), Alignment.Top),
                 horizontalAlignment = Alignment.Start,
             ) {
@@ -282,36 +239,19 @@ fun LocationBottomSheet(
                         .background(
                             color = Color(0xFF171717),
                             shape = RoundedCornerShape(size = figmaDp(10f))
-                        )
-                        .padding(
-                            start = figmaDp(12f),
-                            top = figmaDp(12f),
-                            end = figmaDp(12f),
-                            bottom = figmaDp(12f)
                         ),
-                    horizontalArrangement = Arrangement.spacedBy(figmaDp(12f), Alignment.CenterHorizontally),
+                    horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .width(figmaDp(55f))
-                            .height(figmaDp(20f)),
-                        horizontalArrangement = Arrangement.spacedBy(figmaDp(8f), Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(
-                            text = "위치 추가",
-
-                            // Body2/Regular/14px
-                            style = androidx.compose.ui.text.TextStyle(
-                                fontSize = 14.sp,
-                                lineHeight = 19.6.sp,
-                                //fontFamily = FontFamily(Font(R.font.inter)),
-                                fontWeight = FontWeight(400),
-                                color = Color(0xFFF2F2F2),
-                            )
+                    Text(
+                        text = "위치 추가",
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            lineHeight = 19.6.sp,
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFF2F2F2),
                         )
-                    }
+                    )
                 }
             }
         }
@@ -416,10 +356,4 @@ fun PlaceInfo(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun LocationBottomSheetPreview() {
-    //LocationBottomSheet()
 }

@@ -6,41 +6,26 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.component.BottomBar
@@ -50,18 +35,16 @@ import com.solux.moro.ui.mission.InstagramUpload
 import com.solux.moro.ui.mission.Upload_Button
 import com.solux.moro.ui.viewmodel.UploadViewModel
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UploadPostScreen(
     capturedUri: Uri,
-    viewModel: UploadViewModel = viewModel(),
+    viewModel: UploadViewModel = hiltViewModel(),
     onNavigateHome: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
     var showBottomSheet by remember { mutableStateOf(false) }
 
-    // 진입 시 분석 시작
     LaunchedEffect(capturedUri) {
         viewModel.initAnalysis(capturedUri)
     }
@@ -70,7 +53,6 @@ fun UploadPostScreen(
         topBar = { TopBarBack("게시물 업로드") },
         bottomBar = { BottomBar() }
     ) { innerPadding ->
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,7 +63,6 @@ fun UploadPostScreen(
             verticalArrangement = Arrangement.spacedBy(figmaDp(30f), Alignment.CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // 1. 단계별 멘트
             Row(
                 modifier = Modifier.fillMaxWidth().height(figmaDp(28f)),
                 horizontalArrangement = Arrangement.spacedBy(figmaDp(8f), Alignment.CenterHorizontally),
@@ -90,7 +71,6 @@ fun UploadPostScreen(
                 UploadStepTitle(state.step)
             }
 
-            // 2. 위치 (Step 0에서만 클릭 가능하도록 제어)
             Post_Place(
                 locationName = state.detectedLocation,
                 isClickable = (state.step == 0),
@@ -102,21 +82,29 @@ fun UploadPostScreen(
             if (showBottomSheet) {
                 ModalBottomSheet(
                     onDismissRequest = { showBottomSheet = false },
-                    containerColor = Color.Transparent,
+                    containerColor = Color.Transparent, // 투명하게 해서 디자인 적용
                     dragHandle = null
                 ) {
                     LocationBottomSheet(
                         onClose = { showBottomSheet = false },
-                        onPlaceSelected = { newPlace ->
-                            viewModel.updateLocation(newPlace) // 뷰모델에 선택한 장소 알림
+
+                        // [연결 1] 뷰모델의 검색 함수 연결
+                        onSearch = { query ->
+                            viewModel.searchPlaces(query)
+                        },
+
+                        // [연결 2] 뷰모델의 장소 선택 함수 연결
+                        onPlaceSelected = { selectedPlace ->
+                            viewModel.selectPlace(selectedPlace)
                             showBottomSheet = false
                         },
-                        selectedLocation = state.detectedLocation // 현재 선택된 장소 이름을 넘겨줌
+
+                        selectedLocation = state.detectedLocation,
+                        nearbyPlaces = state.nearbyPlaces
                     )
                 }
             }
 
-            // 3. 게시물 프레임 (Step 1에서만 색상 선택 가능)
             UploadPostFrame(
                 step = state.step,
                 imageUri = state.capturedUri,
@@ -125,16 +113,19 @@ fun UploadPostScreen(
                 onColorSelected = { viewModel.selectColor(it) }
             )
 
-            // 4. 하단 버튼 (Step에 따라 '다음' / '업로드' / '완료' 변경)
             Row(
                 horizontalArrangement = Arrangement.spacedBy(figmaDp(8f)),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 UploadBottomAction(
                     step = state.step,
-                    // Step 1일 때는 색상을 골라야만 '다음' 버튼 활성화
-                    isNextEnabled = if (state.step == 1) state.selectedColorIndex != null else true,
-                    onNext = { viewModel.nextStep() },
+                    isNextEnabled = !state.isUploading && (if (state.step == 1) state.selectedColorIndex != null else true),
+                    onNext = {
+                        when (state.step) {
+                            0 -> viewModel.confirmLocationAndNext()
+                            1 -> viewModel.confirmColorAndNext()
+                        }
+                    },
                     onUpload = { viewModel.uploadPost() },
                     onInstagram = { /* 인스타 로직 */ }
                 )
@@ -142,14 +133,133 @@ fun UploadPostScreen(
         }
     }
 }
+
+// 바텀시트 내용
+@Composable
+fun LocationBottomSheet(
+    viewModel: UploadViewModel,
+    onDismiss: () -> Unit
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .heightIn(min = 300.dp)
+    ) {
+        Text("장소 찾기", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(bottom = 12.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
+                placeholder = { Text("장소명 검색") },
+                modifier = Modifier.weight(1f),
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Button(onClick = { viewModel.searchPlaces(searchQuery) }) {
+                Text("검색")
+            }
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        LazyColumn {
+            items(uiState.nearbyPlaces) { place ->
+                ListItem(
+                    headlineContent = { Text(place.name, fontWeight = FontWeight.Bold) },
+                    supportingContent = { Text(place.address) },
+                    modifier = Modifier.clickable {
+                        viewModel.selectPlace(place)
+                        onDismiss()
+                    }
+                )
+                HorizontalDivider()
+            }
+        }
+    }
+}
+
+@Composable
+fun UploadPost_Color(
+    colorHex: String,
+    percent: String,
+    isSelected: Boolean,
+    isSelectable: Boolean,
+    onClick: () -> Unit
+) {
+    val scale by animateFloatAsState(
+        targetValue = when {
+            !isSelectable -> 1f
+            isSelected -> 75.5f / 71.32f
+            else -> 68f / 71.32f
+        },
+        label = "colorScale"
+    )
+
+
+    val boxColor = try {
+        Color(android.graphics.Color.parseColor(colorHex))
+    } catch (e: Exception) {
+        Color.Gray // 파싱 실패 시 기본색
+    }
+
+    Column(
+        modifier = Modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .width(figmaDp(71.32f))
+            .height(figmaDp(71.32f))
+            .background(
+                color = boxColor,
+                shape = RoundedCornerShape(figmaDp(3.5f))
+            )
+            .clickable(enabled = isSelectable) { onClick() }
+            .padding(figmaDp(5f)),
+        verticalArrangement = Arrangement.spacedBy(figmaDp(0f), Alignment.Bottom),
+        horizontalAlignment = Alignment.Start,
+    ) {
+        // 색상 코드
+        Text(
+            text = colorHex,
+            style = TextStyle(
+                fontSize = 12.sp,
+                color = if (boxColor.luminance() > 0.5f) Color.Black else Color.White,
+
+                lineHeight = 13.sp,
+                platformStyle = androidx.compose.ui.text.PlatformTextStyle(
+                    includeFontPadding = false
+                )
+            )
+        )
+
+        // 퍼센트
+        Text(
+            text = percent,
+            style = TextStyle(
+                fontSize = 12.sp,
+                color = if (boxColor.luminance() > 0.5f) Color.Black else Color.White,
+                lineHeight = 13.sp,
+                platformStyle = androidx.compose.ui.text.PlatformTextStyle(
+                    includeFontPadding = false
+                )
+            )
+        )
+    }
+}
+
+
+
 @Composable
 fun UploadStepTitle(step: Int) {
     Text(
         text = when (step) {
-            0 -> "이 사진의 컬러를 수집할까요?"     // Step 0: 위치 확인 단계
-            1 -> "대표색상을 선택해주세요."       // Step 1: 색상 선택 단계
-            2 -> "Moro에 업로드하면 나의 색상 여정이 지도에 그려집니다." // Step 2: 업로드 준비
-            else -> "업로드가 완료되었습니다!"    // Step 3: 완료
+            0 -> "이 사진의 컬러를 수집할까요?"
+            1 -> "대표색상을 선택해주세요."
+            2 -> "Moro에 업로드하면 나의 색상 여정이 지도에 그려집니다."
+            else -> "업로드가 완료되었습니다!"
         },
         style = when (step) {
             2 -> TextStyle(
@@ -180,24 +290,21 @@ fun UploadBottomAction(
         0, 1 -> {
             Next_Button(
                 text = "다음",
+                enabled = isNextEnabled,
                 onClick = onNext
             )
         }
-
-
         2 -> {
             Upload_Button(onClick = onUpload)
         }
-
         3 -> {
             InstagramUpload(
                 onInstagramClick = onInstagram,
-                onSaveClick = { /* 나중에 저장 기능 구현하면 여기에 연결 */ }
+                onSaveClick = { }
             )
         }
     }
 }
-
 
 @Composable
 fun Next_Button(
@@ -233,17 +340,15 @@ fun Next_Button(
 fun Post_Place(
     locationName: String,
     showActiveColor: Boolean = false,
-    isClickable: Boolean, // 클릭 가능 여부 파라미터 추가
+    isClickable: Boolean,
     onClick: () -> Unit
 ) {
-    // 클릭이 가능하거나(Step 0) OR 활성화 색상을 보여달라고 하면(Step 3) -> 흰색
-    // 그 외에는 -> 회색
     val textColor = if (isClickable || showActiveColor) Color.White else Color.Gray
     val iconAlpha = if (isClickable || showActiveColor) 1f else 0.4f
 
     Row(
         modifier = Modifier
-            .clickable(enabled = isClickable) { onClick() }, // Step 0 아니면 클릭 불가
+            .clickable(enabled = isClickable) { onClick() },
         horizontalArrangement = Arrangement.spacedBy(figmaDp(10f), Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -258,11 +363,11 @@ fun Post_Place(
             style = TextStyle(
                 fontSize = 18.sp,
                 fontWeight = FontWeight(400),
-                color = textColor, // 상태에 따라 색상 변경
+                color = textColor,
                 textAlign = TextAlign.Center,
             )
         )
-        if (isClickable) { // 수정 가능할 때만 화살표 보이기
+        if (isClickable) {
             Image(
                 painter = painterResource(id = R.drawable.chevron_right),
                 contentDescription = "edit",
@@ -270,56 +375,6 @@ fun Post_Place(
         }
     }
 }
-@Composable
-fun UploadPost_Color(
-    colorHex: String,
-    percent: String,
-    isSelected: Boolean,
-    isSelectable: Boolean,
-    onClick: () -> Unit
-) {
-    val scale by animateFloatAsState(
-        targetValue = when {
-            !isSelectable -> 1f                // step 0, 2 → 디자인 유지
-            isSelected -> 75.5f / 71.32f       // 선택됨
-            else -> 68f / 71.32f               // 선택 안됨
-        },
-        label = "colorScale"
-    )
-
-    Column(
-        modifier = Modifier
-            .graphicsLayer {
-                scaleX = scale
-                scaleY = scale
-            }
-            .width(figmaDp(71.32f))
-            .height(figmaDp(71.32f))
-            .background(
-                color = Color(0xFF4982E5),
-                shape = RoundedCornerShape(figmaDp(3.5f))
-            )
-            .clickable(enabled = isSelectable) { onClick() }
-            .padding(figmaDp(5f)),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.Start,
-    ) {
-        Text(
-            text = colorHex,
-            fontSize = 12.sp,
-            color = Color.Black
-        )
-
-        Text(
-            text = percent,
-            fontSize = 12.sp,
-            color = Color.White
-        )
-    }
-}
-
-
-
 
 @Composable
 fun UploadPostFrame(
@@ -338,7 +393,6 @@ fun UploadPostFrame(
         horizontalArrangement = Arrangement.spacedBy(figmaDp(7.3f)),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        // 사진 (왼쪽)
         Box(
             modifier = Modifier
                 .width(figmaDp(235f))
@@ -356,7 +410,6 @@ fun UploadPostFrame(
             }
         }
 
-        // 색상 리스트 (오른쪽)
         Column(
             modifier = Modifier.width(figmaDp(71.32f)).height(figmaDp(313.46f)),
             verticalArrangement = Arrangement.SpaceBetween
@@ -366,7 +419,7 @@ fun UploadPostFrame(
                     colorHex = hex,
                     percent = percent,
                     isSelected = selectedColorIndex == index,
-                    isSelectable = (step == 1), // Step 1에서만 선택 가능!
+                    isSelectable = (step == 1),
                     onClick = { onColorSelected(index) }
                 )
             }
