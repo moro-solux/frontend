@@ -17,4 +17,3 @@ data class FollowUserInfoDto(
     val userName: String
 )
 
-

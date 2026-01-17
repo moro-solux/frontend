@@ -1,12 +1,5 @@
 package com.solux.moro.data.dto
 
-data class UserProfileResponse<T>(
-    val success: Boolean,
-    val status: Int,
-    val message: String,
-    val data: T? = null
-)
-
 data class UserProfileEditRequest(
     val userName: String? = null,
     val userColorId: Int? = null,
@@ -23,13 +16,27 @@ data class UserProfileDto(
     val followingStatus:String,
     val followerCount: Int,
     val followingCount: Int,
-    val colorCodes: List<String>,
+    val colorCodes: List<ColorCodeDto>,
     val currentUser: Boolean,
     val visible: Boolean
 )
 
 data class ColorCodeDto(
-    val colorId: Long,
+    val colorId: Int,
     val hexCode: String
 )
+
+data class ColorThemeDto(
+    val themeName: String,
+    val colors: List<ColorUnlockDto>
+)
+
+data class ColorUnlockDto(
+    val colorId: Int,
+    val hexCode: String,
+    val postCount: Long,
+    val unlocked: Boolean,
+    val isRepresentative: Boolean
+)
+
 

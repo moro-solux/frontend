@@ -12,8 +12,8 @@ fun UserProfileDto.toDomain(): User {
         colorPalette = UserColorPalette(
             userColor =  ColorMapper.toColorFromHex(this.userColorHex) ,
             paletteColors = this.colorCodes.map { colorCode ->
-                ColorMapper.toColorFromHex(colorCode) ?: Color.Transparent
-            }
+                ColorMapper.toColorFromId(colorCode.colorId) ?: Color.Transparent
+            } as List<Color>
         ),
         userColorHex = this.userColorHex,
         visible = this.visible

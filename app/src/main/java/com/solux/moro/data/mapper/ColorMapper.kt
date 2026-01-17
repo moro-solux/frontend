@@ -1,5 +1,6 @@
 package com.solux.moro.data.mapper
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 
 data class ColorDefinition(
@@ -162,28 +163,34 @@ object ColorMapper {
 
     private val themeMap = colors.groupBy { it.theme }
 
-    fun toColorFromId(id: Int): ColorDefinition? =
-        idMap[id]
-
+    fun toColorFromId(id: Int): Color? {
+        val definition = idMap[id] ?: return null
+        return toColorFromHex(definition.hex)
+    }
     fun toColorFromHex(hex: String?): Color {
         if (hex.isNullOrBlank()) return Color(0xFFFFFFFF)
         return try {
-            val cleanedHex = hex.removePrefix("#")
-            val colorLong = cleanedHex.toLong(16).or(0xFF000000)
-            Color(colorLong)
+            val formattedHex = if (hex.startsWith("#")) hex else "#$hex"
+            val colorInt = android.graphics.Color.parseColor(formattedHex)
+
+            Color(colorInt)
         } catch (e: Exception) {
-            Color(0xFFFFFFFF)
+            Log.e("ColorMapper", "변환 실패 hex: $hex - ${e.message}")
+            Color.White // 실패 시 기본값
         }
     }
-    fun toIdFromHex(hex: String): Int =
-        hexMap[hex.uppercase()]!!.id
+    fun toIdFromHex(hex: String): Int {
+        if (hex.contains("999999")) return 41//수정 후 삭제
+        val upperHex = hex.uppercase()
+
+        return hexMap[upperHex]?.id ?: 41
+    }
 
     fun toHexFromId(id: Int): String=
         idMap[id]!!.hex
 
-    fun toIdFromComposeColor(color: Color?): Int? {
-        if (color == null) return null
-
+    fun toIdFromComposeColor(color: Color?): Int {
+        if (color == null) return 1
         val hexString = String.format(
             "#%02X%02X%02X",
             (color.red * 255).toInt(),

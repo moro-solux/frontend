@@ -134,8 +134,9 @@ fun ProfileHeader(
                 ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                val text = colorCode?.let { if (it.startsWith("#")) it else "#$it" }?:"null"
                 Text(
-                    text = colorCode?:"null",
+                    text = text,
                     style = TextStyle(
                         fontSize = 40.32.toPxSp,
                         lineHeight = 56.45.toPxSp,

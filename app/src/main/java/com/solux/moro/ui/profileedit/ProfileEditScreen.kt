@@ -2,6 +2,7 @@ package com.solux.moro.ui.profileedit
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -53,6 +54,9 @@ fun ProfileEditScreen(
 ) {
     val user by viewModel.user.collectAsState()
 
+    val nickname = user.nickname ?: "@colorhunter"
+    val userColorHex = user.userColorHex ?: "#FFFFFF"
+
     Scaffold(
         bottomBar = { BottomBar() },
         topBar = {
@@ -72,8 +76,9 @@ fun ProfileEditScreen(
             verticalArrangement = Arrangement.spacedBy(0.dp, Alignment.Top),
             horizontalAlignment = Alignment.Start,
         ) {
-            ProfileHeader(user?.nickname ?:"@colorhunter" ,
-                user?.colorPalette?.userColor?.value.toString(),)
+            ProfileHeader(nickname,
+                userColorHex,
+                )
 
             Column(Modifier
                     .fillMaxWidth()
@@ -112,7 +117,10 @@ fun ProfileEditScreen(
                 )
 
                 Row(Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .clickable{
+                        navController.navigate("profileColorEdit")
+                    },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {

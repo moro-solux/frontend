@@ -1,5 +1,6 @@
 package com.solux.moro.core.domain
 
+import com.solux.moro.data.dto.ColorThemeDto
 import com.solux.moro.data.model.FeedItem
 import com.solux.moro.data.model.SearchResultPage
 import com.solux.moro.data.model.User
@@ -13,13 +14,15 @@ interface UserRepository {
     val userStats: StateFlow<UserStats?>
 
 
-    suspend fun loadUser(userId:Long=0)
+    suspend fun loadUser(userId:Long=5)
 
     fun getUserPosts(userId: Long): Flow<List<FeedItem>>
 
+    suspend fun getColorUnlockInfo():Result<List<ColorThemeDto>>
+
     suspend fun updateUserColorPalette(
         palette: UserColorPalette
-    )
+    ): Result<Unit>
 
     suspend fun updateProfile(
         nickname: String?,

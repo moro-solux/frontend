@@ -1,7 +1,9 @@
 package com.solux.moro.data.repository
 
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import com.solux.moro.core.domain.UserRepository
+import com.solux.moro.data.dto.ColorThemeDto
 import com.solux.moro.data.dto.MainColorEditRequest
 import com.solux.moro.data.dto.UserProfileEditRequest
 import com.solux.moro.data.mapper.ColorMapper
@@ -28,7 +30,7 @@ class UserRepositoryImpl @Inject constructor(
         id = -1,
         nickname = "",
         userColorHex = "#FFFFFF",
-        colorPalette = UserColorPalette(userColor=null,paletteColors = emptyList()),
+        colorPalette = UserColorPalette(userColor=null,paletteColors = emptyList<Color>()),
         visible = false
     ))
     override val user: StateFlow<User> = _user.asStateFlow()
@@ -40,11 +42,9 @@ class UserRepositoryImpl @Inject constructor(
         try {
             Log.d("loadUserTest", "loadUser ID: $userId")
             val response = userService.getUserProfile(userId = userId)
-            Log.d("loadUserTest", "서버 응답 성공 여부: ${response.success}")
             if (response.success) {
                 Log.d("loadUserTest", "서버가 보내준 실제 이름: ${response.data.userName}")
                 _user.value = response.data.toDomain()
-                Log.d("loadUserTest", "데이터 매핑 완료: ${_user.value.nickname}")
             }
             else {
                 Log.e("loadUserTest", "success== false")
@@ -52,20 +52,6 @@ class UserRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Log.e("loadUserTest", "에러 타입: ${e.javaClass.simpleName}")
             Log.e("loadUserTest", "에러 메시지: ${e.message}")
-            if (e is retrofit2.HttpException) {
-                val errorStatus = e.code() // HTTP 상태 코드 (예: 401)
-                val errorBody = e.response()?.errorBody()?.string() // 이게 서버가 보낸 HTML/텍스트입니다.
-
-                Log.e("loadUserTest", "HTTP Status: $errorStatus")
-                Log.e("loadUserTest", "Server Response Body: $errorBody")
-            }
-            // 2. 파싱 에러(JSON이 아닐 때)인 경우
-            else if (e is com.google.gson.JsonSyntaxException || e is java.io.IOException) {
-                Log.e("loadUserTest", "Parsing Error or Network Issue: ${e.message}")
-            }
-            else {
-                Log.e("loadUserTest", "Unknown Error: ${e.message}")
-            }
         }
     }
 
@@ -75,26 +61,35 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     //유저 컬러 팔레트 수정
-    override suspend fun updateUserColorPalette(palette: UserColorPalette) {
-        val request = MainColorEditRequest(
-            colorIds = palette.paletteColors?.mapNotNull {
-                ColorMapper.toIdFromComposeColor(it)
-            } ?: emptyList()
-        )
-        val response = userService.mainColorEdit(request)
-        if (response.success) {
-            loadUser()
+    override suspend fun updateUserColorPalette(palette: UserColorPalette): Result<Unit> {
+        return try {
+            val request = MainColorEditRequest(
+                colorIds = palette.paletteColors?.mapNotNull {
+                    ColorMapper.toIdFromComposeColor(it)
+                } ?: emptyList()
+            )
+            Log.d("request","request $request")
+            val response = userService.mainColorEdit(request)
+
+            if (response.success) {
+                loadUser()
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
     //프로필 수정
     override suspend fun updateProfile(nickname: String?, userColorId: Int?,userColorHex: String?)
             : Result<Unit>{
-
+        val colorHexToSend = userColorHex?.removePrefix("#")
         val request = UserProfileEditRequest(
             userName = nickname,
             userColorId = userColorId,
-            userColorHex = userColorHex
+            userColorHex = colorHexToSend
         )
 
         return try {
@@ -111,6 +106,18 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getColorUnlockInfo(): Result<List<ColorThemeDto>> {
+        return try {
+            val response = userService.getColorUnlockInfo()
+            if (response.success) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
     //유저 검색
     override suspend fun searchUsers(
         query: String,

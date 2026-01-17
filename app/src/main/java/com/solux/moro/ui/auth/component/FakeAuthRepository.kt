@@ -16,7 +16,7 @@ class FakeAuthRepository @Inject constructor()  : AuthRepository {
 
     private var currentUserId: Long? = null
 
-    override fun myUserId(): Long = 1
+    override fun myUserId(): Long = 5
 
     override suspend fun login(
         email: String,
