@@ -1,6 +1,7 @@
 package com.solux.moro.data.repository
 
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.data.dto.ColorThemeDto
 import com.solux.moro.data.dto.MainColorEditRequest
@@ -29,7 +30,7 @@ class UserRepositoryImpl @Inject constructor(
         id = -1,
         nickname = "",
         userColorHex = "#FFFFFF",
-        colorPalette = UserColorPalette(userColor=null,paletteColors = emptyList()),
+        colorPalette = UserColorPalette(userColor=null,paletteColors = emptyList<Color>()),
         visible = false
     ))
     override val user: StateFlow<User> = _user.asStateFlow()
@@ -41,11 +42,9 @@ class UserRepositoryImpl @Inject constructor(
         try {
             Log.d("loadUserTest", "loadUser ID: $userId")
             val response = userService.getUserProfile(userId = userId)
-            Log.d("loadUserTest", "서버 응답 성공 여부: ${response.success}")
             if (response.success) {
                 Log.d("loadUserTest", "서버가 보내준 실제 이름: ${response.data.userName}")
                 _user.value = response.data.toDomain()
-                Log.d("loadUserTest", "데이터 매핑 완료: ${_user.value.nickname}")
             }
             else {
                 Log.e("loadUserTest", "success== false")
@@ -53,19 +52,6 @@ class UserRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Log.e("loadUserTest", "에러 타입: ${e.javaClass.simpleName}")
             Log.e("loadUserTest", "에러 메시지: ${e.message}")
-            if (e is retrofit2.HttpException) {
-                val errorStatus = e.code() // HTTP 상태 코드
-                val errorBody = e.response()?.errorBody()?.string()
-
-                Log.e("loadUserTest", "HTTP Status: $errorStatus")
-                Log.e("loadUserTest", "Server Response Body: $errorBody")
-            }
-            else if (e is com.google.gson.JsonSyntaxException || e is java.io.IOException) {
-                Log.e("loadUserTest", "Parsing Error or Network Issue: ${e.message}")
-            }
-            else {
-                Log.e("loadUserTest", "Unknown Error: ${e.message}")
-            }
         }
     }
 

@@ -16,13 +16,13 @@ data class UserProfileDto(
     val followingStatus:String,
     val followerCount: Int,
     val followingCount: Int,
-    val colorCodes: List<String>,
+    val colorCodes: List<ColorCodeDto>,
     val currentUser: Boolean,
     val visible: Boolean
 )
 
 data class ColorCodeDto(
-    val colorId: Long,
+    val colorId: Int,
     val hexCode: String
 )
 
