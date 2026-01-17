@@ -2,6 +2,7 @@ package com.solux.moro.ui.paletteedit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,18 +25,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.core.designsystem.theme.Gray40
-import com.solux.moro.core.designsystem.theme.MoroPalette
 import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.ui.profile.component.ColorGrid
 
@@ -72,8 +70,9 @@ fun PaletteEditScreen(
             .padding(innerPadding)) {
             SelectedColorRow(
                 colors = selectedColors,
-                editingColor=editingColor,
-                onCellClick = { clickedIndex -> viewModel.setEditingIndex(clickedIndex) }
+                editingColorIndex=editingColorIndex,
+                onCellClick = { clickedIndex ->
+                    viewModel.setEditingIndex(clickedIndex) }
             )
             ColorGrid(colorCells,{colorCellData -> viewModel.onColorSelected(colorCellData) }
             )
@@ -90,15 +89,12 @@ fun PaletteEditScreen(
 @Composable
 fun SelectedColorRow(
     colors: List<Color>,
-    editingColor: Color,
+    editingColorIndex: Int?,
     onCellClick: (Int) -> Unit = {},
     modifier: Modifier = Modifier,
     color: Color = MoroTheme.colors.fontColor,
     style: TextStyle = MoroTheme.typography.titleBold24,
 ) {
-    val fixedSizeColors = remember(colors) {
-        colors.take(6) + List(maxOf(0, 6 - colors.size)) { Color.Black }
-    }
 
     Column(
         modifier=modifier
@@ -119,10 +115,11 @@ fun SelectedColorRow(
             ,
             Arrangement.SpaceBetween
         ) {
-            fixedSizeColors.forEachIndexed { index, color ->
-                SelectedColorCell(color = color,
-                    editingColor = editingColor,
-                    onCellClick= { onCellClick(index) }
+            colors.forEachIndexed { index, colorValue ->
+                SelectedColorCell(
+                    color = colorValue,
+                    isSelected = index == editingColorIndex,
+                    onCellClick = { onCellClick(index) }
                 )
             }
         }
@@ -131,19 +128,21 @@ fun SelectedColorRow(
 
 @Composable
 fun SelectedColorCell(color: Color,
-                      editingColor: Color,
+                      isSelected: Boolean,
                       modifier: Modifier = Modifier,
-                      onCellClick: (Int) -> Unit = {}
+                      onCellClick: () -> Unit = {}
 ){
     Box(
         modifier = modifier
             .size(55.dp)
             .background(color, shape = RoundedCornerShape(30.dp))
+            .clickable { onCellClick() }
             .border(
-                width =if(editingColor==color)3.dp else 1.dp,
-                color =if(editingColor==color||color== Color.Black) Color.White else Gray40,
+                width =if(isSelected)3.dp else 1.dp,
+                color =if(isSelected||color== Color.Black) Color.White else Gray40,
                 shape = RoundedCornerShape(30.dp)
             )
+
     )
 }
 
@@ -215,21 +214,21 @@ fun SelectedButtonPreview(){
 @Preview
 @Composable
 fun SelectedColorCellPreview(){
-    SelectedColorCell(color = Color.Red, editingColor = Color.Red)
+   // SelectedColorCell(color = Color.Red, 0)
 }
 
-@Preview(device = Devices.PIXEL_4A)
-@Composable
-fun SelectedColorRowPreview(){
-    SelectedColorRow(
-        listOf(
-            MoroPalette.Pastel.Purple400,
-            MoroPalette.Pastel.Yellow300,
-            MoroPalette.Pastel.Green200,
-            MoroPalette.Pastel.Cyan200,
-            MoroPalette.Pastel.Indigo500,
-            MoroPalette.Pastel.Gray400
-        ),
-        editingColor = MoroPalette.Pastel.Cyan200
-    )
-}
+//@Preview(device = Devices.PIXEL_4A)
+//@Composable
+//fun SelectedColorRowPreview(){
+//    SelectedColorRow(
+//        listOf(
+//            MoroPalette.Pastel.Purple400,
+//            MoroPalette.Pastel.Yellow300,
+//            MoroPalette.Pastel.Green200,
+//            MoroPalette.Pastel.Cyan200,
+//            MoroPalette.Pastel.Indigo500,
+//            MoroPalette.Pastel.Gray400
+//        ),
+//        editingColor = MoroPalette.Pastel.Cyan200
+//    )
+//}

@@ -68,7 +68,7 @@ class UserRepositoryImpl @Inject constructor(
                     ColorMapper.toIdFromComposeColor(it)
                 } ?: emptyList()
             )
-
+            Log.d("request","request $request")
             val response = userService.mainColorEdit(request)
 
             if (response.success) {

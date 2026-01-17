@@ -47,10 +47,15 @@ class PaletteEditViewModel @Inject constructor(
                 val serverColors = u?.colorPalette?.paletteColors ?: emptyList()
                 //Log.d("PaletteData", "서버 Color 객체: $serverColors")
 
+                val initializedList = if (serverColors.isEmpty()) {
+                    List(6) { Color.Transparent }
+                }else {
+                    serverColors.take(6) + List(maxOf(0, 6 - serverColors.size)) { Color.Transparent }
+                }
+
                 if (_tempPaletteColors.value.isEmpty()) {
-                    _tempPaletteColors.value = serverColors.ifEmpty {
-                        List(6) { Color.Black }
-                    }
+                    _tempPaletteColors.value = initializedList
+                    Log.d("PaletteData", "초기화된 리스트 개수: ${_tempPaletteColors.value.size}")
                 }
             }
         }
@@ -65,8 +70,17 @@ class PaletteEditViewModel @Inject constructor(
         val index = _editingColorIndex.value ?: return
         Log.d("PaletteData", "선택된 인덱스: $index, 선택된 색상: $selectedColor")
 
+
         _selectedColor.value = selectedColor
+        _isSaveEnabled.value = true
+
         val currentTemp = _tempPaletteColors.value.toMutableList()
+        while (currentTemp.size <= index || currentTemp.size < 6) {
+            currentTemp.add(Color.Transparent)
+        }
+
+        currentTemp[index] = selectedColor
+
         if (index in currentTemp.indices) {
             currentTemp[index] = selectedColor
             _tempPaletteColors.value = currentTemp
@@ -150,15 +164,22 @@ class PaletteEditViewModel @Inject constructor(
         viewModelScope.launch {
             val current = user.value ?: return@launch
 
+            val filteredColors = _tempPaletteColors.value.filter { color ->
+                color != Color.Transparent
+            }
+            Log.d("PaletteSave", "원본 개수: ${_tempPaletteColors.value.size}, 필터링 후 개수: ${filteredColors.size}")
+
+
             userRepository.updateUserColorPalette(
                 current.colorPalette.copy(
-                    paletteColors = _tempPaletteColors.value),
+                    paletteColors = filteredColors),
                 ).onSuccess {
                 userRepository.loadUser()
                 _editingColorIndex.value = 0
-                Log.d("PaletteEdit","색상 편집 완료")
-            }.onFailure {
-                Log.d("PaletteEdit","색상 편집 시ㅍ실")
+                _isSaveEnabled.value = false
+                Log.d("PaletteEdit","색상 편집 완료 $filteredColors")
+            }.onFailure {error ->
+                Log.e("PaletteEdit", "저장 실패: ${error.message}")
             }
         }
     }

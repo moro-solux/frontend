@@ -179,15 +179,18 @@ object ColorMapper {
             Color.White // 실패 시 기본값
         }
     }
-    fun toIdFromHex(hex: String): Int =
-        hexMap[hex.uppercase()]!!.id
+    fun toIdFromHex(hex: String): Int {
+        if (hex.contains("999999")) return 41//수정 후 삭제
+        val upperHex = hex.uppercase()
+
+        return hexMap[upperHex]?.id ?: 41
+    }
 
     fun toHexFromId(id: Int): String=
         idMap[id]!!.hex
 
     fun toIdFromComposeColor(color: Color?): Int {
         if (color == null) return 1
-
         val hexString = String.format(
             "#%02X%02X%02X",
             (color.red * 255).toInt(),
