@@ -24,7 +24,10 @@ interface UserService {
     @PUT("api/users/me/colors/main") //유저 컬러 팔레트 수정
     suspend fun mainColorEdit(
         @Body colorRequest: MainColorEditRequest
-    ): BaseResponse<Unit>
+    ): BaseResponse<String>
+
+    @GET("api/colormaps")
+    suspend fun getColorUnlockInfo():BaseResponse<List<ColorThemeDto>>
 
     @GET("api/users/{userId}/profile")
     suspend fun getUserProfile(
@@ -59,6 +62,4 @@ interface UserService {
         @Path("targetUserId") targetUserId: Long
     ): BaseResponse<Unit>
 
-    @GET("api/colormaps")
-    suspend fun getColorUnlockInfo():BaseResponse<List<ColorThemeDto>>
 }

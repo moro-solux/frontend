@@ -54,13 +54,12 @@ class UserRepositoryImpl @Inject constructor(
             Log.e("loadUserTest", "에러 타입: ${e.javaClass.simpleName}")
             Log.e("loadUserTest", "에러 메시지: ${e.message}")
             if (e is retrofit2.HttpException) {
-                val errorStatus = e.code() // HTTP 상태 코드 (예: 401)
-                val errorBody = e.response()?.errorBody()?.string() // 이게 서버가 보낸 HTML/텍스트입니다.
+                val errorStatus = e.code() // HTTP 상태 코드
+                val errorBody = e.response()?.errorBody()?.string()
 
                 Log.e("loadUserTest", "HTTP Status: $errorStatus")
                 Log.e("loadUserTest", "Server Response Body: $errorBody")
             }
-            // 2. 파싱 에러(JSON이 아닐 때)인 경우
             else if (e is com.google.gson.JsonSyntaxException || e is java.io.IOException) {
                 Log.e("loadUserTest", "Parsing Error or Network Issue: ${e.message}")
             }
@@ -76,26 +75,35 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     //유저 컬러 팔레트 수정
-    override suspend fun updateUserColorPalette(palette: UserColorPalette) {
-        val request = MainColorEditRequest(
-            colorIds = palette.paletteColors?.mapNotNull {
-                ColorMapper.toIdFromComposeColor(it)
-            } ?: emptyList()
-        )
-        val response = userService.mainColorEdit(request)
-        if (response.success) {
-            loadUser()
+    override suspend fun updateUserColorPalette(palette: UserColorPalette): Result<Unit> {
+        return try {
+            val request = MainColorEditRequest(
+                colorIds = palette.paletteColors?.mapNotNull {
+                    ColorMapper.toIdFromComposeColor(it)
+                } ?: emptyList()
+            )
+
+            val response = userService.mainColorEdit(request)
+
+            if (response.success) {
+                loadUser()
+                Result.success(Unit)
+            } else {
+                Result.failure(Exception(response.message))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
     //프로필 수정
     override suspend fun updateProfile(nickname: String?, userColorId: Int?,userColorHex: String?)
             : Result<Unit>{
-
+        val colorHexToSend = userColorHex?.removePrefix("#")
         val request = UserProfileEditRequest(
             userName = nickname,
             userColorId = userColorId,
-            userColorHex = userColorHex
+            userColorHex = colorHexToSend
         )
 
         return try {

@@ -31,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.solux.moro.R
 import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
@@ -42,18 +43,22 @@ import com.solux.moro.ui.profile.component.ColorGrid
 @Composable
 fun ProfileColorEditScreen(
     modifier: Modifier = Modifier,
+    navController: NavController,
     viewModel: ProfileColorEditViewModel = hiltViewModel(),
     ) {
     Scaffold(
         bottomBar = { BottomBar() },
         topBar = { BackNavigationTopAppBar(
             "프로필 편집",
-            onBackClick = {}
+            onBackClick = {
+                navController.popBackStack()
+            }
         )}
     ) { innerPadding ->
         val colors by viewModel.colors.collectAsState()
 
         val colorCells = colors
+        val isSaveEnabled by viewModel.isSaveEnabled.collectAsState()
 
         Column(Modifier
             .fillMaxWidth()
@@ -77,7 +82,8 @@ fun ProfileColorEditScreen(
                         .width(90.dp),
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Gray40,
+                        if(isSaveEnabled) Color.White
+                        else Gray40,
                     )
                 ) {
                     Text(

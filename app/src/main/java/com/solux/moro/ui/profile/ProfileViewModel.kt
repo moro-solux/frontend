@@ -31,7 +31,7 @@ class ProfileViewModel @Inject constructor(
     val stats = userRepository.userStats
 
     private val profileUserId: Long =
-        savedStateHandle["userId"] ?: 3
+        savedStateHandle["userId"] ?: 5
     val myUserId: Long = authRepository.myUserId().toLong()
 
     init {

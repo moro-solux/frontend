@@ -14,7 +14,7 @@ interface UserRepository {
     val userStats: StateFlow<UserStats?>
 
 
-    suspend fun loadUser(userId:Long=0)
+    suspend fun loadUser(userId:Long=5)
 
     fun getUserPosts(userId: Long): Flow<List<FeedItem>>
 
@@ -22,7 +22,7 @@ interface UserRepository {
 
     suspend fun updateUserColorPalette(
         palette: UserColorPalette
-    )
+    ): Result<Unit>
 
     suspend fun updateProfile(
         nickname: String?,

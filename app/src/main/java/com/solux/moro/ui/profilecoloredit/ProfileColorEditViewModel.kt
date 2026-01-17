@@ -35,6 +35,9 @@ class ProfileColorEditViewModel @Inject constructor(
 
     private val _themeDataFromServer = MutableStateFlow<List<ColorThemeDto>>(emptyList())
 
+    private val _isSaveEnabled = MutableStateFlow(false)
+    val isSaveEnabled: StateFlow<Boolean> = _isSaveEnabled.asStateFlow()
+
     init {
         fetchColorUnlockInfo()
     }
@@ -86,6 +89,7 @@ class ProfileColorEditViewModel @Inject constructor(
 
     fun  updateUserColor(userColor: Color) { //사용자 색상 선택
         _selectedColor.value = userColor
+        _isSaveEnabled.value = true
         viewModelScope.launch {
             val current = user.value ?: return@launch
             userRepository.updateUserColorPalette(
@@ -102,6 +106,13 @@ class ProfileColorEditViewModel @Inject constructor(
             userRepository.updateProfile(null,
                 userColorId=userColorId,
                 userColorHex=userColorHex)
+                .onSuccess {
+                    _isSaveEnabled.value = false
+                    Log.d("ProfileColorEditViewModel", "사용자 색상 수정 성공")
+                }
+                .onFailure {
+                    Log.d("ProfileColorEditViewModel", "프로필 수정 실페")
+                }
         }
     }
 

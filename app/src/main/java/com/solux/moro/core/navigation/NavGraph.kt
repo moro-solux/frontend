@@ -53,7 +53,7 @@ fun NavGraph(navController: NavHostController){
         }
         composable("profileColorEdit" ) { // 유저 대표 색 설정 화면
             val viewModel: ProfileColorEditViewModel = hiltViewModel()
-            ProfileColorEditScreen(modifier= Modifier,viewModel)
+            ProfileColorEditScreen(modifier= Modifier,navController = navController,viewModel)
         }
 
         composable( "paletteEdit" ) { // 팔레트 설정 화면

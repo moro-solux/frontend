@@ -1,5 +1,6 @@
 package com.solux.moro.ui.profile.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
 import com.solux.moro.core.util.figmaDp
+import com.solux.moro.data.mapper.ColorMapper
 
 data class ColorCellData(
     val color: Color,
@@ -69,6 +71,9 @@ fun ColorCell(
                 modifier = Modifier.size(figmaDp(16f))
             )
         }
+    }
+    else{
+        Log.d("ColorCellItem", "ColorCellItem: ${ColorMapper.toIdFromComposeColor(color)}")
     }
 
 
