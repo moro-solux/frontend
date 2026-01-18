@@ -1,6 +1,7 @@
 package com.solux.moro.data.network
 
 import com.google.gson.GsonBuilder
+import com.solux.moro.data.service.NotificationService
 import com.solux.moro.data.service.ColorMapService
 import com.solux.moro.data.service.SettingService
 import com.solux.moro.data.service.UploadService
