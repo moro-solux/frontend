@@ -1,10 +1,11 @@
 package com.solux.moro.ui.notification
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.solux.moro.data.model.NotificationUiModel
 import com.solux.moro.core.domain.NotificationRepository
 import com.solux.moro.core.domain.UserRepository
+import com.solux.moro.data.model.NotificationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,23 +35,44 @@ class NotificationViewModel @Inject constructor(
                 "@colorhunter"
             )
 
+    init{
+        loadNotifications()
+    }
+
     private fun loadNotifications() {
         viewModelScope.launch {
             try {
+                notificationRepository.getNotifications()
+                    .collect { mappedData ->
+                        Log.d("NotificationVM", "데이터 수신 성공: $mappedData")
+                        _notifications.value = mappedData
 
+                        val updatedMap = mappedData.mapValues { (_, list) ->
+                            list.map { item ->
+                                if (item is NotificationUiModel.Liked) {
+                                    val count = notificationRepository.getLikes(item.postId)
+                                    Log.d("NotificationVM", "liked 데이터 수신 성공: $count")
+                                    item.copy(totalCount = count)
+                                } else item
+                            }
+                        }
+                        _notifications.value = updatedMap
+                    }
             } catch (e: Exception) {
-                // 에러 처리
+                Log.e("NotificationVM", "알림 로드 실패", e)
             }
         }
     }
 
     fun onNotificationClick(notificationId: Long) {
-        // 서버
         viewModelScope.launch {
-            notificationRepository.markAsRead(notificationId)
+            try {
+                notificationRepository.markAsRead(notificationId)
+                markAsRead(notificationId)
+            } catch (e: Exception) {
+                Log.e("NotificationVM", "읽음 처리 실패", e)
+            }
         }
-        // 내 로컬 화면 상태
-        markAsRead(notificationId)
     }
 
     fun markAsRead(notificationId: Long) {
@@ -62,6 +84,19 @@ class NotificationViewModel @Inject constructor(
                     } else item
                 }
             }
+        }
+    }
+
+    private fun updateLikeCounts(data: Map<String, List<NotificationUiModel>>) {
+        viewModelScope.launch {
+            data.values.flatten().filterIsInstance<NotificationUiModel.Liked>()
+                .forEach { likedItem ->
+                    try {
+                        val likeInfo = notificationRepository.getLikes(likedItem.postId)
+                    } catch (e: Exception) {
+                        Log.e("LikeUpdate", "좋아요 수 업데이트 실패", e)
+                    }
+                }
         }
     }
 }

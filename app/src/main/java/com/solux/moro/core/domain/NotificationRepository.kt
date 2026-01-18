@@ -8,5 +8,6 @@ interface NotificationRepository {
 
     suspend fun markAsRead(notificationId: Long)
 
-    //suspend fun onNotificationClick(notificationId: Long)
+    suspend fun getLikes(postId: Long): Int
 }
+

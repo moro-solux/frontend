@@ -10,11 +10,6 @@ data class NotificationDto(
     val createdAt: String
 )
 
-data class NotificationContent(
-    val additionalProp1: String?,
-    val additionalProp2: String?,
-    val additionalProp3: String?
-)
 
 data class TokenRequest(
     val token: String
@@ -22,4 +17,14 @@ data class TokenRequest(
 
 data class SSEResponse(
     val timeout:String
+)
+
+data class LikeResponseDto(
+    val totalCount: Int,
+    val topLiker: TopLikerDto?
+)
+
+data class TopLikerDto(
+    val userId: Long,
+    val nickname: String
 )

@@ -16,11 +16,13 @@ class NotificationRepositoryImpl @Inject constructor(
     try {
         val response = notificationService.getNotifications()
         if (response.success) {
+            Log.d("NotificationRepo", "서버 응답 성공 여부: ${response.success}")
             val mappedData = response.data.mapValues { entry ->
                 entry.value.map { dto ->
                     dto.toUiModel()
                 }
             }
+            Log.d("NotificationRepo", "매핑된 데이터: ${mappedData.values}")
             emit(mappedData)
         }
     }
@@ -30,8 +32,9 @@ class NotificationRepositoryImpl @Inject constructor(
 }
 
 
-    override suspend fun  markAsRead(notificationId: Long){
+    override suspend fun markAsRead(notificationId: Long){
         try {
+            Log.d("NotificationRepo", "요청 ID: $notificationId")
             val response = notificationService.readNotification(notificationId)
             if (response.success) {
                 Log.d("NotificationRepo", "$notificationId 번 알림 읽음 처리")
@@ -41,4 +44,19 @@ class NotificationRepositoryImpl @Inject constructor(
             Log.e("NotificationRepo", "읽음 처리 실패: ${e.message}")
         }
     }
+
+    override suspend fun getLikes(postId: Long):Int{
+        return try{
+            val response = notificationService.getLikes(postId)
+            if (response.success) {
+                Log.d("NotificationRepo", "좋아요 수 조회 성공 여부: ${response.success}")
+                response.data?.totalCount ?: 1
+            } else 1
+        }
+        catch  (e: Exception){
+            Log.e("NotificationRepo", "좋아요 수 조회 실패: ${e.message}")
+            1
+        }
+    }
+
 }

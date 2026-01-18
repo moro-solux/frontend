@@ -44,6 +44,7 @@ fun NotificationScreen(
 ) {
 
     val navController= navController
+
     Scaffold(
         topBar = { BackNavigationTopAppBar("알림",{
             navController.popBackStack()
@@ -62,73 +63,13 @@ fun NotificationScreen(
         ) {
             FollowNavigationItem( navController = navController)
             val notifications by viewModel.notifications.collectAsState(initial = emptyMap())
-            val mock  = mapOf(
-                "Today" to listOf(
-                    NotificationUiModel.Comment(
-                        id = 1L,
-                        userName = "김철수",
-                        postId = 101,
-                        content = "와! 이 사진 정말 잘 나왔네요. 어디서 찍으신 건가요?",
-                        createdAt = "오전 01:54",
-                        isRead = false
-                    ),
-                    NotificationUiModel.ColorUnlocked(
-                        id = 3L,
-                        createdAt = "오후 10:30",
-                        isRead = false
-                    ),
-                    NotificationUiModel.Liked(
-                        id = 2L,
-                        userName = "이영희",
-                        postId = 102,
-                        imageUrl = null,
-                        createdAt = "오전 01:20",
-                        isRead = false
-                    ),
-                    NotificationUiModel.Mission(
-                    id = 5L,
-                    content = "새로운 주간 미션: 사진 3장 업로드하기",
-                    createdAt = "1월 7일",
-                    isRead = false
-                )
-                ),
-                "Yesterday" to listOf(
-                    NotificationUiModel.ColorUnlocked(
-                        id = 3L,
-                        createdAt = "오후 10:30",
-                        isRead = false
-                    ),
-                    NotificationUiModel.Following(
-                        id = 4L,
-                        userName = "박지성",
-                        createdAt = "오후 06:15",
-                        isRead = false
-                    )
-                ),
-                "Last 7 days" to listOf(
-                    NotificationUiModel.Mission(
-                        id = 5L,
-                        content = "새로운 주간 미션: 사진 3장 업로드하기",
-                        createdAt = "1월 7일",
-                        isRead = true
-                    )
-                ),
-                "Earlier" to listOf(
-                    NotificationUiModel.Mission(
-                        id = 5L,
-                        content = "새로운 주간 미션: 사진 3장 업로드하기",
-                        createdAt = "1월 7일",
-                        isRead = true
-                    )
-                )
-            )
-            val notificationList = mock
+
             Box(modifier = Modifier.weight(1f)) {
                 NotificationList(
                     navController = navController,
                     groupedData = notifications,
                     onItemClick = { notificationId ->
-                        //viewModel.onNotificationClick(notificationId)
+                        viewModel.onNotificationClick(notificationId)
                     }
                 )
             }
@@ -143,7 +84,7 @@ fun NotificationList(
     onItemClick: (Long) -> Unit) {
     LazyColumn (
         modifier=Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
+        verticalArrangement = Arrangement.spacedBy(15.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         groupedData.forEach {(header, notifications) ->

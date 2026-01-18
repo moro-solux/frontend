@@ -60,6 +60,7 @@ sealed class NotificationUiModel {
     data class Comment(
         override val id: Long,
         val userName: String,
+        val userId: Long,
         val postId: Long,
         val content: String,
         override val createdAt: String,
@@ -70,8 +71,10 @@ sealed class NotificationUiModel {
     data class Liked(
         override val id: Long,
         val userName: String,
+        val userId: Long,
         val postId: Long,
         val imageUrl: String?,
+        val totalCount: Int = 1,
         override val createdAt: String,
         override val type: NotificationType = NotificationType.LIKED,
         override var isRead: Boolean = false
@@ -80,6 +83,7 @@ sealed class NotificationUiModel {
     data class Following(
         override val id: Long,
         val userName: String,
+        val userId: Long,
         override val createdAt: String,
         override val type: NotificationType = NotificationType.FOLLOWING,
         override var isRead: Boolean = false

@@ -6,6 +6,7 @@
 
     <!-- Notification - Like -->
     <string name="notification_like_message">%1$s님이 회원님의 사진을 좋아합니다.</string>
+    <string name="notification_like_message_n">%1$s님외 %2$s명이 회원님의 사진을 좋아합니다.</string>
 
     <!-- Notification - Follow -->
     <string name="notification_follow_message">%1$s님이 회원님을 팔로우하기 시작했습니다.</string>
