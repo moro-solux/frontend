@@ -5,10 +5,18 @@ import com.solux.moro.data.model.NotificationType
 import com.solux.moro.data.model.NotificationUiModel
 
 fun NotificationDto.toUiModel(): NotificationUiModel {
-    val typeEnum = try { NotificationType.valueOf(this.type) }
-    catch (e: Exception) { NotificationType.MISSION }
+    val notificationType = try {
+        NotificationType.valueOf(this.type)
+    } catch (e: Exception) {
+        return NotificationUiModel.Mission(
+            content = this.content?.get("content") as? String ?: "",
+            createdAt = this.createdAt,
+            isRead = this.isRead,
+            id = content?.get("id") as? Long ?: -1,
+        )
+    }
 
-    return when (typeEnum) {
+    return when (notificationType) {
         NotificationType.LIKED -> NotificationUiModel.Liked(
             userName = content?.get("userName") as? String ?: "",
             imageUrl = content?.get("imageUrl") as? String?: "",

@@ -6,6 +6,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    //id("com.android.application")
+    id("com.google.gms.google-services")
 
 }
 
@@ -113,4 +115,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.2.0")
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
+
 }

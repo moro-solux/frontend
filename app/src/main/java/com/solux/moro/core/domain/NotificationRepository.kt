@@ -4,9 +4,9 @@ import com.solux.moro.data.model.NotificationUiModel
 import kotlinx.coroutines.flow.Flow
 
 interface NotificationRepository {
-    fun getNotifications(): Flow<Map<String, List<NotificationUiModel>>>
+    suspend fun getNotifications(): Flow<Map<String, List<NotificationUiModel>>>
 
-    fun markAsRead(notificationId: Long)
+    suspend fun markAsRead(notificationId: Long)
 
-    fun onNotificationClick(notificationId: Long)
+    //suspend fun onNotificationClick(notificationId: Long)
 }
