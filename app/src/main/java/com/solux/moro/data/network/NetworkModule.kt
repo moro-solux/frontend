@@ -1,6 +1,7 @@
 package com.solux.moro.data.network
 
 import com.google.gson.GsonBuilder
+import com.solux.moro.data.service.NotificationService
 import com.solux.moro.data.service.ColorMapService
 import com.solux.moro.data.service.SettingService
 import com.solux.moro.data.service.UploadService
@@ -19,7 +20,7 @@ import kotlin.jvm.java
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "https://moro-be.store/"
+    private const val BASE_URL = "https://moro-be.store"
 
     @Provides
     @Singleton
@@ -54,6 +55,12 @@ object NetworkModule {
     @Singleton
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideNotificationService(retrofit: Retrofit): NotificationService {
+        return retrofit.create(NotificationService::class.java)
     }
 
     @Provides

@@ -16,12 +16,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.solux.moro.R
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
@@ -31,6 +31,7 @@ const val PIXEL_DENSITY = 2.625f
 @Composable
 fun TopBar(
     showBell: Boolean = true,
+    navController: NavHostController=NavHostController(LocalContext.current)
 ) {
     Column {
         TopAppBar(
@@ -65,7 +66,9 @@ fun TopBar(
             actions = {
                 if (showBell) {
                     IconButton(
-                        onClick = { },
+                        onClick = {
+                            navController.navigate("notification")
+                        },
                         Modifier
                             .width((126.72).toPxDp)
                             .height((126.72).toPxDp)
@@ -89,11 +92,10 @@ fun TopBar(
     }
 }
 
-@Preview(device = Devices.PIXEL_4A)
-@Composable
-fun TopBarPreview() {
-    Column {
-        TopBar(showBell = true)
-        TopBar(showBell = false)
-    }
-}
+//@Preview(device = Devices.PIXEL_4A)
+//@Composable
+//fun TopBarPreview() {
+//    Column {
+//        TopBar(showBell = true)
+//    }
+//}

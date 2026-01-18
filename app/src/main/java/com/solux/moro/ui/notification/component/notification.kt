@@ -1,5 +1,6 @@
 package com.solux.moro.ui.notification.component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -99,7 +100,13 @@ fun Notification(
                         stringResource(notification.type.messageRes(), notification.userName)
                     }
                     is NotificationUiModel.Liked -> {
-                        stringResource(notification.type.messageRes(), notification.userName)
+                        val othersCount = notification.totalCount - 1
+                        if (othersCount > 0) {
+                            stringResource(R.string.notification_like_message_n, notification.userName, othersCount)
+                        } else {
+                            stringResource(R.string.notification_like_message, notification.userName)
+                        }
+
                     }
                     is NotificationUiModel.Following -> {
                         stringResource(notification.type.messageRes(), notification.userName)
@@ -112,6 +119,7 @@ fun Notification(
                     }
 
                 }
+                Log.d("Notification", "Notification: $notification")
 
                 Text(
                     text = text,

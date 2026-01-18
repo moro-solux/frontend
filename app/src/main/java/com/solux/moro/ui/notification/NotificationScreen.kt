@@ -1,5 +1,6 @@
 package com.solux.moro.ui.notification
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,7 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.solux.moro.R
 import com.solux.moro.components.BackNavigationTopAppBar
@@ -43,7 +44,14 @@ fun NotificationScreen(
     style: TextStyle = MoroTheme.typography.bodyRegular14
 ) {
 
+    Log.d(
+        "VM_UI",
+        "NotificationScreen recomposed - VM hash=${viewModel.hashCode()}"
+    )
     val navController= navController
+    val notifications by viewModel.notifications.collectAsStateWithLifecycle()
+    //val notificationList by viewModel.notificationList.collectAsStateWithLifecycle()
+
     Scaffold(
         topBar = { BackNavigationTopAppBar("알림",{
             navController.popBackStack()
@@ -61,74 +69,14 @@ fun NotificationScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             FollowNavigationItem( navController = navController)
-            val notifications by viewModel.notifications.collectAsState(initial = emptyMap())
-            val mock  = mapOf(
-                "Today" to listOf(
-                    NotificationUiModel.Comment(
-                        id = 1L,
-                        userName = "김철수",
-                        postId = 101,
-                        content = "와! 이 사진 정말 잘 나왔네요. 어디서 찍으신 건가요?",
-                        createdAt = "오전 01:54",
-                        isRead = false
-                    ),
-                    NotificationUiModel.ColorUnlocked(
-                        id = 3L,
-                        createdAt = "오후 10:30",
-                        isRead = false
-                    ),
-                    NotificationUiModel.Liked(
-                        id = 2L,
-                        userName = "이영희",
-                        postId = 102,
-                        imageUrl = null,
-                        createdAt = "오전 01:20",
-                        isRead = false
-                    ),
-                    NotificationUiModel.Mission(
-                    id = 5L,
-                    content = "새로운 주간 미션: 사진 3장 업로드하기",
-                    createdAt = "1월 7일",
-                    isRead = false
-                )
-                ),
-                "Yesterday" to listOf(
-                    NotificationUiModel.ColorUnlocked(
-                        id = 3L,
-                        createdAt = "오후 10:30",
-                        isRead = false
-                    ),
-                    NotificationUiModel.Following(
-                        id = 4L,
-                        userName = "박지성",
-                        createdAt = "오후 06:15",
-                        isRead = false
-                    )
-                ),
-                "Last 7 days" to listOf(
-                    NotificationUiModel.Mission(
-                        id = 5L,
-                        content = "새로운 주간 미션: 사진 3장 업로드하기",
-                        createdAt = "1월 7일",
-                        isRead = true
-                    )
-                ),
-                "Earlier" to listOf(
-                    NotificationUiModel.Mission(
-                        id = 5L,
-                        content = "새로운 주간 미션: 사진 3장 업로드하기",
-                        createdAt = "1월 7일",
-                        isRead = true
-                    )
-                )
-            )
-            val notificationList = mock
+            //val notifications by viewModel.notifications.collectAsState(initial = emptyMap())
+
             Box(modifier = Modifier.weight(1f)) {
                 NotificationList(
                     navController = navController,
                     groupedData = notifications,
                     onItemClick = { notificationId ->
-                        //viewModel.onNotificationClick(notificationId)
+                        viewModel.onNotificationClick(notificationId)
                     }
                 )
             }
@@ -141,9 +89,10 @@ fun NotificationList(
     navController: NavHostController,
     groupedData: Map<String, List<NotificationUiModel>>,
     onItemClick: (Long) -> Unit) {
+    Log.d("UI_RECOMPOSE", "현재 맵 섹션 개수: ${groupedData.size}")
     LazyColumn (
         modifier=Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
+        verticalArrangement = Arrangement.spacedBy(15.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         groupedData.forEach {(header, notifications) ->
@@ -155,7 +104,8 @@ fun NotificationList(
                     color = Color.White
                 )
             }
-            items(notifications) { notification ->
+            items(notifications,
+                key = { it.id }) { notification ->
                 Notification(
                     navController,
                     notification,

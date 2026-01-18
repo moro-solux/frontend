@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.ui.home.component.CommentWindow
@@ -32,7 +33,7 @@ import com.solux.moro.ui.home.component.Feed
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    //navController: NavHostController,
+    navController: NavHostController,
     viewModel: FeedViewModel = hiltViewModel()
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -41,7 +42,7 @@ fun HomeScreen(
 
     Scaffold(
         bottomBar = { BottomBar() },
-        topBar = { TopBar() }
+        topBar = { TopBar(true, navController) }
     ) { innerPadding ->
         val feed by viewModel.feed.collectAsState()
 

@@ -1,15 +1,21 @@
 package com.solux.moro.ui.notification
 
+import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.solux.moro.data.model.NotificationUiModel
+import com.google.gson.Gson
 import com.solux.moro.core.domain.NotificationRepository
 import com.solux.moro.core.domain.UserRepository
+import com.solux.moro.data.dto.NotificationDto
+import com.solux.moro.data.mapper.toUiModel
+import com.solux.moro.data.model.NotificationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -20,9 +26,18 @@ class NotificationViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
     private val userRepository: UserRepository
 ) : ViewModel(){
-
+    init {
+        Log.d("VM_INSTANCE", "NotificationViewModel created: ${this.hashCode()}")
+    }
     private val _notifications = MutableStateFlow<Map<String, List<NotificationUiModel>>>(emptyMap())
     val notifications = _notifications.asStateFlow()
+    var notificationState = mutableStateOf<Map<String, List<NotificationUiModel>>>(emptyMap())
+        private set
+
+    private val _notificationList = MutableStateFlow<List<NotificationUiModel>>(emptyList())
+    val notificationList = _notificationList.asStateFlow()
+
+
     val user = userRepository.user
     val stats = userRepository.userStats
 
@@ -34,23 +49,89 @@ class NotificationViewModel @Inject constructor(
                 "@colorhunter"
             )
 
-    private fun loadNotifications() {
+    init{
+        loadNotifications()
         viewModelScope.launch {
-            try {
+            notificationRepository.sseEvents.collect { rawData ->
 
-            } catch (e: Exception) {
-                // 에러 처리
+                if (rawData == "connected") return@collect
+                try {
+                    val dto = Gson().fromJson(rawData, NotificationDto::class.java)
+                    val newUiModel = dto.toUiModel()
+                    Log.d("ViewModel_SSE", "새 알림 모델: $newUiModel")
+                    _notifications.update { currentMap ->
+                        val todayKey = "오늘"
+                        val todayNotifications = currentMap[todayKey] ?: emptyList()
+                        val updatedList = listOf(newUiModel) + todayNotifications
+                        currentMap.toMutableMap().apply {
+                            this[todayKey] = updatedList
+                        }.toMap()
+                    }
+
+
+                    Log.d("ViewModel_SSE", "UI 모델 업데이트 완료")
+                } catch (e: Exception) {
+                    Log.e("ViewModel_SSE", "파싱 또는 업데이트 실패", e)
+                }
             }
         }
     }
 
-    fun onNotificationClick(notificationId: Long) {
-        // 서버
+    private fun loadNotifications() {
         viewModelScope.launch {
-            notificationRepository.markAsRead(notificationId)
+            try {
+                val mappedData = notificationRepository.getNotifications().first()
+
+                val updatedMap = mappedData.mapValues { (_, list) ->
+                    list.map { item ->
+                        if (item is NotificationUiModel.Liked) {
+                            val count = notificationRepository.getLikes(item.postId)
+                            item.copy(totalCount = count)
+                        } else item
+                    }
+                }
+
+                _notifications.value = updatedMap
+                Log.d("NotificationVM", "초기 알림 로드 완료")
+            } catch (e: Exception) {
+                Log.e("NotificationVM", "알림 로드 실패", e)
+            }
         }
-        // 내 로컬 화면 상태
-        markAsRead(notificationId)
+    }
+//    private fun loadNotifications() {
+//        viewModelScope.launch {
+//            try {
+//                val mappedData =notificationRepository.getNotifications()
+//                    .collect { mappedData ->
+//                        Log.d("NotificationVM", "데이터 수신 성공: $mappedData")
+//                        _notifications.value = mappedData
+//
+//                        val updatedMap = mappedData.mapValues { (_, list) ->
+//                            list.map { item ->
+//                                if (item is NotificationUiModel.Liked) {
+//                                    val count = notificationRepository.getLikes(item.postId)
+//                                    Log.d("NotificationVM", "liked 데이터 수신 성공: $count")
+//                                    item.copy(totalCount = count)
+//                                } else item
+//                            }
+//                        }
+//                        _notifications.value = updatedMap
+//                    }
+//            } catch (e: Exception) {
+//                Log.e("NotificationVM", "알림 로드 실패", e)
+//            }
+//        }
+//    }
+
+    fun onNotificationClick(notificationId: Long) {
+        viewModelScope.launch {
+            try {
+                notificationRepository.markAsRead(notificationId)
+                markAsRead(notificationId)
+            } catch (e: Exception) {
+                Log.e("NotificationVM", "읽음 처리 실패", e)
+            }
+        }
     }
 
     fun markAsRead(notificationId: Long) {
@@ -64,5 +145,41 @@ class NotificationViewModel @Inject constructor(
             }
         }
     }
+
+    private fun updateLikeCounts(data: Map<String, List<NotificationUiModel>>) {
+        viewModelScope.launch {
+            data.values.flatten().filterIsInstance<NotificationUiModel.Liked>()
+                .forEach { likedItem ->
+                    try {
+                        val likeInfo = notificationRepository.getLikes(likedItem.postId)
+                    } catch (e: Exception) {
+                        Log.e("LikeUpdate", "좋아요 수 업데이트 실패", e)
+                    }
+                }
+        }
+    }
+
+    fun registerToken(fcmToken: String) {
+        viewModelScope.launch {
+            try {
+                val response = notificationRepository.postToken(fcmToken)
+
+                if (response.success) {
+                    Log.d("FCM_LOG", "서버에 토큰 등록 성공!")
+
+                    connectToNotificationStream(fcmToken)
+                } else {
+                    Log.e("FCM_LOG", "서ver 등록 실패: ${response.message}")
+                }
+            } catch (e: Exception) {
+                Log.e("FCM_LOG", "네트워크 에러: ${e.message}")
+            }
+        }
+    }
+
+    private fun connectToNotificationStream(token: String) {
+        notificationRepository.connectNotificationStream(token)
+    }
+
 }
 

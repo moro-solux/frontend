@@ -8,7 +8,6 @@ import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.test.repository.FakeCommentRepository
 import com.solux.moro.test.repository.FakeFeedRepository
 import com.solux.moro.test.repository.FakeFollowRepository
-import com.solux.moro.test.repository.FakeNotificationRepository
 import com.solux.moro.ui.auth.AuthRepository
 import com.solux.moro.ui.auth.component.FakeAuthRepository
 import dagger.Binds
@@ -42,7 +41,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindNotificationRepository(
-        impl: FakeNotificationRepository
+        impl: NotificationRepositoryImpl
     ): NotificationRepository
 
     @Binds
