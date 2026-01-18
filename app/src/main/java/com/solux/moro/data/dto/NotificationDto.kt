@@ -1,6 +1,7 @@
 package com.solux.moro.data.dto
 
 import com.google.gson.annotations.SerializedName
+
 data class NotificationDto(
     val id: Long,
     val type: String,

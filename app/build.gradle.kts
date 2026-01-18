@@ -6,8 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    //id("com.android.application")
-    id("com.google.gms.google-services")
+    alias(libs.plugins.google.services)
 
 }
 
@@ -65,6 +64,7 @@ dependencies {
     // Hilt  dependencies
     implementation(libs.hilt.android)
     implementation(libs.play.services.maps)
+
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.lifecycle.vm.compose)
     // Navigation(Compose)
@@ -116,8 +116,17 @@ dependencies {
 
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
-    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.launchdarkly:okhttp-eventsource:3.0.0")
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
+    //implementation("com.google.firebase:firebase-messaging-ktx:23.4.1")
+
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp-sse:4.12.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
 
 
 }

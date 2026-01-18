@@ -6,14 +6,32 @@ import com.solux.moro.data.dto.BaseResponse
 import com.solux.moro.data.dto.TokenRequest
 import com.solux.moro.data.mapper.toUiModel
 import com.solux.moro.data.model.NotificationUiModel
+import com.solux.moro.data.network.NetworkModule
 import com.solux.moro.data.service.NotificationService
 import jakarta.inject.Inject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.sse.EventSource
+import okhttp3.sse.EventSourceListener
+import okhttp3.sse.EventSources
+import java.util.concurrent.TimeUnit
 
 class NotificationRepositoryImpl @Inject constructor(
     private val notificationService: NotificationService
 ): NotificationRepository{
+
+    private val _sseEvents = MutableSharedFlow<String>()
+    override val sseEvents: SharedFlow<String> = _sseEvents.asSharedFlow()
+
     override suspend fun getNotifications(): Flow<Map<String, List<NotificationUiModel>>> = flow{
     try {
         val response = notificationService.getNotifications()
@@ -32,7 +50,6 @@ class NotificationRepositoryImpl @Inject constructor(
         Log.e("NotificationRepo", "목록 조회 실패: ${e.message}")
     }
 }
-
 
     override suspend fun markAsRead(notificationId: Long){
         try {
@@ -89,5 +106,43 @@ class NotificationRepositoryImpl @Inject constructor(
             Log.e("NotificationRepo", "토큰 제거 에러: ${e.message}")
             BaseResponse(status = 500, success = false, message = e.message ?: "Error", data = "")
         }
+    }
+
+    override fun connectNotificationStream(token: String) {
+        val mytoken= NetworkModule.token
+        val request = Request.Builder()
+            .url("https://moro-be.store/api/notifications/stream")
+            .header("Accept", "text/event-stream")
+            .header("Authorization", "Bearer $mytoken")
+            .build()
+
+
+        val listener = object : EventSourceListener() {
+            override fun onOpen(eventSource: EventSource, response: Response) {
+                Log.d("SSE", "연결 성공! 이제 데이터를 기다립니다.")
+            }
+            override fun onEvent(
+                eventSource: okhttp3.sse.EventSource,
+                id: String?,
+                type: String?,
+                data: String
+            ) {
+                Log.d("SSE", "실시간 알림 도착: $data")
+                CoroutineScope(Dispatchers.IO).launch {
+                    _sseEvents.emit(data)
+                }
+            }
+            override fun onFailure(eventSource: EventSource, t: Throwable?, response: Response?) {
+                Log.e("SSE", "연결 에러 발생: ${t?.message}")
+                Log.e("SSE", "응답 코드: ${response?.code}")
+            }
+        }
+
+        val client = OkHttpClient.Builder()
+            .connectTimeout(0, TimeUnit.MILLISECONDS)
+            .readTimeout(0, TimeUnit.MILLISECONDS)
+            .build()
+
+        EventSources.createFactory(client).newEventSource(request, listener)
     }
 }
