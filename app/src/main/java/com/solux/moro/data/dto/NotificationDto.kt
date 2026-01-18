@@ -12,7 +12,7 @@ data class NotificationDto(
 
 
 data class TokenRequest(
-    val token: String
+    val fcmToken: String
 )
 
 data class SSEResponse(

@@ -21,7 +21,7 @@ interface NotificationService {
 
     @POST("/api/notifications/token")// 토큰 등록
     suspend fun postToken(
-        @Body tokenRequest: TokenRequest
+        @Body registerToken: TokenRequest
     ): BaseResponse<String>
 
     @DELETE("/api/notifications/token")// 토큰 제거

@@ -2,6 +2,8 @@ package com.solux.moro.data.repository
 
 import android.util.Log
 import com.solux.moro.core.domain.NotificationRepository
+import com.solux.moro.data.dto.BaseResponse
+import com.solux.moro.data.dto.TokenRequest
 import com.solux.moro.data.mapper.toUiModel
 import com.solux.moro.data.model.NotificationUiModel
 import com.solux.moro.data.service.NotificationService
@@ -59,4 +61,33 @@ class NotificationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun postToken(fcmToken: String): BaseResponse<String> {
+        return try {
+            val request = TokenRequest(fcmToken = fcmToken)
+
+            val response = notificationService.postToken(request)
+
+            if (response.success) {
+                Log.d("NotificationRepo", "FCM 토큰 등록 성공: ${response.data}")
+            }
+            response
+        } catch (e: Exception) {
+            Log.e("NotificationRepo", "토큰 등록 에러: ${e.message}")
+            BaseResponse(status = 500, success = false, message = e.message ?: "Error", data = "")
+        }
+    }
+
+    override suspend fun deleteToken(token: String): BaseResponse<String> {
+        return try {
+            val response = notificationService.deleteToken(token)
+
+            if (response.success) {
+                Log.d("NotificationRepo", "FCM 토큰 제거 성공: ${response.data}")
+            }
+            response
+        } catch (e: Exception) {
+            Log.e("NotificationRepo", "토큰 제거 에러: ${e.message}")
+            BaseResponse(status = 500, success = false, message = e.message ?: "Error", data = "")
+        }
+    }
 }
