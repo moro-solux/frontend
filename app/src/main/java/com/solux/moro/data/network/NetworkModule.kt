@@ -1,6 +1,8 @@
 package com.solux.moro.data.network
 
 import com.google.gson.GsonBuilder
+import com.solux.moro.data.service.SettingService
+import com.solux.moro.data.service.UploadService
 import com.solux.moro.data.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -51,4 +53,17 @@ object NetworkModule {
     fun provideUserService(retrofit: Retrofit): UserService {
         return retrofit.create(UserService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideSettingService(retrofit: Retrofit): SettingService {
+        return retrofit.create(SettingService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUploadService(retrofit: Retrofit): UploadService {
+        return retrofit.create(UploadService::class.java)
+    }
+
 }
