@@ -32,7 +32,7 @@ import com.solux.moro.ui.search.SearchUserViewModel
 @Composable
 fun NavGraph(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination ="camera") {
+    NavHost(navController = navController, startDestination ="home") {
 
         // 카메라 화면
         composable("camera") {
@@ -67,7 +67,7 @@ fun NavGraph(navController: NavHostController){
         }
 
         composable("home") { //홈 화면
-            HomeScreen()
+            HomeScreen(navController = navController)
         }
         composable("menu") {
             MenuScreen(navController = navController)
