@@ -14,7 +14,6 @@ interface UploadService {
     @Multipart
     @POST("api/posts/actions/capture")
     suspend fun capturePost(
-        @Header("Authorization") token: String,
         @Part image: MultipartBody.Part,
         @Query("lat") lat: Double,
         @Query("lng") lng: Double
@@ -23,7 +22,6 @@ interface UploadService {
     // 위치 수정
     @PATCH("api/posts/drafts/{draftId}/location")
     suspend fun updateLocation(
-        @Header("Authorization") token: String,
         @Path("draftId") draftId: Long,
         @Body request: LocationRequestDto
     ): Response<UploadBaseResponse<Unit>>
@@ -31,14 +29,13 @@ interface UploadService {
     // 색상 수정
     @PATCH("api/posts/drafts/{draftId}/main-color")
     suspend fun updateMainColor(
-        @Header("Authorization") token: String,
         @Path("draftId") draftId: Long,
         @Body request: ColorRequestDto
     ): Response<UploadBaseResponse<Unit>>
 
+    // 게시
     @POST("api/posts/drafts/{draftId}/publish")
     suspend fun publishPost(
-        @Header("Authorization") token: String,
         @Path("draftId") draftId: Long,
         @Body body: Map<String, String> = emptyMap()
     ): Response<UploadBaseResponse<Long>>
