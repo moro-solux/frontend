@@ -71,7 +71,14 @@ class UploadViewModel @Inject constructor(
 
             _uiState.value = _uiState.value.copy(
                 detectedLocation = address,
-                nearbyPlaces = listOf(PlaceData("[현재 위치]", address, lat, lng)),
+                nearbyPlaces = listOf(
+                    PlaceData(
+                        name = address,
+                        address = address,
+                        latitude = lat,
+                        longitude = lng
+                    )
+                ),
                 currentLat = lat,
                 currentLng = lng
             )
