@@ -39,7 +39,9 @@ fun MenuScreen(
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBarBack("메뉴") },
+        topBar = { TopBarBack("메뉴",onBackClick = {
+            navController.popBackStack()
+        }) },
         bottomBar = { BottomBar() }
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
@@ -124,19 +126,20 @@ fun SettingsSection(navController: NavHostController) {
         )
         Box(
             modifier = Modifier
-                .border(
-                    width = figmaDp(1f),
-                    color = Color(0xFFF2F2F2),
-                    shape = RoundedCornerShape(size = figmaDp(16f))
-                )
                 .fillMaxWidth()
                 .height(figmaDp(80f))
                 .background(
                     color = Color(0xFF171717),
                     shape = RoundedCornerShape(size = figmaDp(16f))
                 )
-                .padding(figmaDp(20f))
-                .clickable { navController.navigate("colormap") },
+                .border(
+                    width = figmaDp(1f),
+                    color = Color(0xFFF2F2F2),
+                    shape = RoundedCornerShape(size = figmaDp(16f))
+                )
+                .clip(RoundedCornerShape(size = figmaDp(16f))) // 클릭 리플 효과가 경계 안에서만 돌도록 clip 추가
+                .clickable { navController.navigate("colormap") } // 네비게이션 연결 [cite: 2026-01-18]
+                .padding(horizontal = figmaDp(20f)),
             contentAlignment = Alignment.CenterStart
         ) {
             Row(
@@ -152,6 +155,8 @@ fun SettingsSection(navController: NavHostController) {
                         color = Color(0xFFFFFFFF),
                     )
                 )
+
+                // 컬러칩 그래디언트 아이콘 영역
                 Box(
                     modifier = Modifier
                         .size(figmaDp(40f))

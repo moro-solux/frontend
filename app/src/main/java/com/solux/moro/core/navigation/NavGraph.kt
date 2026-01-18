@@ -16,6 +16,8 @@ import com.solux.moro.ui.followlist.FollowRequestScreen
 import com.solux.moro.ui.followlist.FollowRequestViewModel
 import com.solux.moro.ui.followlist.FollowingViewModel
 import com.solux.moro.ui.home.HomeScreen
+import com.solux.moro.ui.menu.ColorMapEditScreen
+import com.solux.moro.ui.menu.ColorMapPostScreen
 import com.solux.moro.ui.menu.ColorMapScreen
 import com.solux.moro.ui.menu.MenuScreen
 import com.solux.moro.ui.notification.NotificationScreen
@@ -32,7 +34,7 @@ import com.solux.moro.ui.search.SearchUserViewModel
 @Composable
 fun NavGraph(navController: NavHostController){
 
-    NavHost(navController = navController, startDestination ="camera") {
+    NavHost(navController = navController, startDestination ="menu") {
 
         // 카메라 화면
         composable("camera") {
@@ -74,6 +76,50 @@ fun NavGraph(navController: NavHostController){
         }
         composable("colormap") {
             ColorMapScreen(navController = navController)
+        }
+
+        // 특정 색상 선택 시 상세 페이지 (colorId와 hexCode 전달)
+        composable(
+            route = "selected_color/{colorId}/{hexCode}",
+            arguments = listOf(
+                navArgument("colorId") { type = NavType.LongType }, // ID는 Long 타입
+                navArgument("hexCode") { type = NavType.StringType } // Hex는 String 타입
+            )
+        ) { backStackEntry ->
+            val colorId = backStackEntry.arguments?.getLong("colorId") ?: 0L
+            val hexCode = backStackEntry.arguments?.getString("hexCode") ?: ""
+
+            // 상세 페이지 컴포넌트 연결
+            com.solux.moro.ui.menu.SelectedColorScreen(
+                colorId = colorId,
+                hexCode = hexCode,
+                navController = navController
+            )
+        }
+
+
+        // 4. 해당 포스트 상세 (SNS 피드 형태)
+        composable(
+            route = "color_post/{colorId}/{postId}",
+            arguments = listOf(
+                navArgument("colorId") { type = NavType.LongType },
+                navArgument("postId") { type = NavType.LongType }
+            )
+        ) { backStackEntry ->
+            val colorId = backStackEntry.arguments?.getLong("colorId") ?: 0L
+            val postId = backStackEntry.arguments?.getLong("postId") ?: 0L
+            ColorMapPostScreen(colorId = colorId, postId = postId, navController = navController)
+        }
+
+        // 5. 수정 화면 (대표색상 변경)
+        composable(
+            route = "postEditScreen/{postId}",
+            arguments = listOf(
+                navArgument("postId") { type = NavType.LongType }
+            )
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getLong("postId") ?: 0L
+            ColorMapEditScreen(postId = postId, navController = navController)
         }
 
         composable("profile_test") {

@@ -2,41 +2,72 @@ package com.solux.moro.ui.menu
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.top.TopBarBack
 import com.solux.moro.core.util.figmaDp
+// 최신 DTO 이름 Import
+import com.solux.moro.data.dto.response.ColorPostDto
 
 @Composable
-fun SelectedColorScreen() {
+fun SelectedColorScreen(
+    colorId: Long,
+    hexCode: String,
+    viewModel: SelectedColorViewModel = hiltViewModel(),
+    navController: NavHostController
+) {
+    val posts by viewModel.posts.collectAsState()
+
+    // Hex 코드 처리
+    val safeHex = if (hexCode.startsWith("#")) hexCode else "#$hexCode"
+    val displayColor = try {
+        Color(android.graphics.Color.parseColor(safeHex))
+    } catch (e: Exception) {
+        Color.Gray // 예외 발생 시 기본 색상
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                viewModel.loadColorPosts(colorId)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     Scaffold(
-        topBar = { TopBarBack("컬러맵") },
+        topBar = {
+            TopBarBack("컬러맵", onBackClick = { navController.popBackStack() })
+        },
         bottomBar = { BottomBar() }
     ) { innerPadding ->
-
         LazyColumn(
             modifier = Modifier
                 .background(Color(0xFF121212))
@@ -45,19 +76,28 @@ fun SelectedColorScreen() {
             verticalArrangement = Arrangement.spacedBy(figmaDp(14f)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            item {
+                SelectedColorSection(hexCode, displayColor)
+            }
 
-            item {
-                SelectedColorSection()
+            val rows = posts.chunked(3)
+            items(rows) { rowPosts ->
+                ImageRow(
+                    rowPosts = rowPosts,
+                    onPostClick = { postId ->
+                        // 클릭 시 상세 화면으로 이동
+                        navController.navigate("color_post/$colorId/$postId")
+                    }
+                )
             }
-            item {
-                ImageSection()
-            }
+
+            item { Spacer(modifier = Modifier.height(figmaDp(30f))) }
         }
     }
 }
 
 @Composable
-fun SelectedColorSection() {
+fun SelectedColorSection(hexCode: String, displayColor: Color) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,8 +116,8 @@ fun SelectedColorSection() {
                 Modifier
                     .shadow(
                         elevation = figmaDp(20f),
-                        spotColor = Color(0x66FF6584),
-                        ambientColor = Color(0x66FF6584)
+                        spotColor = displayColor.copy(alpha = 0.4f),
+                        ambientColor = displayColor.copy(alpha = 0.4f)
                     )
                     .border(
                         width = figmaDp(2f),
@@ -85,79 +125,63 @@ fun SelectedColorSection() {
                         shape = RoundedCornerShape(size = figmaDp(9999f))
                     )
                     .size(figmaDp(80f))
-                    .background(
-                        color = Color(0xFFFF6584),
-                        shape = RoundedCornerShape(size = figmaDp(9999f))
-                    )
+                    .background(color = displayColor, shape = RoundedCornerShape(size = figmaDp(9999f)))
             )
-            Row(
-                modifier = Modifier
-                    .width(figmaDp(80f))
-                    .height(figmaDp(25f)),
-                horizontalArrangement = Arrangement.spacedBy(figmaDp(8f), Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    text = "#FF6584",
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        lineHeight = 24.sp,
-                        //fontFamily = FontFamily(Font(R.font.inter)),
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFFF6584),
-                        textAlign = TextAlign.Center,
-                    )
+            Text(
+                text = "#${hexCode.replace("#","").uppercase()}",
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight(400),
+                    color = displayColor,
+                    textAlign = TextAlign.Center,
                 )
-            }
+            )
         }
-
     }
 }
 
 @Composable
-fun ImageItem() {
-    Box(
-        modifier = Modifier
-            .size(figmaDp(110.66666f))
-            .background(
-                color = Color(0xFFA5A5A5),
-                shape = RoundedCornerShape(figmaDp(9.22222f))
-            )
-    )
-}
-
-@Composable
-fun ImageRow() {
+fun ImageRow(
+    rowPosts: List<ColorPostDto>,
+    onPostClick: (Long) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(figmaDp(110.66666f))
             .padding(horizontal = figmaDp(16f)),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(figmaDp(5.5f), Alignment.Start),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        repeat(3) {
-            ImageItem()
+        rowPosts.forEach { post ->
+            ImageItem(
+                imageUrl = post.imageUrl,
+                onClick = { onPostClick(post.postId) }
+            )
+        }
+
+        repeat(3 - rowPosts.size) {
+            Box(modifier = Modifier.weight(1f).aspectRatio(1f))
         }
     }
 }
 
 @Composable
-fun ImageSection() {
-    Column(
+fun ImageItem(
+    imageUrl: String,
+    onClick: () -> Unit
+) {
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(figmaDp(575.33331f)),
-        verticalArrangement = Arrangement.spacedBy(figmaDp(5.5f))
+            .size(figmaDp(110.66666f))
+            .clip(RoundedCornerShape(figmaDp(9.22222f)))
+            .background(Color(0xFF2A2A2A))
+            .clickable { onClick() }
     ) {
-        repeat(3) {
-            ImageRow()
-        }
+        AsyncImage(
+            model = imageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
     }
-}
-
-@Preview
-@Composable
-fun SelectedColorScreenPreview() {
-    SelectedColorScreen()
 }

@@ -2,6 +2,8 @@ package com.solux.moro.core.designsystem.component.top
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
+import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
@@ -32,31 +35,30 @@ fun TopBarBack(
     showBottomDivider: Boolean = true,
     onBackClick: () -> Unit = {}
 ) {
-
     Column {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(figmaDp(70f))
                 .background(color = Color(0xFF121212))
-                .padding(
-                    start = figmaDp(16f),
-                    top = figmaDp(5f),
-                    end = figmaDp(16f),
-                    bottom = figmaDp(5f)
-                ),
+                .padding(horizontal = figmaDp(16f), vertical = figmaDp(5f)),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
                 painter = painterResource(id = navigationIconResId),
-                contentDescription = "navigation",
+                contentDescription = "Back Button",
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onBackClick
+                    )
+                    .padding(figmaDp(4f))
             )
+
             Text(
                 text = title,
-
-                // Subtitle2/SemiBold/18px
                 style = androidx.compose.ui.text.TextStyle(
                     fontSize = 18.sp,
                     lineHeight = 25.2.sp,
@@ -65,16 +67,11 @@ fun TopBarBack(
                     textAlign = TextAlign.Center,
                 )
             )
-            Row(
-                modifier = Modifier
-                    .width(figmaDp(20.99063f))
-                    .height(figmaDp(18f)),
-                horizontalArrangement = Arrangement.spacedBy(figmaDp(0f), Alignment.CenterHorizontally),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                // Child views.
-            }
+
+
+            Box(modifier = Modifier.width(figmaDp(24f)))
         }
+
         if (showBottomDivider) {
             Box(
                 modifier = Modifier
@@ -84,7 +81,6 @@ fun TopBarBack(
             )
         }
     }
-
 }
 
 @Preview
