@@ -20,7 +20,7 @@ import kotlin.jvm.java
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val BASE_URL = "https://moro-be.store/"
+    private const val BASE_URL = "https://moro-be.store"
 
     @Provides
     @Singleton
