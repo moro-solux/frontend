@@ -163,7 +163,7 @@ object MoroPalette {
         val Gray200 = Color(0xFF1C3233)
         val Gray300 = Color(0xFF242424)
         val Gray400 = Color(0xFFF7F4F4)
-        val Gray500 = Color(0xFF999999)
+        val Gray500 = Color(0xFF00B3A4)
         val Gray600 = Color(0xFF333333)
     }
 

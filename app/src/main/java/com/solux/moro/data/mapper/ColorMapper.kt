@@ -105,7 +105,7 @@ object ColorMapper {
         ColorDefinition(92, "vivid", "#1C3233"),
         ColorDefinition(93, "vivid", "#242424"),
         ColorDefinition(94, "vivid", "#F7F4F4"),
-        ColorDefinition(95, "vivid", "#999999"),
+        ColorDefinition(95, "vivid", "#00B3A4"),
         ColorDefinition(96, "vivid", "#333333"),
         ColorDefinition(97, "nature", "#DFF6FD"),
         ColorDefinition(98, "nature", "#CBF2FD"),
@@ -180,10 +180,9 @@ object ColorMapper {
         }
     }
     fun toIdFromHex(hex: String): Int {
-        if (hex.contains("999999")) return 41//수정 후 삭제
         val upperHex = hex.uppercase()
 
-        return hexMap[upperHex]?.id ?: 41
+        return hexMap[upperHex]?.id ?:1
     }
 
     fun toHexFromId(id: Int): String=
