@@ -59,6 +59,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideNotificationService(retrofit: Retrofit): NotificationService {
+        return retrofit.create(NotificationService::class.java)
+    }
+
+    @Provides
+    @Singleton
     fun provideSettingService(retrofit: Retrofit): SettingService {
         return retrofit.create(SettingService::class.java)
     }
