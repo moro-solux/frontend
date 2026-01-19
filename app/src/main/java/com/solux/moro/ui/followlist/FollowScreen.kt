@@ -58,7 +58,7 @@ fun FollowScreen(
     val selectedTab = uiState.selectedTab
     val followers = uiState.filteredFollowers
     val followings = uiState.filteredFollowings
-    val userId = viewModel.userNickName
+    val userId = ""
 
     Scaffold(
         bottomBar = { BottomBar() },
@@ -112,17 +112,16 @@ fun FollowScreen(
                 val currentList = if (selectedTab == FollowTabType.FOLLOWING) followings else followers
                 items(
                     items = currentList,
-                    key = { it.user.id }
+                    key = { it.userId }
                 ) { item ->
                     FollowUserItem(
-                        user = item.user,
-                        stats = item.stats,
+                        user = item,
                         isFollowTab = selectedTab == FollowTabType.FOLLOWING,
                         onActionClick = {
                             if (selectedTab == FollowTabType.FOLLOWING) {
-                                viewModel.unFollow(item.user.id)
+                                viewModel.unFollow(item.userId)
                             } else {
-                                viewModel.removeFollower(item.user.id)
+                                viewModel.removeFollower(item.userId)
                             }
                         }
                     )
