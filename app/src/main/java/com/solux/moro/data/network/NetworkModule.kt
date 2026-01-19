@@ -1,8 +1,8 @@
 package com.solux.moro.data.network
 
 import com.google.gson.GsonBuilder
-import com.solux.moro.data.service.NotificationService
 import com.solux.moro.data.service.ColorMapService
+import com.solux.moro.data.service.NotificationService
 import com.solux.moro.data.service.SettingService
 import com.solux.moro.data.service.UploadService
 import com.solux.moro.data.service.UserService
@@ -15,17 +15,15 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.jvm.java
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     private const val BASE_URL = "https://moro-be.store"
-
+    val token=""
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
-        val token=""
 
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
