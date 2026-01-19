@@ -6,6 +6,7 @@ import com.solux.moro.data.model.UserInfo
 fun FollowUserDto.toUiModel(): UserInfo {
     return UserInfo(
         userId = this.userId,
-        userName = this.userName
+        userName = this.userName,
+        followId = this.followId
     )
 }

@@ -1,10 +1,11 @@
 package com.solux.moro.core.domain
 
 import com.solux.moro.data.dto.TargetUserIdDto
+import com.solux.moro.data.model.FollowStatusResponse
 import com.solux.moro.data.model.UserInfo
 
 interface FollowRepository {
-    suspend fun followRequest(userId: TargetUserIdDto): Result<UserInfo>//팔로우 걸기
+    suspend fun followRequest(userId: TargetUserIdDto): Result<FollowStatusResponse>//팔로우 걸기
     suspend fun getFollowers(
          userId: Long,
          page: Int,

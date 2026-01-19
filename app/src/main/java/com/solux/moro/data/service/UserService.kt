@@ -6,7 +6,7 @@ import com.solux.moro.data.dto.MainColorEditRequest
 import com.solux.moro.data.dto.UserProfileDto
 import com.solux.moro.data.dto.UserProfileEditRequest
 import com.solux.moro.data.dto.UserSearchResponseDto
-import com.solux.moro.data.model.FollowUserResponse
+import com.solux.moro.data.model.FollowUserDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -41,7 +41,7 @@ interface UserService {
     @GET("/api/users/{userId}/followings")
     suspend fun getFollowings(
         @Path("userId") userId: Long
-    ): BaseResponse<FollowUserResponse>
+    ): BaseResponse<List<FollowUserDto>>
 
     @GET("/api/users/{userId}/followers")
     suspend fun getFollowers(
@@ -49,7 +49,7 @@ interface UserService {
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("keyword") keyword: String,
-    ): BaseResponse<FollowUserResponse>
+    ): BaseResponse<List<FollowUserDto>>
 
     @GET("/api/users/search")
     suspend fun searchUser(
@@ -57,7 +57,7 @@ interface UserService {
     ): BaseResponse<UserSearchResponseDto>
 
     @GET("/api/users/me/follow-requests")
-    suspend fun getFollowRequests(): BaseResponse<FollowUserResponse>
+    suspend fun getFollowRequests(): BaseResponse<List<FollowUserDto>>
 
     @DELETE("/api/users/me/followers/{targetUserId}") //팔로워 삭제
     suspend fun deleteFollower(

@@ -87,7 +87,7 @@ private fun FollowRequestButton(
     var text="확인"
 Row(
     horizontalArrangement = Arrangement.spacedBy(
-        5.dp)
+        10.dp)
 ) {
     Button(
         onClick = onAcceptClick,

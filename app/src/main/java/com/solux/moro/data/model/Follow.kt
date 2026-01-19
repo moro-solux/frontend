@@ -14,8 +14,14 @@ data class FollowUserDto(
     val userName: String
 )
 
+data class FollowStatusResponse(
+    val followId: Long,
+    val status: String
+)
+
 data class UserInfo(
     val userId: Long,
     val userName: String,
-    val isFollowing: Boolean=true
+    val isFollowing: Boolean=true,
+    val followId: Long,
 )

@@ -2,7 +2,7 @@ package com.solux.moro.data.service
 
 import com.solux.moro.data.dto.BaseResponse
 import com.solux.moro.data.dto.TargetUserIdDto
-import com.solux.moro.data.model.UserInfo
+import com.solux.moro.data.model.FollowStatusResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.PATCH
@@ -13,12 +13,12 @@ interface FollowService {
     @POST("/api/follows")//팔로우 요청
     suspend fun followRequest(
         @Body targetUserId: TargetUserIdDto
-    ):BaseResponse<UserInfo>
+    ):BaseResponse<FollowStatusResponse>
 
     @PATCH("/api/follows/{followId}/accept")//팔로우 승인
     suspend fun acceptRequest(
-        @Path("targetUserId") targetUserId: Long
-    ):BaseResponse<UserInfo>
+        @Path("followId") followId: Long
+    ):BaseResponse<FollowStatusResponse>
 
     @DELETE("/api/follows/{targetUserId}")//내가 한 팔로우 취소/언팔
     suspend fun deleteFollowing(

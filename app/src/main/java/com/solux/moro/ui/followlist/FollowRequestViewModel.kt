@@ -20,6 +20,7 @@ class FollowRequestViewModel @Inject constructor(
     private var allFollowRequests = listOf<UserInfo>()
     private val _uiState = MutableStateFlow(FollowRequestUiState())
     val uiState: StateFlow<FollowRequestUiState> = _uiState.asStateFlow()
+
     init {
         loadFollowRequestData()
     }
@@ -38,12 +39,12 @@ class FollowRequestViewModel @Inject constructor(
         }
     }
 // 팔로우 요청 수락
-    fun acceptRequest(userId: Long) {
+    fun acceptRequest(requestId: Long) {
         viewModelScope.launch {
-            val result = followRepository.acceptFollowRequest(userId)
-            followRepository.acceptFollowRequest(userId)
+            val result = followRepository.acceptFollowRequest(requestId)
             result.onSuccess {
-                removeUserFromList(userId)
+                removeUserFromList(requestId)
+                Log.d("FollowRequestVM","팔로우 요청 수락")
             }.onFailure {
                 Log.d("FollowRequestVM","팔로우 요청 수락 실패")
             }
@@ -51,21 +52,19 @@ class FollowRequestViewModel @Inject constructor(
     }
 
     // 팔로우 요청 거절
-    fun declineRequest(userId: Long) {
+    fun declineRequest(requestId: Long) {
         viewModelScope.launch {
-            val result = followRepository.rejectFollowRequest(userId)
-            // 거절 성공
-            removeUserFromList(userId)
+            val result = followRepository.rejectFollowRequest(requestId)
             result.onSuccess {
-                removeUserFromList(userId)
+                removeUserFromList(requestId)
             }.onFailure {
                 Log.d("FollowRequestVM","팔로우 요청 거절 실패")
             }
         }
     }
 
-    private fun removeUserFromList(userId: Long) {
-        allFollowRequests = allFollowRequests.filter { it.userId != userId }
+    private fun removeUserFromList(requestId: Long) {
+        allFollowRequests = allFollowRequests.filter { it.followId != requestId }
         _uiState.update { it.copy(filteredFollowRequests = allFollowRequests) }
     }
 }
