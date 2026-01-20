@@ -1,5 +1,6 @@
 package com.solux.moro.data.mapper
 
+import android.util.Log
 import com.solux.moro.data.dto.NotificationDto
 import com.solux.moro.data.model.NotificationType
 import com.solux.moro.data.model.NotificationUiModel
@@ -35,14 +36,22 @@ fun NotificationDto.toUiModel(): NotificationUiModel {
             postId = (content?.get("postId") as? Number)?.toLong() ?: -1L,
             id = (this.id as? Number)?.toLong() ?: -1L
         )
-        NotificationType.FOLLOWING -> NotificationUiModel.Following(
+        NotificationType.FOLLOWING -> {
+            //Log.d("MappingCheck", "전체 데이터: ${this.content}")
+            val status = content ?. get ("followBackStatus") as? String ?: "NONE"
+            Log.d("NotificationType.FOLLOWING","$status")
+            NotificationUiModel.Following(
             userName = content?.get("actorName") as? String ?: "",
-            userId= (content?.get("actorId") as? Number)?.toLong() ?: -1L,
+            userId = (content?.get("actorId") as? Number)?.toLong() ?: -1L,
             createdAt = this.createdAt,
             isRead = this.isRead,
-            isFollowing = content?.get("isFollowing") as? Boolean ?: false,
+                isFollowing = when (status) {
+                    "ACCEPTED", "PENDING" -> true
+                    else -> false
+                },
             id = (this.id as? Number)?.toLong() ?: -1L
-        )
+            )
+        }
         NotificationType.COLOR_UNLOCKED -> NotificationUiModel.ColorUnlocked(
             createdAt = this.createdAt,
             isRead = this.isRead,

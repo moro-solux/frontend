@@ -77,6 +77,8 @@ fun NotificationScreen(
                     navController = navController,
                     groupedData = notifications,
                     visible=visible,
+                    onFollowClick = viewModel::onFollow,
+                    unFollowClick= viewModel::unFollow,
                     onItemClick = { notificationId ->
                         viewModel.onNotificationClick(notificationId)
                     }
@@ -91,6 +93,8 @@ fun NotificationList(
     navController: NavHostController,
     groupedData: Map<String, List<NotificationUiModel>>,
     visible:Boolean,
+    onFollowClick: (Long) -> Unit,
+    unFollowClick: (Long) -> Unit,
     onItemClick: (Long) -> Unit) {
     //Log.d("UI_RECOMPOSE", "현재 맵 섹션 개수: ${groupedData.size}")
     LazyColumn (
@@ -119,7 +123,10 @@ fun NotificationList(
                 Notification(
                     navController,
                     notification,
-                    onReadClick = { onItemClick(notification.id) })
+                    onReadClick = { onItemClick(notification.id) },
+                    onFollowClick = onFollowClick,
+                    unFollowClick= unFollowClick,
+                )
             }
             item{
                 Spacer(modifier=Modifier.height(5.dp))

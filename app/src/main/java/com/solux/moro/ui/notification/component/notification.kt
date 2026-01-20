@@ -1,5 +1,6 @@
 package com.solux.moro.ui.notification.component
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,6 +41,8 @@ fun Notification(
     notification: NotificationUiModel,
     color: Color = MoroTheme.colors.fontColor,
     style: TextStyle = MoroTheme.typography.bodyRegular16,
+    onFollowClick: (Long) -> Unit = {},
+    unFollowClick: (Long) -> Unit = {},
     onReadClick: () -> Unit = {}
 ) {
     Row(
@@ -61,7 +64,7 @@ fun Notification(
                             //navController.navigate()  해당 게시물로 이동
                         }
                         is NotificationUiModel.Following -> {
-                            navController.navigate("follow")
+                            //
                         }
                         is NotificationUiModel.ColorUnlocked -> {
                             //navController.navigate("colorMap")
@@ -156,11 +159,16 @@ fun Notification(
                 }
             }
         }
-        NotificationSide(notification)
+        NotificationSide(notification,
+            onFollowClick = onFollowClick,
+            unFollowClick = unFollowClick
+        )
     }
 }
 @Composable
-fun NotificationSide(notification: NotificationUiModel){
+fun NotificationSide(notification: NotificationUiModel,
+                     onFollowClick: (Long) -> Unit = {},
+                     unFollowClick: (Long) -> Unit = {}, ){
     Column(
         modifier = Modifier.padding(end = 10.dp, top = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -181,21 +189,35 @@ fun NotificationSide(notification: NotificationUiModel){
             }
             is NotificationUiModel.Following -> { //버튼
                 Column (modifier= Modifier){
+                    Log.d("NotificationSide", "notification.isFollowing: ${notification.isFollowing}")
+                    var btnColor=Color.White
+                    var textColor=Color.Black
                     Button(
-                        onClick = {},
+                        onClick = {
+                            if(notification.isFollowing) {
+                                unFollowClick(notification.userId)
+                                btnColor=Color.Black
+                                textColor=Color.White
+                            }
+                            else
+                                onFollowClick(notification.userId)
+                        },
                         modifier = Modifier
                             .width(70.dp)
                             .height(25.dp),
                         shape = ButtonDefaults.shape,
                         colors = ButtonDefaults.buttonColors(
-                            Color.White,
-                            Color.Black
+                            btnColor,
+                            textColor
                         ),
                         contentPadding = PaddingValues(all = 0.dp),
                     ) {
                         Text(
-                            "Follow",
-                            color = Color.Black,
+                            text= if(notification.isFollowing)
+                                "following"
+                            else
+                                "follow",
+                            color = textColor,
                             style = MoroTheme.typography.bodyRegular12,
                         )
                     }
