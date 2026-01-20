@@ -2,10 +2,12 @@ package com.solux.moro.core.navigation
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
@@ -16,10 +18,13 @@ import com.solux.moro.ui.followlist.FollowRequestScreen
 import com.solux.moro.ui.followlist.FollowRequestViewModel
 import com.solux.moro.ui.followlist.FollowingViewModel
 import com.solux.moro.ui.home.HomeScreen
+import com.solux.moro.ui.map.MapScreenRoute
+import com.solux.moro.ui.map.MapViewModel
 import com.solux.moro.ui.menu.ColorMapEditScreen
 import com.solux.moro.ui.menu.ColorMapPostScreen
 import com.solux.moro.ui.menu.ColorMapScreen
 import com.solux.moro.ui.menu.MenuScreen
+import com.solux.moro.ui.mission.MissionScreen
 import com.solux.moro.ui.notification.NotificationScreen
 import com.solux.moro.ui.notification.NotificationViewModel
 import com.solux.moro.ui.paletteedit.PaletteEditScreen
@@ -30,12 +35,85 @@ import com.solux.moro.ui.profilecoloredit.ProfileColorEditViewModel
 import com.solux.moro.ui.profileedit.ProfileEditScreen
 import com.solux.moro.ui.search.SearchUserScreen
 import com.solux.moro.ui.search.SearchUserViewModel
+import com.solux.moro.ui.splash.SplashScreen
+import com.solux.moro.ui.onboarding.OnboardingScreen
+import com.solux.moro.ui.auth.AuthWebRoute
+import com.solux.moro.ui.auth.SignUpRoute
+import com.solux.moro.ui.auth.AuthResult
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
 
 @Composable
-fun NavGraph(navController: NavHostController){
+fun NavGraph(
+    navController: NavHostController,
+    authResultFlow: StateFlow<AuthResult?>? = null,
+    onAuthResultConsumed: (() -> Unit)? = null
+){
+    LaunchedEffect(authResultFlow) {
+        authResultFlow?.filterNotNull()?.collect { result ->
+            if (!result.token.isNullOrBlank()) {
+                navController.navigate("onboarding") {
+                    popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
+                }
+            } else if (!result.email.isNullOrBlank()) {
+                val encodedEmail = Uri.encode(result.email)
+                navController.navigate("signup?email=$encodedEmail") {
+                    popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
+                }
+            }
+            onAuthResultConsumed?.invoke()
+        }
+    }
 
+    NavHost(navController = navController, startDestination ="splash") {
 
-    NavHost(navController = navController, startDestination = Profile.route) {
+        composable("splash") {
+            SplashScreen(
+                onGoogleStartClick = {
+                    navController.navigate("auth_web") {
+                        popUpTo("splash") { inclusive = true }
+                    }
+                },
+                onSkipClick = {
+                    navController.navigate("signup?email=") {
+                        popUpTo("splash") { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable("auth_web") {
+            AuthWebRoute()
+        }
+
+        composable(
+            route = "signup?email={email}",
+            arguments = listOf(
+                navArgument("email") { type = NavType.StringType; defaultValue = "" }
+            )
+        ) { backStackEntry ->
+            val email = backStackEntry.arguments?.getString("email").orEmpty()
+            SignUpRoute(
+                initialEmail = email,
+                onClose = { navController.popBackStack() },
+                onSuccess = {
+                    navController.navigate("onboarding") {
+                        popUpTo("signup?email={email}") { inclusive = true }
+                    }
+                },
+                quickStart = true
+            )
+        }
+
+        composable("onboarding") {
+            OnboardingScreen(
+                onFinish = {
+                    navController.navigate("home") {
+                        popUpTo("onboarding") { inclusive = true }
+                    }
+                }
+            )
+        }
 
 
         // 카메라 화면
@@ -72,6 +150,13 @@ fun NavGraph(navController: NavHostController){
 
         composable("home") { //홈 화면
             HomeScreen(navController = navController)
+        }
+        composable("mission") {
+            MissionScreen(navController = navController)
+        }
+        composable("map") {
+            val viewModel: MapViewModel = hiltViewModel()
+            MapScreenRoute(viewModel = viewModel, navController = navController)
         }
         composable("menu") {
             MenuScreen(navController = navController)

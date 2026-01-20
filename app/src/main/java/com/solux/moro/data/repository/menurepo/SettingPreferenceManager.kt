@@ -29,6 +29,14 @@ class SettingPreferenceManager @Inject constructor(
         return prefs.getBoolean("is_noti_enabled", false) // 기본값 false
     }
 
+    fun setAccessToken(token: String) {
+        prefs.edit().putString("access_token", token).apply()
+    }
+
+    fun getAccessToken(): String? {
+        return prefs.getString("access_token", null)
+    }
+
     fun clearAuthData() {
         prefs.edit().remove("access_token").apply()
         prefs.edit().remove("is_visible").remove("is_noti_enabled").apply()

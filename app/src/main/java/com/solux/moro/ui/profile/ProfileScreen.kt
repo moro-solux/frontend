@@ -71,7 +71,7 @@ fun ProfileScreen(
     val posts by viewModel.userPosts.collectAsState(emptyList())
 
     Scaffold(
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(navController) },
         topBar = { if(isMyProfile){TopBar()}
         else{BackNavigationTopAppBar(nickname,onBackClick = {
             navController.popBackStack()})}}

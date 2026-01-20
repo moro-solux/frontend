@@ -2,7 +2,8 @@ package com.solux.moro.data.network
 
 import com.google.gson.GsonBuilder
 import com.solux.moro.data.service.ColorMapService
-import com.solux.moro.data.service.FollowService
+import com.solux.moro.data.service.AuthService
+import com.solux.moro.data.service.MapService
 import com.solux.moro.data.service.NotificationService
 import com.solux.moro.data.service.SettingService
 import com.solux.moro.data.service.UploadService
@@ -21,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
     private const val BASE_URL = "https://moro-be.store"
-    val token=""
+    var token = ""
     @Provides
     @Singleton
     fun provideRetrofit(): Retrofit {
@@ -58,8 +59,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideFollowService(retrofit: Retrofit): FollowService {
-        return retrofit.create(FollowService::class.java)
+    fun provideAuthService(retrofit: Retrofit): AuthService {
+        return retrofit.create(AuthService::class.java)
     }
 
     @Provides
@@ -83,5 +84,11 @@ object NetworkModule {
     @Singleton
     fun provideColorMapService(retrofit: Retrofit): ColorMapService {
         return retrofit.create(ColorMapService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMapService(retrofit: Retrofit): MapService {
+        return retrofit.create(MapService::class.java)
     }
 }
