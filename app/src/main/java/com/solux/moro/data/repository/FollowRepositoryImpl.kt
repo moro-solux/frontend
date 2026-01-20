@@ -2,6 +2,7 @@ package com.solux.moro.data.repository
 
 import android.util.Log
 import com.solux.moro.core.domain.FollowRepository
+import com.solux.moro.data.dto.TargetUserIdDto
 import com.solux.moro.data.mapper.toUiModel
 import com.solux.moro.data.model.FollowStatusResponse
 import com.solux.moro.data.model.FollowUserDto
@@ -17,7 +18,7 @@ class FollowRepositoryImpl@Inject constructor(
 ): FollowRepository {
     override suspend fun followRequest(userId: Long): Result<FollowStatusResponse> {//팔로우 요청
         return try {
-            val response = followService.followRequest(userId)
+            val response = followService.followRequest(TargetUserIdDto(userId))
             if (response.success) {
                 Result.success(response.data)
             } else {
@@ -94,14 +95,20 @@ class FollowRepositoryImpl@Inject constructor(
 
     override suspend fun rejectFollowRequest(userId: Long): Result<Unit> = try {
         val response = followService.rejectRequest(userId)
-        if (response.success) Result.success(Unit)
-        else Result.failure(Exception(response.message))
+        if (response.isSuccessful) Result.success(Unit)
+        else {
+            val errorMsg = response.errorBody()?.string() ?: " 에러 발생"
+            Result.failure(Exception(errorMsg))
+        }
     } catch (e: Exception) { Result.failure(e) }
 
     override suspend fun unFollow(userId: Long): Result<Unit> = try {
         val response = followService.deleteFollowing(userId)
-        if (response.success) Result.success(Unit)
-        else Result.failure(Exception(response.message))
+        if (response.isSuccessful) Result.success(Unit)
+        else {
+            val errorMsg = response.errorBody()?.string() ?: " 에러 발생"
+            Result.failure(Exception(errorMsg))
+        }
     } catch (e: Exception) { Result.failure(e) }
 
     override suspend fun deleteFollower(userId: Long): Result<Unit> = try {

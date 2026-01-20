@@ -77,10 +77,10 @@ fun FollowUserItem(
                 )
             }
             if(isFollowTab) { // 팔로우 탭에서 온 경유
-                FollowButton(onActionClick)
+                FollowingButton(user.isFollowing, onActionClick)
             }
             else{ // 팔로잉 탭에서 온 경우
-                FollowingButton(user.isFollowing, onActionClick)
+                FollowButton(onActionClick)
             }
         }
     }

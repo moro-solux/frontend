@@ -88,7 +88,7 @@ class FollowingViewModel @Inject constructor(
         }
     }
 
-    // 4. following 검색
+    // following 검색
     fun updateFollowingSearch(query: String) {
         _uiState.update { state ->
             state.copy(
@@ -104,10 +104,17 @@ class FollowingViewModel @Inject constructor(
         viewModelScope.launch {
             val result =followRepository.unFollow(userId)
             result.onSuccess {
-                allFollowings = allFollowings.filter { it.userId != userId }
+                allFollowings = allFollowings.map { user ->
+                    if (user.userId == userId) {
+                        user.copy(isFollowing = false)
+                    } else {
+                        user
+                    }
+                }
+                //allFollowings = allFollowings.filter { it.userId != userId }
                 updateFollowingSearch(_uiState.value.followingSearchQuery)
-            }.onFailure {
-                Log.d("FollowViewModel", "언팔로우 실패")
+            }.onFailure {error ->
+                Log.d("FollowViewModel", "언팔로우 실패${error.message}")
             }
         }
     }
@@ -122,6 +129,25 @@ class FollowingViewModel @Inject constructor(
             updateFollowerSearch(_uiState.value.followerSearchQuery)
             }.onFailure {
                 Log.d("FollowViewModel", "팔로워 삭제 실패")
+            }
+        }
+    }
+
+    fun onFollow(userId:Long){
+        viewModelScope.launch {
+            val result = followRepository.followRequest(userId)
+            result.onSuccess {
+                allFollowings = allFollowings.map { user ->
+                    if (user.userId == userId) {
+                        user.copy(isFollowing = true)
+                    } else {
+                        user
+                    }
+                }
+                Log.d("FollowVM","팔로우 요청")
+                updateFollowingSearch(_uiState.value.followingSearchQuery)
+            }.onFailure {error ->
+                Log.d("FollowViewModel", "팔로우 요청 실패${error.message}")
             }
         }
     }

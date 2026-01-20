@@ -98,10 +98,12 @@ fun FollowScreen(
                     )
                 }
                 TextSearchField(
-                    query = if (selectedTab == FollowTabType.FOLLOWER) uiState.followerSearchQuery else uiState.followingSearchQuery,
-                    onQueryChange = {
-                        if (selectedTab == FollowTabType.FOLLOWER) viewModel.updateFollowerSearch(it)
-                        else viewModel.updateFollowingSearch(it)
+                    query =
+                        if (selectedTab == FollowTabType.FOLLOWER) uiState.followerSearchQuery
+                        else uiState.followingSearchQuery,
+                    onQueryChange = {inputString ->
+                        if (selectedTab == FollowTabType.FOLLOWER) viewModel.updateFollowerSearch(inputString)
+                        else viewModel.updateFollowingSearch(inputString)
                     }
                 )
             }
@@ -119,7 +121,8 @@ fun FollowScreen(
                         isFollowTab = selectedTab == FollowTabType.FOLLOWING,
                         onActionClick = {
                             if (selectedTab == FollowTabType.FOLLOWING) {
-                                viewModel.unFollow(item.userId)
+                                if(item.isFollowing)viewModel.unFollow(item.userId)
+                                else viewModel.onFollow(item.userId)
                             } else {
                                 viewModel.removeFollower(item.userId)
                             }
@@ -134,7 +137,7 @@ fun FollowScreen(
 @Composable
 private fun TextSearchField(
     query: String,
-    onQueryChange: (String) -> Unit
+    onQueryChange: (String) -> Unit,
 ){
     val focusManager = LocalFocusManager.current
     TextField(
@@ -143,6 +146,7 @@ private fun TextSearchField(
         singleLine = true,
         keyboardActions = KeyboardActions(
             onSearch = {
+                onQueryChange(query)
                 focusManager.clearFocus()
                 println("검색 실행: $query")
             }
