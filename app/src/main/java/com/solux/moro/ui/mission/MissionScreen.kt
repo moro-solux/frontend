@@ -26,16 +26,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.top.TopBar2
 import com.solux.moro.core.util.figmaDp
 
 @Composable
-fun MissionScreen() {
+fun MissionScreen(
+    navController: NavHostController? = null
+) {
     Scaffold(
         topBar = { TopBar2() },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
 
         LazyColumn(

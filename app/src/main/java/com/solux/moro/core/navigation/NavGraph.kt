@@ -18,10 +18,13 @@ import com.solux.moro.ui.followlist.FollowRequestScreen
 import com.solux.moro.ui.followlist.FollowRequestViewModel
 import com.solux.moro.ui.followlist.FollowingViewModel
 import com.solux.moro.ui.home.HomeScreen
+import com.solux.moro.ui.map.MapScreenRoute
+import com.solux.moro.ui.map.MapViewModel
 import com.solux.moro.ui.menu.ColorMapEditScreen
 import com.solux.moro.ui.menu.ColorMapPostScreen
 import com.solux.moro.ui.menu.ColorMapScreen
 import com.solux.moro.ui.menu.MenuScreen
+import com.solux.moro.ui.mission.MissionScreen
 import com.solux.moro.ui.notification.NotificationScreen
 import com.solux.moro.ui.notification.NotificationViewModel
 import com.solux.moro.ui.paletteedit.PaletteEditScreen
@@ -147,6 +150,13 @@ fun NavGraph(
 
         composable("home") { //홈 화면
             HomeScreen(navController = navController)
+        }
+        composable("mission") {
+            MissionScreen(navController = navController)
+        }
+        composable("map") {
+            val viewModel: MapViewModel = hiltViewModel()
+            MapScreenRoute(viewModel = viewModel, navController = navController)
         }
         composable("menu") {
             MenuScreen(navController = navController)

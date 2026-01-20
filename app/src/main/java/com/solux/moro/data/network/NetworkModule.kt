@@ -3,6 +3,7 @@ package com.solux.moro.data.network
 import com.google.gson.GsonBuilder
 import com.solux.moro.data.service.ColorMapService
 import com.solux.moro.data.service.AuthService
+import com.solux.moro.data.service.MapService
 import com.solux.moro.data.service.NotificationService
 import com.solux.moro.data.service.SettingService
 import com.solux.moro.data.service.UploadService
@@ -83,5 +84,11 @@ object NetworkModule {
     @Singleton
     fun provideColorMapService(retrofit: Retrofit): ColorMapService {
         return retrofit.create(ColorMapService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMapService(retrofit: Retrofit): MapService {
+        return retrofit.create(MapService::class.java)
     }
 }

@@ -41,7 +41,7 @@ fun HomeScreen(
     var selectedPostId by remember { mutableStateOf<Long?>(null) }
 
     Scaffold(
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(navController) },
         topBar = { TopBar(true, navController) }
     ) { innerPadding ->
         val feed by viewModel.feed.collectAsState()
