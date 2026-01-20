@@ -3,7 +3,9 @@ package com.solux.moro.core.designsystem.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -30,175 +32,178 @@ import com.solux.moro.ui.profile.component.toPxSp
 fun BottomBar() {
     Column {
         HorizontalDivider(
-            thickness = (2.88 ).toPxDp,
+            thickness = (2.88).toPxDp,
             color = Color(0xFFF2F2F2)
         )
         BottomAppBar(
             containerColor = Color(0xFF121212),
             windowInsets = WindowInsets(0),
-    ) {
-            Column(
-                Modifier
-                    .width((203.60001 ).toPxDp)
-                    .height((166.72 ).toPxDp)
-                    .background(color = Color(0xFF121212)),
-                verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 ).toPxDp,
-                    Alignment.CenterVertically
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center) {
+                Column(
+                    Modifier
+                        .width((203.60001).toPxDp)
+                        .height((166.72).toPxDp)
+                        .background(color = Color(0xFF121212)),
+                    verticalArrangement = Arrangement.spacedBy(
+                        (11.520000457763672).toPxDp,
+                        Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
 
-                Icon(
-                    painter = painterResource(R.drawable.icon_home),
-                    modifier = Modifier
-                        .padding((0.15429 ).toPxDp)
-                        .width((60.48 ).toPxDp)
-                        .height((69.12 ).toPxDp),
-                    contentDescription = "home icon",
-                    tint = White
-                )
-                Text(
-                    text = "Home",
-                    style = TextStyle(
-                        fontSize = (40.32 ).toPxSp,
-                        lineHeight = (40.32 ).toPxSp,
-//                           fontFamily = FontFamily(Font(R.font.inter)),
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFF2F2F2),
-
-                        textAlign = TextAlign.Center,
+                    Icon(
+                        painter = painterResource(R.drawable.icon_home),
+                        modifier = Modifier
+                            .padding((0.15429).toPxDp)
+                            .width((60.48).toPxDp)
+                            .height((69.12).toPxDp),
+                        contentDescription = "home icon",
+                        tint = White
                     )
-                )
-            }
-
-            Column(
-                Modifier
-                    .width((201.60001 ).toPxDp)
-                    .height((166.72 ).toPxDp),
-                verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 ).toPxDp,
-                    Alignment.CenterVertically
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.mission),
-                    modifier = Modifier
-                        .padding((0.15429 ).toPxDp)
-                        .width((60.48 ).toPxDp)
-                        .height((69.12 ).toPxDp),
-                    contentDescription = "mission icon",
-                    tint = White
-                )
-                Text(
-                    text = "Mission",
-                    style = TextStyle(
-                        fontSize = (40.32 ).toPxSp,
-                        lineHeight = (40.32 ).toPxSp,
+                    Text(
+                        text = "Home",
+                        style = TextStyle(
+                            fontSize = (40.32).toPxSp,
+                            lineHeight = (40.32).toPxSp,
 //                           fontFamily = FontFamily(Font(R.font.inter)),
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFF2F2F2),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFF2F2F2),
 
-                        textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Center,
+                        )
                     )
-                )
-            }
-            Column(
-                Modifier
-                    .width((201.60001 ).toPxDp)
-                    .height((165.64 ).toPxDp),
-                verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 ).toPxDp,
-                    Alignment.CenterVertically
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.icon_camera),
-                    modifier = Modifier
-                        .padding((0.15429 ).toPxDp)
-                        .width((60.48 ).toPxDp)
-                        .height((69.12 ).toPxDp),
-                    contentDescription = "camera icon",
-                    tint = White
-                )
-                Text(
-                    text = "Camera",
-                    style = TextStyle(
-                        fontSize = (40.32 ).toPxSp,
-                        lineHeight = (40.32 ).toPxSp,
+                }
+
+                Column(
+                    Modifier
+                        .width((201.60001).toPxDp)
+                        .height((166.72).toPxDp),
+                    verticalArrangement = Arrangement.spacedBy(
+                        (11.520000457763672).toPxDp,
+                        Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.mission),
+                        modifier = Modifier
+                            .padding((0.15429).toPxDp)
+                            .width((60.48).toPxDp)
+                            .height((69.12).toPxDp),
+                        contentDescription = "mission icon",
+                        tint = White
+                    )
+                    Text(
+                        text = "Mission",
+                        style = TextStyle(
+                            fontSize = (40.32).toPxSp,
+                            lineHeight = (40.32).toPxSp,
 //                           fontFamily = FontFamily(Font(R.font.inter)),
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFF2F2F2),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFF2F2F2),
 
-                        textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Center,
+                        )
                     )
-                )
-            }
-            Column(
-                Modifier
-                    .width((201.60001 ).toPxDp)
-                    .height((166.72 ).toPxDp),
-                verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 ).toPxDp,
-                    Alignment.CenterVertically
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.map),
-                    modifier = Modifier
-                        .padding((0.15429 ).toPxDp)
-                        .width((60.48 ).toPxDp)
-                        .height((69.12 ).toPxDp),
-                    contentDescription = "map icon",
-                    tint = White
-                )
-                Text(
-                    text = "Map",
-                    style = TextStyle(
-                        fontSize = (40.32 ).toPxSp,
-                        lineHeight = (40.32 ).toPxSp,
+                }
+                Column(
+                    Modifier
+                        .width((201.60001).toPxDp)
+                        .height((165.64).toPxDp),
+                    verticalArrangement = Arrangement.spacedBy(
+                        (11.520000457763672).toPxDp,
+                        Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.icon_camera),
+                        modifier = Modifier
+                            .padding((0.15429).toPxDp)
+                            .width((60.48).toPxDp)
+                            .height((69.12).toPxDp),
+                        contentDescription = "camera icon",
+                        tint = White
+                    )
+                    Text(
+                        text = "Camera",
+                        style = TextStyle(
+                            fontSize = (40.32).toPxSp,
+                            lineHeight = (40.32).toPxSp,
 //                           fontFamily = FontFamily(Font(R.font.inter)),
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFF2F2F2),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFF2F2F2),
 
-                        textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Center,
+                        )
                     )
-                )
-            }
-            Column(
-                Modifier
-                    .width((201.60001 ).toPxDp)
-                    .height((166.72 ).toPxDp),
-                verticalArrangement = Arrangement.spacedBy(
-                    (11.520000457763672 ).toPxDp,
-                    Alignment.CenterVertically
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.profile),
-                    modifier = Modifier
-                        .padding((0.15429 ).toPxDp)
-                        .width((60.48 ).toPxDp)
-                        .height((69.12 ).toPxDp),
-                    contentDescription = "profile icon",
-                    tint = White
-                )
-                Text(
-                    text = "Profile",
-                    style = TextStyle(
-                        fontSize = (40.32 ).toPxSp,
-                        lineHeight = (40.32 ).toPxSp,
+                }
+                Column(
+                    Modifier
+                        .width((201.60001).toPxDp)
+                        .height((166.72).toPxDp),
+                    verticalArrangement = Arrangement.spacedBy(
+                        (11.520000457763672).toPxDp,
+                        Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.map),
+                        modifier = Modifier
+                            .padding((0.15429).toPxDp)
+                            .width((60.48).toPxDp)
+                            .height((69.12).toPxDp),
+                        contentDescription = "map icon",
+                        tint = White
+                    )
+                    Text(
+                        text = "Map",
+                        style = TextStyle(
+                            fontSize = (40.32).toPxSp,
+                            lineHeight = (40.32).toPxSp,
 //                           fontFamily = FontFamily(Font(R.font.inter)),
-                        fontWeight = FontWeight(400),
-                        color = Color(0xFFF2F2F2),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFF2F2F2),
 
-                        textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Center,
+                        )
                     )
-                )
+                }
+                Column(
+                    Modifier
+                        .width((201.60001).toPxDp)
+                        .height((166.72).toPxDp),
+                    verticalArrangement = Arrangement.spacedBy(
+                        (11.520000457763672).toPxDp,
+                        Alignment.CenterVertically
+                    ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.profile),
+                        modifier = Modifier
+                            .padding((0.15429).toPxDp)
+                            .width((60.48).toPxDp)
+                            .height((69.12).toPxDp),
+                        contentDescription = "profile icon",
+                        tint = White
+                    )
+                    Text(
+                        text = "Profile",
+                        style = TextStyle(
+                            fontSize = (40.32).toPxSp,
+                            lineHeight = (40.32).toPxSp,
+//                           fontFamily = FontFamily(Font(R.font.inter)),
+                            fontWeight = FontWeight(400),
+                            color = Color(0xFFF2F2F2),
+
+                            textAlign = TextAlign.Center,
+                        )
+                    )
+                }
             }
         }
     }
