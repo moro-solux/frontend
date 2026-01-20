@@ -21,6 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.solux.moro.R
 import com.solux.moro.ui.profile.component.toPxDp
@@ -31,7 +33,8 @@ const val PIXEL_DENSITY = 2.625f
 @Composable
 fun TopBar(
     showBell: Boolean = true,
-    navController: NavHostController=NavHostController(LocalContext.current)
+    navController: NavHostController=NavHostController(LocalContext.current),
+    search:Boolean=false,
 ) {
     Column {
         TopAppBar(
@@ -64,6 +67,25 @@ fun TopBar(
                 )
             },
             actions = {
+                if (search) {
+                    IconButton(
+                        onClick = {
+                            navController.navigate("search")
+                        },
+                        Modifier
+                            .width((126.72).toPxDp)
+                            .height((126.72).toPxDp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.icon_search),
+                            modifier = Modifier
+                                .padding((0.15429).toPxDp)
+                                .width((60.48).toPxDp)
+                                .height((69.12).toPxDp),
+                            contentDescription = "Notification"
+                        )
+                    }
+                }
                 if (showBell) {
                     IconButton(
                         onClick = {
@@ -92,10 +114,10 @@ fun TopBar(
     }
 }
 
-//@Preview(device = Devices.PIXEL_4A)
-//@Composable
-//fun TopBarPreview() {
-//    Column {
-//        TopBar(showBell = true)
-//    }
-//}
+@Preview(device = Devices.PIXEL_4A)
+@Composable
+fun TopBarPreview() {
+    Column {
+        TopBar(showBell = true, search = true)
+    }
+}

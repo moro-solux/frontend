@@ -2,12 +2,12 @@ package com.solux.moro.data.service
 
 import com.solux.moro.data.dto.BaseResponse
 import com.solux.moro.data.dto.ColorThemeDto
-import com.solux.moro.data.dto.FollowRequestDto
 import com.solux.moro.data.dto.MainColorEditRequest
 import com.solux.moro.data.dto.UserProfileDto
 import com.solux.moro.data.dto.UserProfileEditRequest
 import com.solux.moro.data.dto.UserSearchResponseDto
-import com.solux.moro.ui.followlist.FollowUserInfo
+import com.solux.moro.data.model.FollowUserDto
+import com.solux.moro.data.model.FollowUserResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -41,23 +41,27 @@ interface UserService {
 //
     @GET("/api/users/{userId}/followings")
     suspend fun getFollowings(
-        @Path("userId") userId: Long
-    ): BaseResponse<List<FollowUserInfo>>
+        @Path("userId") userId: Long,
+        @Query("keyword") keyword: String,
+    ): BaseResponse<FollowUserResponse>
 
     @GET("/api/users/{userId}/followers")
     suspend fun getFollowers(
-        @Path("userId") userId: Long
-    ): BaseResponse<List<FollowUserInfo>>
+        @Path("userId") userId: Long,
+//        @Query("page") page: Int,
+//        @Query("size") size: Int,
+        @Query("keyword") keyword: String,
+    ): BaseResponse<FollowUserResponse>
 
     @GET("/api/users/search")
     suspend fun searchUser(
-        @Query("nickname") nickname: String
+        @Query("keyword") keyword: String
     ): BaseResponse<UserSearchResponseDto>
 
     @GET("/api/users/me/follow-requests")
-    suspend fun getFollowRequests(): BaseResponse<List<FollowRequestDto>>
+    suspend fun getFollowRequests(): BaseResponse<List<FollowUserDto>>
 
-    @DELETE("/api/users/me/followers/{targetUserId}")
+    @DELETE("/api/users/me/followers/{targetUserId}") //팔로워 삭제
     suspend fun deleteFollower(
         @Path("targetUserId") targetUserId: Long
     ): BaseResponse<Unit>

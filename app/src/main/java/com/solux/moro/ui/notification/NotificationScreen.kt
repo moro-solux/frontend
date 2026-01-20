@@ -51,7 +51,7 @@ fun NotificationScreen(
     val navController= navController
     val notifications by viewModel.notifications.collectAsStateWithLifecycle()
     //val notificationList by viewModel.notificationList.collectAsStateWithLifecycle()
-
+    val visible=!viewModel.isPublic
     Scaffold(
         topBar = { BackNavigationTopAppBar("알림",{
             navController.popBackStack()
@@ -68,13 +68,17 @@ fun NotificationScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp, Alignment.Top),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            FollowNavigationItem( navController = navController)
+            if(visible)
+                FollowNavigationItem( navController = navController)
             //val notifications by viewModel.notifications.collectAsState(initial = emptyMap())
 
             Box(modifier = Modifier.weight(1f)) {
                 NotificationList(
                     navController = navController,
                     groupedData = notifications,
+                    visible=visible,
+                    onFollowClick = viewModel::onFollow,
+                    unFollowClick= viewModel::unFollow,
                     onItemClick = { notificationId ->
                         viewModel.onNotificationClick(notificationId)
                     }
@@ -88,13 +92,23 @@ fun NotificationScreen(
 fun NotificationList(
     navController: NavHostController,
     groupedData: Map<String, List<NotificationUiModel>>,
+    visible:Boolean,
+    onFollowClick: (Long) -> Unit,
+    unFollowClick: (Long) -> Unit,
     onItemClick: (Long) -> Unit) {
-    Log.d("UI_RECOMPOSE", "현재 맵 섹션 개수: ${groupedData.size}")
+    //Log.d("UI_RECOMPOSE", "현재 맵 섹션 개수: ${groupedData.size}")
     LazyColumn (
         modifier=Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(15.dp, Alignment.Top),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ){
+        item {
+            val topSpace = if (visible) 0.dp else 10.dp
+            Spacer(modifier = Modifier
+                .fillMaxWidth()
+                .height(topSpace)
+            )
+        }
         groupedData.forEach {(header, notifications) ->
             item {
                 Text(
@@ -109,7 +123,10 @@ fun NotificationList(
                 Notification(
                     navController,
                     notification,
-                    onReadClick = { onItemClick(notification.id) })
+                    onReadClick = { onItemClick(notification.id) },
+                    onFollowClick = onFollowClick,
+                    unFollowClick= unFollowClick,
+                )
             }
             item{
                 Spacer(modifier=Modifier.height(5.dp))

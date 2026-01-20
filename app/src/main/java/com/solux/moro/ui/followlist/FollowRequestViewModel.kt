@@ -1,8 +1,10 @@
 package com.solux.moro.ui.followlist
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.core.domain.FollowRepository
+import com.solux.moro.data.model.UserInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,9 +17,10 @@ import kotlinx.coroutines.launch
 class FollowRequestViewModel @Inject constructor(
     private val followRepository: FollowRepository
 ) : ViewModel() {
-    private var allFollowRequests = listOf<FollowUserInfo>()
+    private var allFollowRequests = listOf<UserInfo>()
     private val _uiState = MutableStateFlow(FollowRequestUiState())
     val uiState: StateFlow<FollowRequestUiState> = _uiState.asStateFlow()
+
     init {
         loadFollowRequestData()
     }
@@ -25,7 +28,8 @@ class FollowRequestViewModel @Inject constructor(
     private fun loadFollowRequestData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            allFollowRequests = followRepository.getFollowRequest()
+            val result = followRepository.getFollowRequest()
+            allFollowRequests = result.getOrDefault(emptyList())
             _uiState.update {
                 it.copy(
                     filteredFollowRequests = allFollowRequests,
@@ -35,27 +39,32 @@ class FollowRequestViewModel @Inject constructor(
         }
     }
 // 팔로우 요청 수락
-    fun acceptRequest(userId: Long) {
+    fun acceptRequest(requestId: Long) {
         viewModelScope.launch {
-            followRepository.acceptFollowRequest(userId)
-            // 수락 성공
-            removeUserFromList(userId)
-
+            val result = followRepository.acceptFollowRequest(requestId)
+            result.onSuccess {
+                removeUserFromList(requestId)
+                Log.d("FollowRequestVM","팔로우 요청 수락")
+            }.onFailure {
+                Log.d("FollowRequestVM","팔로우 요청 수락 실패")
+            }
         }
     }
 
     // 팔로우 요청 거절
-    fun declineRequest(userId: Long) {
+    fun declineRequest(requestId: Long) {
         viewModelScope.launch {
-            followRepository.rejectFollowRequest(userId)
-            // 거절 성공
-            removeUserFromList(userId)
-
+            val result = followRepository.rejectFollowRequest(requestId)
+            result.onSuccess {
+                removeUserFromList(requestId)
+            }.onFailure {
+                Log.d("FollowRequestVM","팔로우 요청 거절 실패")
+            }
         }
     }
 
-    private fun removeUserFromList(userId: Long) {
-        allFollowRequests = allFollowRequests.filter { it.user.id != userId }
+    private fun removeUserFromList(requestId: Long) {
+        allFollowRequests = allFollowRequests.filter { it.followId != requestId }
         _uiState.update { it.copy(filteredFollowRequests = allFollowRequests) }
     }
 }

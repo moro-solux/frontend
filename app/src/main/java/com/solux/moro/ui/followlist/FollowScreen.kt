@@ -58,7 +58,7 @@ fun FollowScreen(
     val selectedTab = uiState.selectedTab
     val followers = uiState.filteredFollowers
     val followings = uiState.filteredFollowings
-    val userId = viewModel.userNickName
+    val userId = viewModel.myName
 
     Scaffold(
         bottomBar = { BottomBar() },
@@ -98,10 +98,12 @@ fun FollowScreen(
                     )
                 }
                 TextSearchField(
-                    query = if (selectedTab == FollowTabType.FOLLOWER) uiState.followerSearchQuery else uiState.followingSearchQuery,
-                    onQueryChange = {
-                        if (selectedTab == FollowTabType.FOLLOWER) viewModel.updateFollowerSearch(it)
-                        else viewModel.updateFollowingSearch(it)
+                    query =
+                        if (selectedTab == FollowTabType.FOLLOWER) uiState.followerSearchQuery
+                        else uiState.followingSearchQuery,
+                    onQueryChange = {inputString ->
+                        if (selectedTab == FollowTabType.FOLLOWER) viewModel.updateFollowerSearch(inputString)
+                        else viewModel.updateFollowingSearch(inputString)
                     }
                 )
             }
@@ -112,17 +114,17 @@ fun FollowScreen(
                 val currentList = if (selectedTab == FollowTabType.FOLLOWING) followings else followers
                 items(
                     items = currentList,
-                    key = { it.user.id }
+                    key = { it.userId }
                 ) { item ->
                     FollowUserItem(
-                        user = item.user,
-                        stats = item.stats,
+                        user = item,
                         isFollowTab = selectedTab == FollowTabType.FOLLOWING,
                         onActionClick = {
                             if (selectedTab == FollowTabType.FOLLOWING) {
-                                viewModel.unFollow(item.user.id)
+                                if(item.isFollowing)viewModel.unFollow(item.userId)
+                                else viewModel.onFollow(item.userId)
                             } else {
-                                viewModel.removeFollower(item.user.id)
+                                viewModel.removeFollower(item.userId)
                             }
                         }
                     )
@@ -135,7 +137,7 @@ fun FollowScreen(
 @Composable
 private fun TextSearchField(
     query: String,
-    onQueryChange: (String) -> Unit
+    onQueryChange: (String) -> Unit,
 ){
     val focusManager = LocalFocusManager.current
     TextField(
@@ -144,6 +146,7 @@ private fun TextSearchField(
         singleLine = true,
         keyboardActions = KeyboardActions(
             onSearch = {
+                onQueryChange(query)
                 focusManager.clearFocus()
                 println("검색 실행: $query")
             }
