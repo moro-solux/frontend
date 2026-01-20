@@ -58,7 +58,7 @@ fun FollowScreen(
     val selectedTab = uiState.selectedTab
     val followers = uiState.filteredFollowers
     val followings = uiState.filteredFollowings
-    val userId = ""
+    val userId = viewModel.myName
 
     Scaffold(
         bottomBar = { BottomBar() },

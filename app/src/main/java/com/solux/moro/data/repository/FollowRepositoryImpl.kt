@@ -27,24 +27,25 @@ class FollowRepositoryImpl@Inject constructor(
             Result.failure(e)
         }
     }
-    override suspend fun getFollowers(
-        userId: Long, page: Int, size: Int, keyWord: String
-    ): Result<List<UserInfo>> = try {
-        val response = userService.getFollowers(userId, page, size, keyWord)
-        if (response.success) { val uiModels = response.data.map { it.toUiModel() }
-
+    override suspend fun getFollowers(userId: Long, keyWord: String): Result<List<UserInfo>> = try {
+        val response = userService.getFollowers(userId,keyWord)
+        if (response.success) { val uiModels = response.data.content.map { it.toUiModel() }
+            Log.d("followImpl", "리스트 반환 성공: ${response.data}")
             Result.success(uiModels)
         } else {
+            Log.d("followImpl", "리스트 반환 실패: ${response.data}")
             Result.failure(Exception(response.message))
         }
-    } catch (e: Exception) { Result.failure(e) }
+    } catch (e: Exception) {
+        Log.d("followImpl", "error: ${e}")
+        Result.failure(e) }
 
 
-    override suspend fun getFollowings(userId: Long): Result<List<UserInfo>> {
+    override suspend fun getFollowings(userId: Long, keyWord: String): Result<List<UserInfo>> {
         return try {
-            val response = userService.getFollowings(userId)
+            val response = userService.getFollowings(userId,keyWord)
             if (response.success) {
-                val uiModels = response.data.map { it.toUiModel() }
+                val uiModels = response.data.content.map { it.toUiModel() }
                 Result.success(uiModels)
             } else {
                 Result.failure(Exception(response.message))

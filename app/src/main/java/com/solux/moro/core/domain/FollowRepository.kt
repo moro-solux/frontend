@@ -7,11 +7,14 @@ interface FollowRepository {
     suspend fun followRequest(userId: Long): Result<FollowStatusResponse>//팔로우 걸기
     suspend fun getFollowers(
          userId: Long,
-         page: Int,
-         size: Int,
+//         page: Int,
+//         size: Int,
          keyWord: String
     ): Result<List<UserInfo>>
-    suspend fun getFollowings(userId: Long): Result<List<UserInfo>>
+    suspend fun getFollowings(
+        userId: Long,
+        keyWord: String
+    ): Result<List<UserInfo>>
 
     suspend fun getFollowRequest(): Result<List<UserInfo>>
     suspend fun acceptFollowRequest(userId: Long): Result<Unit>

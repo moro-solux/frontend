@@ -45,7 +45,8 @@ class FollowingViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(FollowUiState())
     val uiState: StateFlow<FollowUiState> = _uiState.asStateFlow()
 
-    private val targetUserId: Long = savedStateHandle.get<Long>("userId") ?: 0L
+    val myName: String = userRepository.user.value.nickname
+    private val targetUserId: Long = savedStateHandle.get<Long>("userId") ?: 5L
 
     init {
         loadFollowData()
@@ -55,8 +56,8 @@ class FollowingViewModel @Inject constructor(
     private fun loadFollowData() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-            val followersResult = followRepository.getFollowers(targetUserId, page = 0, size = 100, keyWord = "")
-            val followingsResult = followRepository.getFollowings(targetUserId)
+            val followersResult = followRepository.getFollowers(targetUserId,keyWord = "")
+            val followingsResult = followRepository.getFollowings(targetUserId,keyWord = "")
 
             allFollowers = followersResult.getOrDefault(emptyList())
             allFollowings = followingsResult.getOrDefault(emptyList())

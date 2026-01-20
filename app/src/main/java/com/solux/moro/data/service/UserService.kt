@@ -7,6 +7,7 @@ import com.solux.moro.data.dto.UserProfileDto
 import com.solux.moro.data.dto.UserProfileEditRequest
 import com.solux.moro.data.dto.UserSearchResponseDto
 import com.solux.moro.data.model.FollowUserDto
+import com.solux.moro.data.model.FollowUserResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -40,16 +41,17 @@ interface UserService {
 //
     @GET("/api/users/{userId}/followings")
     suspend fun getFollowings(
-        @Path("userId") userId: Long
-    ): BaseResponse<List<FollowUserDto>>
+        @Path("userId") userId: Long,
+        @Query("keyword") keyword: String,
+    ): BaseResponse<FollowUserResponse>
 
     @GET("/api/users/{userId}/followers")
     suspend fun getFollowers(
         @Path("userId") userId: Long,
-        @Query("page") page: Int,
-        @Query("size") size: Int,
+//        @Query("page") page: Int,
+//        @Query("size") size: Int,
         @Query("keyword") keyword: String,
-    ): BaseResponse<List<FollowUserDto>>
+    ): BaseResponse<FollowUserResponse>
 
     @GET("/api/users/search")
     suspend fun searchUser(
