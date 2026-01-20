@@ -1,5 +1,6 @@
 package com.solux.moro.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -13,19 +14,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.messaging.FirebaseMessaging
 import com.solux.moro.core.designsystem.theme.MoroTheme
+import com.solux.moro.data.network.NetworkModule
+import com.solux.moro.data.repository.menurepo.SettingPreferenceManager
 import com.solux.moro.core.navigation.NavGraph
+import com.solux.moro.ui.auth.AuthResult
+import com.solux.moro.ui.auth.parseAuthResult
 import com.solux.moro.ui.notification.NotificationViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val notificationViewModel: NotificationViewModel by viewModels()
+    @Inject lateinit var settingPreferenceManager: SettingPreferenceManager
+    private val authResultFlow = MutableStateFlow<AuthResult?>(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-            // 앱 실행 시 토큰 확인 및 서버 등록
-            getAndRegisterFcmToken()
+        NetworkModule.token = settingPreferenceManager.getAccessToken().orEmpty()
+        // 앱 실행 시 토큰 확인 및 서버 등록
+        getAndRegisterFcmToken()
+        handleAuthIntent(intent)
         setContent {
             MoroTheme {
 //                MapScreen(
@@ -43,25 +54,46 @@ class MainActivity : ComponentActivity() {
 //                    onUpdateLastKnownLocation = {},
 //                )
                 val navController = rememberNavController()
-                NavGraph(navController = navController)
-            }
-        }
-        }
-
-        private fun getAndRegisterFcmToken() {
-            FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Log.w("FCM_LOG", "토큰 발급 실패", task.exception)
-                    return@addOnCompleteListener
-                }
-
-                val token = task.result
-                Log.d("FCM_LOG", "현재 FCM 토큰: $token")
-
-                notificationViewModel.registerToken(token)
+                NavGraph(
+                    navController = navController,
+                    authResultFlow = authResultFlow,
+                    onAuthResultConsumed = { authResultFlow.value = null }
+                )
             }
         }
     }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleAuthIntent(intent)
+    }
+
+    private fun handleAuthIntent(intent: Intent?) {
+        val uri = intent?.data ?: return
+        val result = parseAuthResult(uri) ?: return
+        result.token?.let { saveToken(it) }
+        authResultFlow.value = result
+    }
+
+    private fun saveToken(token: String) {
+        NetworkModule.token = token
+        settingPreferenceManager.setAccessToken(token)
+    }
+
+    private fun getAndRegisterFcmToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("FCM_LOG", "토큰 발급 실패", task.exception)
+                return@addOnCompleteListener
+            }
+
+            val token = task.result
+            Log.d("FCM_LOG", "현재 FCM 토큰: $token")
+
+            notificationViewModel.registerToken(token)
+        }
+    }
+}
 
 
 @Composable

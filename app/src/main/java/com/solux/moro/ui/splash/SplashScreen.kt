@@ -41,7 +41,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier,
-    onGoogleStartClick: () -> Unit = {}
+    onGoogleStartClick: () -> Unit = {},
+    onSkipClick: () -> Unit = {}
 ) {
     val isPreview = LocalInspectionMode.current
 
@@ -101,6 +102,15 @@ fun SplashScreen(
                             .width(figmaDp(272f))
                             .height(figmaDp(53f))
                             .noRippleClickable { onGoogleStartClick() }
+                    )
+
+                    Spacer(modifier = Modifier.height(figmaDp(14f)))
+
+                    Text(
+                        text = "간단하게 시작하기",
+                        style = MoroTheme.typography.bodyRegular14,
+                        color = MoroTheme.colors.gray40,
+                        modifier = Modifier.noRippleClickable { onSkipClick() }
                     )
                 }
             }
