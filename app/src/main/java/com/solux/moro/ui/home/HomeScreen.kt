@@ -42,7 +42,7 @@ fun HomeScreen(
 
     Scaffold(
         bottomBar = { BottomBar() },
-        topBar = { TopBar(true, navController) }
+        topBar = { TopBar(true,navController,search=true) }
     ) { innerPadding ->
         val feed by viewModel.feed.collectAsState()
 
