@@ -1,6 +1,5 @@
 package com.solux.moro.ui.notification.component
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -119,7 +118,7 @@ fun Notification(
                     }
 
                 }
-                Log.d("Notification", "Notification: $notification")
+                //Log.d("Notification", "Notification: $notification")
 
                 Text(
                     text = text,

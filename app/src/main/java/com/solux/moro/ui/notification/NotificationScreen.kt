@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,7 +51,7 @@ fun NotificationScreen(
     val navController= navController
     val notifications by viewModel.notifications.collectAsStateWithLifecycle()
     //val notificationList by viewModel.notificationList.collectAsStateWithLifecycle()
-    val visible=viewModel.visible
+    val visible=!viewModel.isPublic
     Scaffold(
         topBar = { BackNavigationTopAppBar("알림",{
             navController.popBackStack()
@@ -93,14 +92,14 @@ fun NotificationList(
     groupedData: Map<String, List<NotificationUiModel>>,
     visible:Boolean,
     onItemClick: (Long) -> Unit) {
-    Log.d("UI_RECOMPOSE", "현재 맵 섹션 개수: ${groupedData.size}")
+    //Log.d("UI_RECOMPOSE", "현재 맵 섹션 개수: ${groupedData.size}")
     LazyColumn (
         modifier=Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(15.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         item {
-            val topSpace = if (visible) 100.dp else 0.dp
+            val topSpace = if (visible) 0.dp else 10.dp
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(topSpace)

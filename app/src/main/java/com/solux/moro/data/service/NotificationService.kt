@@ -3,6 +3,7 @@ package com.solux.moro.data.service
 import com.solux.moro.data.dto.BaseResponse
 import com.solux.moro.data.dto.LikeResponseDto
 import com.solux.moro.data.dto.NotificationDto
+import com.solux.moro.data.dto.PrivacyStatusDto
 import com.solux.moro.data.dto.SSEResponse
 import com.solux.moro.data.dto.TokenRequest
 import retrofit2.http.Body
@@ -41,5 +42,9 @@ interface NotificationService {
     suspend fun getLikes(
     @Path("postId") postId: Long
     ): BaseResponse<LikeResponseDto>
+
+    @GET("/api/settings/privacy-status") // 공개 비공개 설정값
+    suspend fun getPrivacyStatus(
+    ): BaseResponse<PrivacyStatusDto>
 
 }

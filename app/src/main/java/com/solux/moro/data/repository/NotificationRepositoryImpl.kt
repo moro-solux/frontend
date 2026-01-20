@@ -145,4 +145,19 @@ class NotificationRepositoryImpl @Inject constructor(
 
         EventSources.createFactory(client).newEventSource(request, listener)
     }
+
+    override suspend fun getPrivacyStatus(): Boolean {
+        return try {
+            val response = notificationService.getPrivacyStatus()
+            if (response.success) {
+                Log.d("NotificationRepo", "getPrivacyStatus 성공: ${response.success}")
+                response.data.isPublic
+            }
+            else false
+        }
+        catch  (e: Exception){
+            Log.e("NotificationRepo", "getPrivacyStatus 실패: ${e.message}")
+            false
+        }
+    }
 }

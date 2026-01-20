@@ -1,7 +1,9 @@
 package com.solux.moro.ui.notification
 
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -26,8 +28,13 @@ class NotificationViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
     private val userRepository: UserRepository
 ) : ViewModel(){
+
+    var isPublic by mutableStateOf(false)
+        private set
+
     init {
-        Log.d("VM_INSTANCE", "NotificationViewModel created: ${this.hashCode()}")
+        loadPrivacyStatus()
+        Log.d("isPublic", " ${isPublic}")
     }
     private val _notifications = MutableStateFlow<Map<String, List<NotificationUiModel>>>(emptyMap())
     val notifications = _notifications.asStateFlow()
@@ -40,6 +47,13 @@ class NotificationViewModel @Inject constructor(
 
     val user = userRepository.user
     val stats = userRepository.userStats
+
+    fun loadPrivacyStatus() {
+        viewModelScope.launch {
+            isPublic = notificationRepository.getPrivacyStatus()
+        }
+    }
+
 
     val visible=user.value.visible
     val nickname =

@@ -29,3 +29,7 @@ data class TopLikerDto(
     val userId: Long,
     val nickname: String
 )
+
+data class PrivacyStatusDto(
+    val isPublic: Boolean
+)

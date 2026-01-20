@@ -40,6 +40,7 @@ fun NotificationDto.toUiModel(): NotificationUiModel {
             userId= (content?.get("actorId") as? Number)?.toLong() ?: -1L,
             createdAt = this.createdAt,
             isRead = this.isRead,
+            isFollowing = content?.get("isFollowing") as? Boolean ?: false,
             id = (this.id as? Number)?.toLong() ?: -1L
         )
         NotificationType.COLOR_UNLOCKED -> NotificationUiModel.ColorUnlocked(
