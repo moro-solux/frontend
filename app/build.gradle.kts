@@ -57,7 +57,8 @@ android {
 }
 
 dependencies {
-
+    implementation(platform("com.google.firebase:firebase-bom:34.8.0"))
+    implementation("com.google.firebase:firebase-analytics")
     // Lifecycle /Viewmodel
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -67,6 +68,7 @@ dependencies {
 
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.lifecycle.vm.compose)
+    implementation(libs.hilt.navigation.compose)
     // Navigation(Compose)
     implementation(libs.androidx.navigation.compose)
 
@@ -79,6 +81,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.animation.core)
+    implementation("androidx.browser:browser:1.7.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
