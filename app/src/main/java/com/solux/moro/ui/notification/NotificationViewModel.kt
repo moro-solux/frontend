@@ -41,6 +41,7 @@ class NotificationViewModel @Inject constructor(
     val user = userRepository.user
     val stats = userRepository.userStats
 
+    val visible=user.value.visible
     val nickname =
         user.map { it?.nickname.orEmpty() }
             .stateIn(
