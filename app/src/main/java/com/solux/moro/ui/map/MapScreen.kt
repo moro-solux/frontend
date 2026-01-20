@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -53,6 +54,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.solux.moro.R
+import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.data.dto.response.MapPostDetailDto
@@ -60,6 +62,7 @@ import com.solux.moro.data.dto.response.MapPostDto
 import com.solux.moro.ui.map.component.CircleActionButton
 import com.solux.moro.ui.map.component.MapPostBottomSheet
 import com.solux.moro.ui.map.component.MapSearchBar
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
@@ -67,29 +70,36 @@ import kotlinx.coroutines.launch
 @Composable
 fun MapScreenRoute(
     viewModel: MapViewModel,
+    navController: NavHostController? = null,
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    MapScreen(
-        posts = uiState.posts,
-        selectedPost = uiState.selectedPost,
-        keyword = uiState.keyword,
-        onKeywordChange = viewModel::onKeywordChange,
-        onSearch = viewModel::search,
-        onSelectPost = viewModel::selectPost,
-        onClearSelection = viewModel::clearSelection,
-        onLoadNearby = viewModel::loadNearby,
+    Scaffold(
+        bottomBar = { BottomBar(navController) }
+    ) { innerPadding ->
+        MapScreen(
+            modifier = Modifier.padding(innerPadding),
+            posts = uiState.posts,
+            selectedPost = uiState.selectedPost,
+            keyword = uiState.keyword,
+            onKeywordChange = viewModel::onKeywordChange,
+            onSearch = viewModel::search,
+            onSelectPost = viewModel::selectPost,
+            onClearSelection = viewModel::clearSelection,
+            onLoadNearby = viewModel::loadNearby,
 
-        hasFineLocationPermission = uiState.hasFineLocationPermission,
-        lastKnownLatLng = uiState.lastKnownLatLng,
-        onLocationPermissionChanged = viewModel::onLocationPermissionChanged,
-        onUpdateLastKnownLocation = viewModel::updateLastKnownLocation,
-    )
+            hasFineLocationPermission = uiState.hasFineLocationPermission,
+            lastKnownLatLng = uiState.lastKnownLatLng,
+            onLocationPermissionChanged = viewModel::onLocationPermissionChanged,
+            onUpdateLastKnownLocation = viewModel::updateLastKnownLocation,
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun MapScreen(
+    modifier: Modifier = Modifier,
     posts: List<MapPostDto>,
     selectedPost: MapPostDetailDto?,
     keyword: String,
@@ -212,7 +222,7 @@ fun MapScreen(
         if (selectedPost != null) scope.launch { sheetState.show() }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    Box(modifier.fillMaxSize()) {
         MapLayer(
             isPreview = isPreview,
             enableAutoLoad = enableAutoLoad,

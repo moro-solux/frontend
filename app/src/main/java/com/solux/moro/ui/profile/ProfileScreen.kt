@@ -75,7 +75,7 @@ fun ProfileScreen(
 
 
     Scaffold(
-        bottomBar = { BottomBar() },
+        bottomBar = { BottomBar(navController) },
         topBar = { if(isMyProfile){TopBar()}
         else{BackNavigationTopAppBar(nickname,onBackClick = {
             navController.popBackStack()})}}
