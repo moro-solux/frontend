@@ -25,6 +25,7 @@ data class SearchUiState(
     val filteredSearchRequests: List<SearchUser> = emptyList(),
     val isLoading: Boolean = false
 )
+
 @HiltViewModel
 class SearchUserViewModel @Inject constructor(
     private val userRepository: UserRepository,

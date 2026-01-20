@@ -53,7 +53,7 @@ interface UserService {
 
     @GET("/api/users/search")
     suspend fun searchUser(
-        @Query("nickname") nickname: String
+        @Query("keyword") keyword: String
     ): BaseResponse<UserSearchResponseDto>
 
     @GET("/api/users/me/follow-requests")

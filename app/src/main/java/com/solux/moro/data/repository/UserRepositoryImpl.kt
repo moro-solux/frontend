@@ -130,6 +130,8 @@ class UserRepositoryImpl @Inject constructor(
             Result.success(searchResultPage)
 
         } catch (e: Exception) {
+            Log.e("SearchTest", "에러 타입: ${e.javaClass.simpleName}")
+            Log.e("SearchTest", "에러 메시지: ${e.message}")
             Result.failure(e)
         }
     }

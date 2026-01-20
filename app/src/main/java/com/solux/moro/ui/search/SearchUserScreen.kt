@@ -1,5 +1,6 @@
 package com.solux.moro.ui.search
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,9 +24,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,8 +31,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -76,26 +72,27 @@ fun SearchUserScreen(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
                     .width(1080.toPxDp)
-                    .height(313.92001.toPxDp)
+                    .height(90.dp)
                     .padding(start = 46.08.toPxDp, top = 46.08.toPxDp, end = 46.08.toPxDp)
             ) {
                 TextSearchFiled(
                     query = uiState.searchQuery,
-                    onQueryChange = { viewModel.onQueryChanged(it)}
+                    onQueryChange = { viewModel.onQueryChanged(it)},
                 )
+
             }
             LazyColumn(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(start = 46.08.toPxDp, end = 46.08.toPxDp)
+                modifier = Modifier.padding( start = 46.08.toPxDp, end = 46.08.toPxDp)
             ) {
                 items(
-                    items = searchResults,
+                    items = uiState.filteredSearchRequests,
                 ) { searchUser ->
                     SearchUserItem(
                         user = searchUser,
                         onItemClick = { id ->
                             // 프로필로 이동
-                            navController.navigate(Profile.createRoute(id.toString()))
+                            navController.navigate(Profile.createRoute(id))
                         }
                     )
                 }
@@ -118,6 +115,7 @@ fun SearchUserItem(
                 .height(207.36.toPxDp)
                 .padding(top = 34.56.toPxDp, bottom = 34.56.toPxDp)
                 .clickable{
+                    Log.d("SearchUserItem", "유저 아이디: ${user.id}")
                     onItemClick(user.id)
                 }
         ) {
@@ -151,54 +149,21 @@ fun SearchUserItem(
     HorizontalDivider(thickness = (2.88 ).toPxDp, color = Color(0xFF262626))
 }
 
-@Preview( device = Devices.PIXEL_4A)
-@Composable
-fun SearchUserItemPreview(){
-//    SearchUserItem(
-//        user = User(
-//            id = 1,
-//            email = "test@test.com",
-//            nickname = "테스트유저",
-//            colorPalette = UserColorPalette(
-//                theme = MoroThemeType.Pastel,
-//                userColor = MoroPalette.Pastel.Purple400,
-//                paletteColors = listOf(
-//                    MoroPalette.Pastel.Purple400,
-//                    MoroPalette.Pastel.Yellow300,
-//                    MoroPalette.Pastel.Green200,
-//                    MoroPalette.Pastel.Cyan200,
-//                    MoroPalette.Pastel.Indigo500,
-//                    MoroPalette.Pastel.Gray400
-//                )
-//            )
-//        ),
-//        stats = UserStats(
-//            colorsCount = 1,
-//            followerCount = 1,
-//            followingCount = 1,
-//            isFollowing = true
-//        ),
-//        onActionClick={}
-//
-//    )
-}
-
 
 @Composable
 private fun TextSearchFiled(
     query: String,
-    onQueryChange: (String) -> Unit
+    onQueryChange: (String) -> Unit,
 ){
-    var text by remember { mutableStateOf("") }
+    //var text by remember { mutableStateOf("") }
     TextField(
-        value = text,
-        onValueChange = { text = it },
+        value = query,
+        onValueChange = { onQueryChange(it) },
         singleLine = true,
         keyboardActions = KeyboardActions(
             onSearch = {
-                // 검색
-                println("검색 실행: $text")
-
+                onQueryChange(query)
+                println("검색 실행: $query")
                 // focusManager.clearFocus()
             }
         ),
@@ -233,8 +198,3 @@ private fun TextSearchFiled(
     )
 }
 
-@Preview
-@Composable
-fun SearchUserScreenPreview(){
-    //SearchUserScreen()
-}
