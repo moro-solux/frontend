@@ -35,7 +35,7 @@ import com.solux.moro.ui.search.SearchUserViewModel
 fun NavGraph(navController: NavHostController){
 
 
-    NavHost(navController = navController, startDestination ="home") {
+    NavHost(navController = navController, startDestination = Profile.route) {
 
 
         // 카메라 화면
