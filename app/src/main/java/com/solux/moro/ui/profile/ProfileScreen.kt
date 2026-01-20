@@ -67,13 +67,8 @@ fun ProfileScreen(
     val colorsCount = stats?.colorsCount?:0
     val followerCount = stats?.followerCount?:1
     val followingCount = stats?.followingCount?:1
-   // val followerCount by viewModel.followerCount.collectAsState()
-    val isFollowing by viewModel.isFollowing.collectAsState()
-    //val followingCount by viewModel.followingCount.collectAsState()
-
+    val isFollowing = stats?.isFollowing?:false
     val posts by viewModel.userPosts.collectAsState(emptyList())
-
-
 
     Scaffold(
         bottomBar = { BottomBar() },
@@ -110,12 +105,16 @@ fun ProfileScreen(
                             colorsCount,
                             action,
                             navController,
+                            isFollowing,
                             onEditProfile = {
                                 navController.navigate("profileEdit")
                             },
                             onFollow = {
-                        // 팔로우 동작
+                                viewModel.onFollow(userId = user.id)
                             },
+                            unFollow={
+                                viewModel.unFollow(userId = user.id)
+                            }
                         )
                         if(!isMyProfile&& user?.visible ==false)
                             NotCaptures()

@@ -2,7 +2,6 @@ package com.solux.moro.data.repository
 
 import android.util.Log
 import com.solux.moro.core.domain.FollowRepository
-import com.solux.moro.data.dto.TargetUserIdDto
 import com.solux.moro.data.mapper.toUiModel
 import com.solux.moro.data.model.FollowStatusResponse
 import com.solux.moro.data.model.FollowUserDto
@@ -16,9 +15,9 @@ class FollowRepositoryImpl@Inject constructor(
     private val followService: FollowService,
     private val userService: UserService
 ): FollowRepository {
-    override suspend fun followRequest(targetUserId: TargetUserIdDto): Result<FollowStatusResponse> {//팔로우 요청
+    override suspend fun followRequest(userId: Long): Result<FollowStatusResponse> {//팔로우 요청
         return try {
-            val response = followService.followRequest(targetUserId)
+            val response = followService.followRequest(userId)
             if (response.success) {
                 Result.success(response.data)
             } else {
@@ -74,9 +73,9 @@ class FollowRepositoryImpl@Inject constructor(
             Result.failure(e)
         }
     }
-    override suspend fun acceptFollowRequest(followId: Long): Result<Unit> =
+    override suspend fun acceptFollowRequest(userId: Long): Result<Unit> =
     try {
-        val response = followService.acceptRequest(followId)
+        val response = followService.acceptRequest(userId)
         if (response.success) {
             Log.d("followImpl", "팔로우 승인 성공!! 서버 메시지: ${response.message}")
             Log.d("followImpl", "응답 데이터: ${response.data}")
@@ -92,20 +91,20 @@ class FollowRepositoryImpl@Inject constructor(
 }
 
 
-    override suspend fun rejectFollowRequest(followId: Long): Result<Unit> = try {
-        val response = followService.rejectRequest(followId)
+    override suspend fun rejectFollowRequest(userId: Long): Result<Unit> = try {
+        val response = followService.rejectRequest(userId)
         if (response.success) Result.success(Unit)
         else Result.failure(Exception(response.message))
     } catch (e: Exception) { Result.failure(e) }
 
-    override suspend fun unFollow(targetUserId: Long): Result<Unit> = try {
-        val response = followService.deleteFollowing(targetUserId)
+    override suspend fun unFollow(userId: Long): Result<Unit> = try {
+        val response = followService.deleteFollowing(userId)
         if (response.success) Result.success(Unit)
         else Result.failure(Exception(response.message))
     } catch (e: Exception) { Result.failure(e) }
 
-    override suspend fun deleteFollower(targetUserId: Long): Result<Unit> = try {
-        val response = userService.deleteFollower(targetUserId)
+    override suspend fun deleteFollower(userId: Long): Result<Unit> = try {
+        val response = userService.deleteFollower(userId)
         if (response.success) Result.success(Unit)
         else Result.failure(Exception(response.message))
     } catch (e: Exception) { Result.failure(e) }

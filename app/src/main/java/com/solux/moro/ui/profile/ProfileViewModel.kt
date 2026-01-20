@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.solux.moro.core.domain.FollowRepository
 import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.ui.auth.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +25,7 @@ sealed class ProfileAction {
 class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository, //내 id
+    private val followRepository: FollowRepository,
     val savedStateHandle: SavedStateHandle //프로필 id
 ) : ViewModel() {
 
@@ -56,36 +58,6 @@ class ProfileViewModel @Inject constructor(
                 "#B1271A"
             )
 
-    val colorsCount=//   컬러맵 해금 사이즈 필요
-        user.map{it.colorPalette.paletteColors.size?:0}
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
-                0
-            )
-    val followerCount =
-        stats.map { it?.followerCount ?: 0 }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
-                0
-            )
-    val isFollowing =
-        stats.map { it?.isFollowing ?: false }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
-                0
-            )
-    val followingCount =
-        stats.map { it?.followingCount ?: 0 }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
-                0
-            )
-
-
     val isMyProfile: StateFlow<Boolean> =
         flowOf(profileUserId == myUserId)
             .stateIn(
@@ -106,19 +78,6 @@ class ProfileViewModel @Inject constructor(
             ProfileAction.Follow
         )
 
-    val profileActionText: StateFlow<String> =
-        profileAction
-            .map { action ->
-                when (action) {
-                    ProfileAction.EditProfile -> "프로필 편집"
-                    ProfileAction.Follow -> "팔로우"
-                }
-            }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000),
-                "팔로우"
-            )
 
     val userPosts = userRepository.getUserPosts(profileUserId)
 //        .stateIn(
@@ -127,4 +86,26 @@ class ProfileViewModel @Inject constructor(
 //            initialValue = emptyList() // 초기값 빈 리스트
 //        )
 
+    fun onFollow(userId:Long){
+        viewModelScope.launch {
+            val result = followRepository.followRequest(userId)
+            result.onSuccess {
+                Log.d("ProfileVM","팔로우 요청")
+            }.onFailure {
+                Log.d("ProfileVM","팔로우 요청 실패")
+            }
+        }
+    }
+
+
+    fun unFollow(userId:Long){
+        viewModelScope.launch {
+            val result = followRepository.unFollow(userId)
+            result.onSuccess {
+                Log.d("ProfileVM","언팔")
+            }.onFailure {
+                Log.d("ProfileVM","언팔 실패")
+            }
+        }
+    }
 }
