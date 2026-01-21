@@ -93,8 +93,8 @@ fun NotificationList(
     navController: NavHostController,
     groupedData: Map<String, List<NotificationUiModel>>,
     visible:Boolean,
-    onFollowClick: (Long) -> Unit,
-    unFollowClick: (Long) -> Unit,
+    onFollowClick: (Long,Long) -> Unit,
+    unFollowClick: (Long,Long) -> Unit,
     onItemClick: (Long) -> Unit) {
     //Log.d("UI_RECOMPOSE", "현재 맵 섹션 개수: ${groupedData.size}")
     LazyColumn (

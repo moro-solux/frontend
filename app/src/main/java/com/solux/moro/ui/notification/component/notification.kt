@@ -41,8 +41,8 @@ fun Notification(
     notification: NotificationUiModel,
     color: Color = MoroTheme.colors.fontColor,
     style: TextStyle = MoroTheme.typography.bodyRegular16,
-    onFollowClick: (Long) -> Unit = {},
-    unFollowClick: (Long) -> Unit = {},
+    onFollowClick: (Long,Long) -> Unit = { _, _ -> },
+    unFollowClick: (Long,Long) -> Unit = { _, _ -> },
     onReadClick: () -> Unit = {}
 ) {
     Row(
@@ -167,8 +167,8 @@ fun Notification(
 }
 @Composable
 fun NotificationSide(notification: NotificationUiModel,
-                     onFollowClick: (Long) -> Unit = {},
-                     unFollowClick: (Long) -> Unit = {}, ){
+                     onFollowClick: (Long,Long) -> Unit ={ _, _ -> },
+                     unFollowClick: (Long,Long) -> Unit = { _, _ -> }, ){
     Column(
         modifier = Modifier.padding(end = 10.dp, top = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -195,12 +195,12 @@ fun NotificationSide(notification: NotificationUiModel,
                     Button(
                         onClick = {
                             if(notification.isFollowing) {
-                                unFollowClick(notification.userId)
+                                unFollowClick(notification.userId,notification.id)
                                 btnColor=Color.Black
                                 textColor=Color.White
                             }
                             else
-                                onFollowClick(notification.userId)
+                                onFollowClick(notification.userId,notification.id)
                         },
                         modifier = Modifier
                             .width(70.dp)

@@ -169,9 +169,10 @@ class NotificationViewModel @Inject constructor(
         notificationRepository.connectNotificationStream(token)
     }
 
-    fun onFollow(userId:Long) {
+    fun onFollow(userId:Long,notificationId: Long) {
         viewModelScope.launch {
             val result = followRepository.followRequest(userId)
+            notificationRepository.markAsRead(notificationId)
             result.onSuccess {
                 result.onSuccess {
                     _notifications.update { currentMap ->
@@ -191,9 +192,10 @@ class NotificationViewModel @Inject constructor(
             }
         }
     }
-        fun unFollow(userId: Long) {
+        fun unFollow(userId: Long,notificationId: Long) {
             viewModelScope.launch {
                 val result = followRepository.unFollow(userId)
+                notificationRepository.markAsRead(notificationId)
                 result.onSuccess {
                     _notifications.update { currentMap ->
                         currentMap.mapValues { (_, list) ->
