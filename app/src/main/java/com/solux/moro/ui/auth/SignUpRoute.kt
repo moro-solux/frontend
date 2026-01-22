@@ -18,8 +18,14 @@ fun SignUpRoute(
     SignUpScreen(
         initialEmail = initialEmail,
         errorMessage = if (quickStart) null else viewModel.errorMessage,
+        isRegistering = viewModel.isRegistering,
+        nicknameCheckState = viewModel.nicknameCheckState,
         onCloseClick = onClose,
         isQuickStart = quickStart,
+        onNicknameChange = { viewModel.resetNicknameCheck() },
+        onNicknameCheckClick = { nickname ->
+            coroutineScope.launch { viewModel.checkNickname(nickname) }
+        },
         onSignUpClick = { email, nickname, sensitivity ->
             if (quickStart) {
                 onSuccess()
