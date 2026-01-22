@@ -4,6 +4,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,6 +50,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapEffect
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
@@ -65,6 +68,8 @@ import com.solux.moro.ui.map.component.MapSearchBar
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
@@ -82,6 +87,7 @@ fun MapScreenRoute(
             posts = uiState.posts,
             selectedPost = uiState.selectedPost,
             keyword = uiState.keyword,
+            searchCenter = uiState.searchCenter,
             onKeywordChange = viewModel::onKeywordChange,
             onSearch = viewModel::search,
             onSelectPost = viewModel::selectPost,
@@ -103,6 +109,7 @@ fun MapScreen(
     posts: List<MapPostDto>,
     selectedPost: MapPostDetailDto?,
     keyword: String,
+    searchCenter: LatLng?,
     onKeywordChange: (String) -> Unit,
     onSearch: () -> Unit,
     onSelectPost: (Long) -> Unit,
@@ -218,6 +225,17 @@ fun MapScreen(
         zoomControlsEnabled = false,
     )
 
+    LaunchedEffect(searchCenter) {
+        if (searchCenter != null) {
+            scope.launch {
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLngZoom(searchCenter, 15f),
+                    durationMs = 600
+                )
+            }
+        }
+    }
+
     LaunchedEffect(selectedPost?.postId) {
         if (selectedPost != null) scope.launch { sheetState.show() }
     }
@@ -318,6 +336,9 @@ private fun MapLayer(
     onLoadNearby: (Double, Double) -> Unit,
     onSelectPost: (Long) -> Unit,
 ) {
+    val context = LocalContext.current
+    var markerIcon by remember { mutableStateOf<BitmapDescriptor?>(null) }
+
     if (isPreview) {
         Box(
             modifier = Modifier
@@ -349,9 +370,14 @@ private fun MapLayer(
         properties = mapProperties,
         uiSettings = mapUiSettings,
     ) {
+        MapEffect(Unit) {
+            markerIcon = createMarkerIcon(context = context, resId = R.drawable.ic_map_pin)
+        }
+
         posts.forEach { post ->
             Marker(
                 state = MarkerState(LatLng(post.lat, post.lng)),
+                icon = markerIcon,
                 onClick = {
                     onSelectPost(post.postId)
                     true
@@ -359,6 +385,17 @@ private fun MapLayer(
             )
         }
     }
+}
+
+private fun createMarkerIcon(context: android.content.Context, resId: Int): BitmapDescriptor? {
+    val drawable = ContextCompat.getDrawable(context, resId) ?: return null
+    val width = if (drawable.intrinsicWidth > 0) drawable.intrinsicWidth else 48
+    val height = if (drawable.intrinsicHeight > 0) drawable.intrinsicHeight else 48
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas(bitmap)
+    drawable.setBounds(0, 0, canvas.width, canvas.height)
+    drawable.draw(canvas)
+    return BitmapDescriptorFactory.fromBitmap(bitmap)
 }
 
 @Composable
@@ -411,7 +448,7 @@ private fun MapScreenPreview() {
                 postId = 1L,
                 lat = 37.5909,
                 lng = 126.9970,
-                title = "Sookmyung women’s univ",
+                title = "Sookmyung women's univ",
                 thumbnailUrl = null
             ),
             MapPostDto(
@@ -420,15 +457,26 @@ private fun MapScreenPreview() {
                 lng = 126.9955,
                 title = "Nearby post",
                 thumbnailUrl = null
+            ),
+            MapPostDto(
+                postId = 3L,
+                lat = 37.5879,
+                lng = 126.9982,
+                title = "Mock cafe",
+                thumbnailUrl = null
             )
         )
 
         val dummyDetail = MapPostDetailDto(
             postId = 1L,
-            title = "Sookmyung women’s univ",
-            address = "123 Main Street, City",
-            date = "25.11.03.mon",
-            colors = listOf("#FF6025", "#FF6025", "#FF6025", "#FF6025"),
+            createdAt = "25.11.03.mon",
+            placeName = "Sookmyung women's univ",
+            addressKo = "123 Main Street, City",
+            addressEn = "123 Main Street, City",
+            hexCode1 = "#FF6025",
+            hexCode2 = "#FF6025",
+            hexCode3 = "#FF6025",
+            hexCode4 = "#FF6025",
             imageUrl = null
         )
 
@@ -436,6 +484,7 @@ private fun MapScreenPreview() {
             posts = dummyPosts,
             selectedPost = dummyDetail,
             keyword = "sookmyung",
+            searchCenter = null,
             onKeywordChange = {},
             onSearch = {},
             onSelectPost = {},

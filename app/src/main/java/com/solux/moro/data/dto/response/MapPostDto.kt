@@ -1,34 +1,48 @@
 package com.solux.moro.data.dto.response
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.google.gson.annotations.SerializedName
 
-@Serializable
 data class MapPostDto(
-    @SerialName("postId")
+    @SerializedName("postId")
     val postId: Long,
-    @SerialName("lat")
+    @SerializedName(value = "lat", alternate = ["latitude"])
     val lat: Double,
-    @SerialName("lng")
+    @SerializedName(value = "lng", alternate = ["longitude"])
     val lng: Double,
-    @SerialName("title")
+    @SerializedName("title")
     val title: String? = null,
-    @SerialName("thumbnailUrl")
+    @SerializedName("thumbnailUrl")
     val thumbnailUrl: String? = null,
 )
 
-@Serializable
 data class MapPostDetailDto(
-    @SerialName("postId")
+    @SerializedName("postId")
     val postId: Long,
-    @SerialName("title")
-    val title: String,
-    @SerialName("address")
-    val address: String,
-    @SerialName("date")
-    val date: String,
-    @SerialName("colors")
-    val colors: List<String>,
-    @SerialName("imageUrl")
+    @SerializedName("createdAt")
+    val createdAt: String,
+    @SerializedName("placeName")
+    val placeName: String,
+    @SerializedName("addressKo")
+    val addressKo: String,
+    @SerializedName("addressEn")
+    val addressEn: String,
+    @SerializedName("hexCode1")
+    val hexCode1: String,
+    @SerializedName("hexCode2")
+    val hexCode2: String,
+    @SerializedName("hexCode3")
+    val hexCode3: String,
+    @SerializedName("hexCode4")
+    val hexCode4: String,
+    @SerializedName("imageUrl")
     val imageUrl: String? = null,
+)
+
+data class MapSearchResponseDto(
+    @SerializedName(value = "centerLat", alternate = ["centerLatitude"])
+    val centerLat: Double,
+    @SerializedName(value = "centerLng", alternate = ["centerLongitude"])
+    val centerLng: Double,
+    @SerializedName("posts")
+    val posts: List<MapPostDto>,
 )

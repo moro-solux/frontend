@@ -9,6 +9,7 @@ data class MapUiState(
     val radius: Double = 1.5,
     val posts: List<MapPostDto> = emptyList(),
     val selectedPost: MapPostDetailDto? = null,
+    val searchCenter: LatLng? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
 
