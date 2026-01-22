@@ -1,10 +1,13 @@
 package com.solux.moro.ui.notification
 
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
+import com.solux.moro.core.domain.FollowRepository
 import com.solux.moro.core.domain.NotificationRepository
 import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.data.dto.NotificationDto
@@ -24,23 +27,32 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val followRepository: FollowRepository
 ) : ViewModel(){
+
+    var isPublic by mutableStateOf(false)
+        private set
+
     init {
-        Log.d("VM_INSTANCE", "NotificationViewModel created: ${this.hashCode()}")
+        loadPrivacyStatus()
+        Log.d("isPublic", " ${isPublic}")
     }
     private val _notifications = MutableStateFlow<Map<String, List<NotificationUiModel>>>(emptyMap())
     val notifications = _notifications.asStateFlow()
     var notificationState = mutableStateOf<Map<String, List<NotificationUiModel>>>(emptyMap())
         private set
 
-    private val _notificationList = MutableStateFlow<List<NotificationUiModel>>(emptyList())
-    val notificationList = _notificationList.asStateFlow()
-
-
     val user = userRepository.user
     val stats = userRepository.userStats
 
+    fun loadPrivacyStatus() {
+        viewModelScope.launch {
+            isPublic = notificationRepository.getPrivacyStatus()
+        }
+    }
+
+    val visible=user.value.visible
     val nickname =
         user.map { it?.nickname.orEmpty() }
             .stateIn(
@@ -69,7 +81,7 @@ class NotificationViewModel @Inject constructor(
                     }
 
 
-                    Log.d("ViewModel_SSE", "UI 모델 업데이트 완료")
+                    //Log.d("ViewModel_SSE", "UI 모델 업데이트 완료")
                 } catch (e: Exception) {
                     Log.e("ViewModel_SSE", "파싱 또는 업데이트 실패", e)
                 }
@@ -92,36 +104,12 @@ class NotificationViewModel @Inject constructor(
                 }
 
                 _notifications.value = updatedMap
-                Log.d("NotificationVM", "초기 알림 로드 완료")
+               // Log.d("NotificationVM", "초기 알림 로드 완료")
             } catch (e: Exception) {
                 Log.e("NotificationVM", "알림 로드 실패", e)
             }
         }
     }
-//    private fun loadNotifications() {
-//        viewModelScope.launch {
-//            try {
-//                val mappedData =notificationRepository.getNotifications()
-//                    .collect { mappedData ->
-//                        Log.d("NotificationVM", "데이터 수신 성공: $mappedData")
-//                        _notifications.value = mappedData
-//
-//                        val updatedMap = mappedData.mapValues { (_, list) ->
-//                            list.map { item ->
-//                                if (item is NotificationUiModel.Liked) {
-//                                    val count = notificationRepository.getLikes(item.postId)
-//                                    Log.d("NotificationVM", "liked 데이터 수신 성공: $count")
-//                                    item.copy(totalCount = count)
-//                                } else item
-//                            }
-//                        }
-//                        _notifications.value = updatedMap
-//                    }
-//            } catch (e: Exception) {
-//                Log.e("NotificationVM", "알림 로드 실패", e)
-//            }
-//        }
-//    }
 
     fun onNotificationClick(notificationId: Long) {
         viewModelScope.launch {
@@ -180,6 +168,49 @@ class NotificationViewModel @Inject constructor(
     private fun connectToNotificationStream(token: String) {
         notificationRepository.connectNotificationStream(token)
     }
+
+    fun onFollow(userId:Long) {
+        viewModelScope.launch {
+            val result = followRepository.followRequest(userId)
+            result.onSuccess {
+                result.onSuccess {
+                    _notifications.update { currentMap ->
+                        currentMap.mapValues { (_, list) ->
+                            list.map { notification ->
+                                if (notification is NotificationUiModel.Following && notification.userId == userId) {
+                                    notification.copy(isFollowing = true)
+                                } else {
+                                    notification
+                                }
+                            }
+                        }
+                    }
+                }.onFailure { error ->
+                    Log.d("FollowViewModel", "팔로우 요청 실패${error.message}")
+                }
+            }
+        }
+    }
+        fun unFollow(userId: Long) {
+            viewModelScope.launch {
+                val result = followRepository.unFollow(userId)
+                result.onSuccess {
+                    _notifications.update { currentMap ->
+                        currentMap.mapValues { (_, list) ->
+                            list.map { notification ->
+                                if (notification is NotificationUiModel.Following && notification.userId == userId) {
+                                    notification.copy(isFollowing = false)
+                                } else {
+                                    notification
+                                }
+                            }
+                        }
+                    }
+                }.onFailure { error ->
+                    Log.d("FollowViewModel", "언팔로우 실패${error.message}")
+                }
+            }
+        }
 
 }
 

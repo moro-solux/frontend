@@ -84,6 +84,7 @@ sealed class NotificationUiModel {
         override val id: Long,
         val userName: String,
         val userId: Long,
+        val isFollowing: Boolean,
         override val createdAt: String,
         override val type: NotificationType = NotificationType.FOLLOWING,
         override var isRead: Boolean = false

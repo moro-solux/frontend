@@ -15,3 +15,7 @@ data class UserStats(
     val isFollowing: Boolean
 )
 
+data class isPublic(
+    val isPublic: Boolean
+)
+

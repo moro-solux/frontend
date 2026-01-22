@@ -31,15 +31,13 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.solux.moro.R
-import com.solux.moro.data.model.User
-import com.solux.moro.data.model.UserStats
+import com.solux.moro.data.model.UserInfo
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
 
 @Composable
 fun FollowUserItem(
-    user: User,
-    stats: UserStats,
+    user: UserInfo,
     isFollowTab: Boolean,
     onActionClick: () -> Unit,
     ) {
@@ -66,7 +64,7 @@ fun FollowUserItem(
                     contentScale = ContentScale.None
                 )
                 Text(
-                    text = user.nickname,
+                    text = user.userName,
                     style = TextStyle(
                         fontSize = 46.08.toPxSp,
                         lineHeight = 64.51.toPxSp,
@@ -78,11 +76,11 @@ fun FollowUserItem(
                         .height(65.toPxDp)
                 )
             }
-            if(isFollowTab) {
-                FollowButton(onActionClick)
+            if(isFollowTab) { // 팔로우 탭에서 온 경유
+                FollowingButton(user.isFollowing, onActionClick)
             }
-            else{
-                FollowingButton(stats.isFollowing, onActionClick)
+            else{ // 팔로잉 탭에서 온 경우
+                FollowButton(onActionClick)
             }
         }
     }
@@ -90,7 +88,7 @@ fun FollowUserItem(
 }
 
 @Composable
-private fun FollowButton(
+private fun FollowButton(  // 나를 팔로우 -> 삭제 버튼, 나를 팔로우하는 사람 삭제
     onFollowClick: () -> Unit
 ) {
     IconButton(onClick = onFollowClick) {
@@ -102,7 +100,7 @@ private fun FollowButton(
     }
 }
 @Composable
-private fun FollowingButton(
+private fun FollowingButton( // 팔로잉 탭에서 온 경우 (내가 팔로우 함)
     following: Boolean,
     onFollowingClick: () -> Unit
 ){
@@ -111,13 +109,13 @@ private fun FollowingButton(
     var borderColor=Color(0xFF404040)
     var text="Following"
 
-    if(following){
+    if(following){    // 내가 팔로우하는 경우
         containerColor = Color(0xFF262626)
         contentColor = Color(0xFFF2F2F2)
         borderColor=Color(0xFF404040)
         text="Following"
     }
-    else{
+    else{           // 내가 팔로우 하지 않는 경우
         containerColor =  Color(0xFFF2F2F2)
         contentColor = Color(0xFF121212)
         borderColor= Color(0xFF262626)

@@ -25,15 +25,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.theme.MoroTheme
-import com.solux.moro.data.model.User
-import com.solux.moro.data.model.UserStats
+import com.solux.moro.data.model.UserInfo
 import com.solux.moro.ui.profile.component.toPxDp
 import com.solux.moro.ui.profile.component.toPxSp
 
 @Composable
 fun FollowRequestUserItem(
-    user: User,
-    stats: UserStats,
+    user: UserInfo,
     onAcceptClick: () -> Unit,
     onDeclineClick: () -> Unit
 ) {
@@ -60,7 +58,7 @@ fun FollowRequestUserItem(
                     contentScale = ContentScale.None
                 )
                 Text(
-                    text = user.nickname,
+                    text = user.userName,
                     style = TextStyle(
                         fontSize = 46.08.toPxSp,
                         lineHeight = 64.51.toPxSp,
@@ -89,7 +87,7 @@ private fun FollowRequestButton(
     var text="확인"
 Row(
     horizontalArrangement = Arrangement.spacedBy(
-        5.dp)
+        10.dp)
 ) {
     Button(
         onClick = onAcceptClick,

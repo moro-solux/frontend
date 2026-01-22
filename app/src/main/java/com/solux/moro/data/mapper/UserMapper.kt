@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.solux.moro.data.dto.UserProfileDto
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserColorPalette
+import com.solux.moro.data.model.UserStats
 
 fun UserProfileDto.toDomain(): User {
     return User(
@@ -19,3 +20,13 @@ fun UserProfileDto.toDomain(): User {
         visible = this.visible
     )
 }
+
+fun UserProfileDto.toStatsDomain(): UserStats {
+    return UserStats(
+        colorsCount = this.colorCount,
+        followerCount = this.followerCount,
+        followingCount = this.followingCount,
+        isFollowing = this.followingStatus == "ACCEPTED",
+    )
+}
+

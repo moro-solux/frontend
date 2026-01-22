@@ -20,8 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -44,9 +42,10 @@ fun Profile(
     followingCnt: Int,
     action: ProfileAction,
     navController: NavController,
-
+    isFollowing: Boolean,
     onEditProfile: () -> Unit,
     onFollow: () -> Unit,
+    unFollow: () -> Unit,
 ) {
     val colorsCnt: Int = colorsCnt
     val followerCnt: Int = followerCnt
@@ -76,9 +75,11 @@ fun Profile(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             ProfileActionButton(
+                isFollowing=isFollowing,
                 action = action,
                 onEditProfile = onEditProfile,
-                onFollow = onFollow
+                onFollow = onFollow,
+                unFollow = unFollow
             )
             ProfileInfo(
                 colorsCnt,
@@ -134,16 +135,21 @@ fun ProfileInfo(
 
 @Composable
 fun ProfileActionButton(
+    isFollowing: Boolean,
     action: ProfileAction,
     onEditProfile: () -> Unit,
     onFollow: () -> Unit,
+    unFollow:() ->Unit,
 
 ) {
     Button(
         onClick = {
             when (action) {
                 ProfileAction.EditProfile -> onEditProfile()
-                ProfileAction.Follow -> onFollow()
+                ProfileAction.Follow -> {
+                    if(isFollowing) unFollow() //이미 팔로우 중인 경우 클릭시 언팔
+                    else onFollow()//팔로우 하지 않는 경우 클릭시 팔로우
+                }
             }
         },
         shape = RoundedCornerShape(size = 46.08.toPxDp),
@@ -160,7 +166,10 @@ fun ProfileActionButton(
         Text(
             text = when (action) {
                 ProfileAction.EditProfile -> "프로필 편집"
-                ProfileAction.Follow -> "팔로우"
+                ProfileAction.Follow -> {
+                    if(isFollowing) "팔로잉" //이미 팔로우 중인 경우
+                    else "팔로우" //팔로우 하지 않는 경우
+                }
             },
             style = MoroTheme.typography.bodyRegular14,
         )
@@ -209,13 +218,13 @@ fun ProfileStatItem(cnt: Int, title: String,onClick: () -> Unit){
         )
     }
 }
-
-@Preview(device = Devices.PIXEL_4A)
-@Composable
-fun ProfileActionButtonPreview(){
-    ProfileActionButton(
-        action = ProfileAction.EditProfile,
-        onEditProfile = {},
-        onFollow = {}
-    )
-}
+//
+//@Preview(device = Devices.PIXEL_4A)
+//@Composable
+//fun ProfileActionButtonPreview(){
+//    ProfileActionButton(
+//        action = ProfileAction.EditProfile,
+//        onEditProfile = {},
+//        onFollow = {}
+//    )
+//}

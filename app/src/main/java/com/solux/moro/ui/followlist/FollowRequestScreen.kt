@@ -50,13 +50,12 @@ import com.solux.moro.ui.profile.component.toPxDp
             ) {
                 items(
                     items = followRequests,
-                    key = { it.user.id }
+                    key = { it.userId }
                 ) { item ->
                     FollowRequestUserItem(
-                        user = item.user,
-                        stats = item.stats,
-                        onAcceptClick = { viewModel.acceptRequest(item.user.id) },
-                        onDeclineClick = {viewModel.declineRequest(item.user.id)}
+                        user = item,
+                        onAcceptClick = { viewModel.acceptRequest(item.followId) },
+                        onDeclineClick = {viewModel.declineRequest(item.followId)}
                     )
                 }
             }

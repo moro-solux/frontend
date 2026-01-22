@@ -8,6 +8,7 @@ import com.solux.moro.data.dto.MainColorEditRequest
 import com.solux.moro.data.dto.UserProfileEditRequest
 import com.solux.moro.data.mapper.ColorMapper
 import com.solux.moro.data.mapper.toDomain
+import com.solux.moro.data.mapper.toStatsDomain
 import com.solux.moro.data.model.FeedItem
 import com.solux.moro.data.model.SearchResultPage
 import com.solux.moro.data.model.User
@@ -45,6 +46,7 @@ class UserRepositoryImpl @Inject constructor(
             if (response.success) {
                 Log.d("loadUserTest", "서버가 보내준 실제 이름: ${response.data.userName}")
                 _user.value = response.data.toDomain()
+                _userStats.value= response.data.toStatsDomain()
             }
             else {
                 Log.e("loadUserTest", "success== false")
@@ -130,6 +132,8 @@ class UserRepositoryImpl @Inject constructor(
             Result.success(searchResultPage)
 
         } catch (e: Exception) {
+            Log.e("SearchTest", "에러 타입: ${e.javaClass.simpleName}")
+            Log.e("SearchTest", "에러 메시지: ${e.message}")
             Result.failure(e)
         }
     }
