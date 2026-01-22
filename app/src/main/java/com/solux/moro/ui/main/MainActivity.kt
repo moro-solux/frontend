@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.messaging.FirebaseMessaging
+import com.solux.moro.BuildConfig
 import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.data.network.NetworkModule
 import com.solux.moro.data.repository.menurepo.SettingPreferenceManager
@@ -33,7 +34,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        NetworkModule.token = settingPreferenceManager.getAccessToken().orEmpty()
+        val savedToken = settingPreferenceManager.getAccessToken().orEmpty()
+        if (savedToken.isNotBlank()) {
+            saveToken(savedToken)
+        }
+        
         // 앱 실행 시 토큰 확인 및 서버 등록
         getAndRegisterFcmToken()
         handleAuthIntent(intent)
@@ -71,13 +76,26 @@ class MainActivity : ComponentActivity() {
     private fun handleAuthIntent(intent: Intent?) {
         val uri = intent?.data ?: return
         val result = parseAuthResult(uri) ?: return
-        result.token?.let { saveToken(it) }
+        Log.d("AUTH_LOG", "딥링크 수신 uri=$uri")
+        Log.d(
+            "AUTH_LOG",
+            "token=${!result.token.isNullOrBlank()} needsNameSetup=${result.needsNameSetup} tempEmail=${result.tempEmail}"
+        )
+        if (!result.needsNameSetup) {
+            result.token?.let { saveToken(it) }
+        }
         authResultFlow.value = result
     }
 
     private fun saveToken(token: String) {
-        NetworkModule.token = token
-        settingPreferenceManager.setAccessToken(token)
+        val normalized = token.removePrefix("Bearer ").trim()
+        if (normalized.isBlank()) {
+            Log.w("AUTH_LOG", "토큰 저장 실패: 빈 토큰")
+            return
+        }
+        NetworkModule.token = normalized
+        settingPreferenceManager.setAccessToken(normalized)
+        Log.d("AUTH_LOG", "토큰 저장 완료: ${normalized.take(12)}...")
     }
 
     private fun getAndRegisterFcmToken() {

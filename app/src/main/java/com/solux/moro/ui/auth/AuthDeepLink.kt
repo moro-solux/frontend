@@ -4,16 +4,25 @@ import android.net.Uri
 
 data class AuthResult(
     val token: String?,
-    val email: String?
+    val email: String?,
+    val needsNameSetup: Boolean,
+    val tempEmail: String?
 )
 
 fun parseAuthResult(uri: Uri): AuthResult? {
     val token = extractToken(uri)
     val email = uri.getQueryParameter("email")?.ifBlank { null }
-    if (token == null && email == null) {
+    val needsNameSetup = uri.getQueryParameter("needsNameSetup")?.toBooleanStrictOrNull() == true
+    val tempEmail = uri.getQueryParameter("tempEmail")?.ifBlank { null } ?: email
+    if (token == null && tempEmail == null) {
         return null
     }
-    return AuthResult(token = token, email = email)
+    return AuthResult(
+        token = token,
+        email = email,
+        needsNameSetup = needsNameSetup,
+        tempEmail = tempEmail
+    )
 }
 
 private fun extractToken(uri: Uri): String? {

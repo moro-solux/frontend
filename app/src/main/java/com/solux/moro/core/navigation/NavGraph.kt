@@ -51,12 +51,14 @@ fun NavGraph(
 ){
     LaunchedEffect(authResultFlow) {
         authResultFlow?.filterNotNull()?.collect { result ->
-            if (!result.token.isNullOrBlank()) {
-                navController.navigate("onboarding") {
+            if (!result.token.isNullOrBlank() && !result.needsNameSetup) {
+                navController.navigate("home") {
                     popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
                 }
-            } else if (!result.email.isNullOrBlank()) {
-                val encodedEmail = Uri.encode(result.email)
+            } else if ((result.needsNameSetup || result.token.isNullOrBlank()) &&
+                !result.tempEmail.isNullOrBlank()
+            ) {
+                val encodedEmail = Uri.encode(result.tempEmail)
                 navController.navigate("signup?email=$encodedEmail") {
                     popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
                 }
@@ -101,7 +103,7 @@ fun NavGraph(
                         popUpTo("signup?email={email}") { inclusive = true }
                     }
                 },
-                quickStart = true
+                quickStart = false
             )
         }
 
