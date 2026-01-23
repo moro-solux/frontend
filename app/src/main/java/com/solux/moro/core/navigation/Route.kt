@@ -31,3 +31,10 @@ data object Profile : Route {
     fun createRoute(userId: Long): String =
         "profile/$userId"
 }
+
+data object FeedRoute : Route {
+    override val route = "Feed/{FeedId}"
+
+    fun createRoute(FeedId: Long): String =
+        "Feed/$FeedId"
+}

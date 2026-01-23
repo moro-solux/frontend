@@ -2,6 +2,7 @@ package com.solux.moro.ui.home.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -52,8 +53,10 @@ import com.solux.moro.ui.profile.component.toPxSp
 
 @Composable
 fun Feed(
+    modifier: Modifier=Modifier,
     item: FeedItem,
     isMyPost: Boolean = false,
+    onProfileClick: () -> Unit = {},
     onLikeClick: () -> Unit = {},
     onCommentClick: () -> Unit={},
     onEditClick : () -> Unit={},
@@ -76,7 +79,10 @@ fun Feed(
         Row(
             Modifier
                 .width((987.84003).toPxDp)
-                .height((110.76924).toPxDp),
+                .height((110.76924).toPxDp)
+                .clickable{
+                    onProfileClick()
+                },
             horizontalArrangement = Arrangement.spacedBy(
                 (28.80000114440918).toPxDp,
                 Alignment.Start
@@ -134,7 +140,7 @@ fun Feed(
                 if(isMyPost) {
                     FeedMoreMenu(
                         onEditClick = { /*TODO*/ },
-                        onDeleteClick = { /*TODO*/ }
+                        onDeleteClick = { onDeleteClick }
                     )
                 }
             }

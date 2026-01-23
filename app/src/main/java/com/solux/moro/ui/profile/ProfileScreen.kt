@@ -119,7 +119,7 @@ fun ProfileScreen(
                         )
                         if(!isMyProfile&& user?.visible ==false)
                             NotCaptures()
-                        else Captures(captures)
+                        else Captures(captures,navController)
                     }
                     Box(
                         modifier = Modifier
