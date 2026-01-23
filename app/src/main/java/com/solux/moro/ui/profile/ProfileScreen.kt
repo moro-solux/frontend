@@ -120,7 +120,10 @@ fun ProfileScreen(
                         )
                         if(!isMyProfile&& user?.visible ==false)
                             NotCaptures()
-                        else Captures(captures,navController)
+                        else Captures(captures,
+                            navController,
+                            { viewModel.onChangeViewType("USER_COLORS") }
+                        ,)
                     }
                     Box(
                         modifier = Modifier
