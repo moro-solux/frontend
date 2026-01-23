@@ -102,9 +102,9 @@ fun ProfileScreen(
                         Profile(
                             nickname,
                             userColorHex,
+                            colorsCount,
                             followerCount,
                             followingCount,
-                            colorsCount,
                             action,
                             navController,
                             isFollowing,
