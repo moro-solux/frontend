@@ -7,11 +7,11 @@ interface AuthRepository {
 
     fun myUserId(): Long
 
-    suspend fun login(
-        email: String,
-        password: String
-    )
-    suspend fun logout()
+//    suspend fun login(
+//        email: String,
+//        password: String
+//    )
+//    suspend fun logout()
 }
 
 sealed interface AuthState {

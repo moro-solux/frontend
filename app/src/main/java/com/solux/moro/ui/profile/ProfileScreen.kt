@@ -68,7 +68,8 @@ fun ProfileScreen(
     val followerCount = stats?.followerCount?:1
     val followingCount = stats?.followingCount?:1
     val isFollowing = stats?.isFollowing?:false
-    val posts by viewModel.userPosts.collectAsState(emptyList())
+
+    val captures by viewModel.userPosts.collectAsState()
 
     Scaffold(
         bottomBar = { BottomBar(navController) },
@@ -118,7 +119,7 @@ fun ProfileScreen(
                         )
                         if(!isMyProfile&& user?.visible ==false)
                             NotCaptures()
-                        else Captures(posts)
+                        else Captures(captures,navController)
                     }
                     Box(
                         modifier = Modifier
@@ -163,7 +164,13 @@ fun ProfileScreen(
                     modifier = Modifier,
                     navController = navController,
                     isMyProfile = isMyProfile,
-                    paletteColors =palette
+                    paletteColors =palette,
+                    onAllClick = { viewType ->
+                        viewModel.onChangeViewType(viewType)
+                    },
+                    onColorClick = { colorId ->
+                        viewModel.onColorSelected(colorId)
+                    }
                 )
             }
 

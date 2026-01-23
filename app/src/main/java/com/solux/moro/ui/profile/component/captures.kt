@@ -1,7 +1,9 @@
 package com.solux.moro.ui.profile.component
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,14 +31,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.solux.moro.R
-import com.solux.moro.data.model.FeedItem
+import com.solux.moro.core.navigation.FeedRoute
+import com.solux.moro.data.model.ProfileFeedItem
 
 @SuppressLint("DiscouragedApi")
 @Composable
 fun Captures(
-    posts: List<FeedItem>
+    posts: List<ProfileFeedItem>,
+    navController: NavHostController
 ){
     Column(
         modifier = Modifier.Companion
@@ -71,13 +76,14 @@ fun Captures(
         val captureImages = (1..9).map { i ->
             context.resources.getIdentifier("imp_captures_$i", "drawable", context.packageName)
         }
-        ImageFeedGrid(posts)
+        ImageFeedGrid(posts,navController)
 
     }
 }
 
 @Composable
-fun ImageFeedGrid(posts: List<FeedItem>) {
+fun ImageFeedGrid(posts: List<ProfileFeedItem>,
+                  navController: NavHostController) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier
@@ -92,6 +98,9 @@ fun ImageFeedGrid(posts: List<FeedItem>) {
                     .aspectRatio(1f)
                     .clip(RoundedCornerShape(8.dp)) // 살짝 둥글게 처리
                     .background(Color(0xFF2B2B2B)) // 로딩 전 기본 배경색
+                    .clickable{
+                        Log.d("Clicked", "Clicked $post.id ")
+                        navController.navigate(FeedRoute.createRoute(post.id))}
             ) {
                 AsyncImage(
                     model = post.imageUrl?: R.drawable.imp_captures_1,

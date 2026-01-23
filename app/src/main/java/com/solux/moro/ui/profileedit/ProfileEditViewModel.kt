@@ -17,7 +17,6 @@ class ProfileEditViewModel @Inject constructor(
     private val userRepository: UserRepository
 ): ViewModel() {
     val user = userRepository.user
-
     var nicknameInput by mutableStateOf("")
         private set
 

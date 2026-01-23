@@ -17,6 +17,6 @@ interface CommentRepository {
         content: String
     )
 
-    suspend fun deleteComment(commentId: Long)
+    //suspend fun deleteComment(commentId: Long)
 }
 

@@ -71,15 +71,24 @@ class NotificationViewModel @Inject constructor(
                     val dto = Gson().fromJson(rawData, NotificationDto::class.java)
                     val newUiModel = dto.toUiModel()
                     Log.d("ViewModel_SSE", "새 알림 모델: $newUiModel")
+//                    _notifications.update { currentMap ->
+//                        val todayKey = "오늘"
+//                        val todayNotifications = currentMap[todayKey] ?: emptyList()
+//                        val updatedList = listOf(newUiModel) + todayNotifications
+//                        currentMap.toMutableMap().apply {
+//                            this[todayKey] = updatedList
+//                        }.toMap()
+//                    }
                     _notifications.update { currentMap ->
-                        val todayKey = "오늘"
+                        val todayKey = "Today"
                         val todayNotifications = currentMap[todayKey] ?: emptyList()
-                        val updatedList = listOf(newUiModel) + todayNotifications
-                        currentMap.toMutableMap().apply {
-                            this[todayKey] = updatedList
-                        }.toMap()
-                    }
 
+                        val updatedList = listOf(newUiModel) + todayNotifications
+
+                        val newMap = currentMap.toMutableMap()
+                        newMap[todayKey] = updatedList
+                        newMap
+                    }
 
                     //Log.d("ViewModel_SSE", "UI 모델 업데이트 완료")
                 } catch (e: Exception) {
@@ -147,7 +156,7 @@ class NotificationViewModel @Inject constructor(
         }
     }
 
-    fun registerToken(fcmToken: String) {
+    fun registerToken(fcmToken: String, myToken: String) {
         viewModelScope.launch {
             try {
                 val response = notificationRepository.postToken(fcmToken)
@@ -155,7 +164,7 @@ class NotificationViewModel @Inject constructor(
                 if (response.success) {
                     Log.d("FCM_LOG", "서버에 토큰 등록 성공!")
 
-                    connectToNotificationStream(fcmToken)
+                    connectToNotificationStream(myToken)
                 } else {
                     Log.e("FCM_LOG", "서ver 등록 실패: ${response.message}")
                 }

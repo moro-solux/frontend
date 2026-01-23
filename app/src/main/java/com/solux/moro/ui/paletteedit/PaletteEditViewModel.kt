@@ -8,6 +8,7 @@ import com.solux.moro.core.designsystem.theme.MoroThemeType
 import com.solux.moro.core.designsystem.theme.colorsOf
 import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.data.dto.ColorThemeDto
+import com.solux.moro.ui.auth.AuthRepository
 import com.solux.moro.ui.profile.component.ColorCellData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -22,9 +23,10 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class PaletteEditViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
 ): ViewModel() {
-
+    val myUserId= userRepository.currentUserId
     val user = userRepository.user
     private val _selectedTheme = MutableStateFlow(MoroThemeType.Pastel)
     val selectedTheme: StateFlow<MoroThemeType> = _selectedTheme.asStateFlow()
