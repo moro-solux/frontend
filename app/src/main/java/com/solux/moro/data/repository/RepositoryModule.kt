@@ -5,8 +5,6 @@ import com.solux.moro.core.domain.FeedRepository
 import com.solux.moro.core.domain.FollowRepository
 import com.solux.moro.core.domain.NotificationRepository
 import com.solux.moro.core.domain.UserRepository
-import com.solux.moro.test.repository.FakeCommentRepository
-import com.solux.moro.test.repository.FakeFeedRepository
 import com.solux.moro.ui.auth.AuthRepository
 import com.solux.moro.ui.auth.component.FakeAuthRepository
 import dagger.Binds
@@ -30,12 +28,12 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindCommentRepository(
-        impl: FakeCommentRepository
+        impl: CommentImpl
     ): CommentRepository
 
     @Binds
     abstract fun bindFeedRepository(
-        impl: FakeFeedRepository
+        impl: FeedRepositoryImpl
     ): FeedRepository
 
     @Binds

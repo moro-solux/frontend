@@ -1,7 +1,7 @@
 package com.solux.moro.core.domain
 
 import com.solux.moro.data.dto.ColorThemeDto
-import com.solux.moro.data.model.FeedItem
+import com.solux.moro.data.model.ProfileFeedItem
 import com.solux.moro.data.model.SearchResultPage
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserColorPalette
@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.StateFlow
 interface UserRepository {
     val user: StateFlow<User>
     val userStats: StateFlow<UserStats?>
-
+    val currentUserId:StateFlow<Long>
 
     suspend fun loadUser(userId:Long=5)
 
-    fun getUserPosts(userId: Long): Flow<List<FeedItem>>
+    fun getUserPosts(userId: Long, viewType: String ="DEFAULT", colorId: Int? =0): Flow<List<ProfileFeedItem>>
 
     suspend fun getColorUnlockInfo():Result<List<ColorThemeDto>>
 

@@ -49,7 +49,7 @@ fun Comment(
         id = 1,
         userNickname = "테스트유저2",
         content = "테스트 댓글",
-        createdAt = System.currentTimeMillis()
+        createdAt = "2023-09-09"
     )
 ){
     Row(
@@ -133,7 +133,7 @@ fun CommentWindow(
     }
 
     Column(
-        modifier=Modifier
+        modifier=modifier
             .fillMaxWidth()
             .height(560.dp)
             .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
@@ -148,19 +148,26 @@ fun CommentWindow(
             comments = commentList,
             modifier = Modifier.weight(1f)
         )
-        CommentInput()
+        CommentInput(
+            onSendMessage = { text ->
+                viewModel.onAddComment(text)
+            }
+        )
     }
 }
 
 @Composable
-fun CommentInput(){
+fun CommentInput(
+    onSendMessage: (String) -> Unit
+){
+    var text by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        var text by remember { mutableStateOf("") }
 
         TextField(
             value = text,//viewModel.nicknameInput,
@@ -179,9 +186,9 @@ fun CommentInput(){
                 IconButton(
                     onClick = {
                         if (text.isNotBlank()) {
-                            // TODO: 여기에 저장 로직 추가 (예: viewModel.saveComment(text))
-                            println("저장된 댓글: $text")
+                            onSendMessage(text)
                             text = ""
+                            println("저장된 댓글: $text")
                         }
                     },
                     modifier = Modifier
@@ -211,26 +218,26 @@ fun CommentInput(){
     }
 }
 
+//
+//@Preview
+//@Composable
+//fun CommentInputPreview(){
+//    CommentInput()
+//}
 
-@Preview
-@Composable
-fun CommentInputPreview(){
-    CommentInput()
-}
-
-
-@Preview
-@Composable
-fun CommentPreview(){
-    Comment(
-        item = CommentItem(
-            id = 1,
-            userNickname = "@creativedev",
-            content = "Mind if I use this as inspiration for my next project?",
-            createdAt = System.currentTimeMillis()
-        )
-    )
-}
+//
+//@Preview
+//@Composable
+//fun CommentPreview(){
+//    Comment(
+//        item = CommentItem(
+//            id = 1,
+//            userNickname = "@creativedev",
+//            content = "Mind if I use this as inspiration for my next project?",
+//            createdAt = System.currentTimeMillis()
+//        )
+//    )
+//}
 
 @Preview
 @Composable

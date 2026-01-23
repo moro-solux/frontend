@@ -36,13 +36,7 @@ class CommentViewModel @Inject constructor(
         val currentId = _postId.value ?: return
         viewModelScope.launch {
             commentRepository.addComment(currentId, content)
+            commentRepository.loadComments(currentId)
         }
     }
-
-    fun onDeleteComment(commentId: Long) {
-        viewModelScope.launch {
-            commentRepository.deleteComment(commentId)
-        }
-    }
-
 }

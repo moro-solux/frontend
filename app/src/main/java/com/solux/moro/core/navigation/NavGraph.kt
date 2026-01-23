@@ -5,18 +5,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.solux.moro.screens.FollowScreen
+import com.solux.moro.ui.auth.AuthResult
+import com.solux.moro.ui.auth.AuthWebRoute
+import com.solux.moro.ui.auth.SignUpRoute
 import com.solux.moro.ui.camera.UploadCameraScreen
 import com.solux.moro.ui.camera.UploadPostScreen
 import com.solux.moro.ui.followlist.FollowRequestScreen
 import com.solux.moro.ui.followlist.FollowRequestViewModel
 import com.solux.moro.ui.followlist.FollowingViewModel
+import com.solux.moro.ui.home.FeedScreen
 import com.solux.moro.ui.home.HomeScreen
 import com.solux.moro.ui.map.MapScreenRoute
 import com.solux.moro.ui.map.MapViewModel
@@ -27,6 +31,7 @@ import com.solux.moro.ui.menu.MenuScreen
 import com.solux.moro.ui.mission.MissionScreen
 import com.solux.moro.ui.notification.NotificationScreen
 import com.solux.moro.ui.notification.NotificationViewModel
+import com.solux.moro.ui.onboarding.OnboardingScreen
 import com.solux.moro.ui.paletteedit.PaletteEditScreen
 import com.solux.moro.ui.profile.ProfileScreen
 import com.solux.moro.ui.profile.ProfileViewModel
@@ -36,10 +41,6 @@ import com.solux.moro.ui.profileedit.ProfileEditScreen
 import com.solux.moro.ui.search.SearchUserScreen
 import com.solux.moro.ui.search.SearchUserViewModel
 import com.solux.moro.ui.splash.SplashScreen
-import com.solux.moro.ui.onboarding.OnboardingScreen
-import com.solux.moro.ui.auth.AuthWebRoute
-import com.solux.moro.ui.auth.SignUpRoute
-import com.solux.moro.ui.auth.AuthResult
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 
@@ -221,6 +222,20 @@ fun NavGraph(
             val viewModel: ProfileViewModel = hiltViewModel()
             ProfileScreen(navController, viewModel)
         }
+
+        composable(
+            route = FeedRoute.route,
+            arguments = listOf(
+                navArgument("FeedId") { type = NavType.LongType } // 명시적으로 Long 타입 정의
+            )
+        ) { backStackEntry ->
+            val postId = backStackEntry.arguments?.getLong("FeedId") ?: return@composable
+            FeedScreen(
+                navController = navController,
+                postId = postId
+            )
+        }
+
 
         composable("profileEdit" ) { // 프로필 설정 화면
             ProfileEditScreen(navController = navController)

@@ -13,11 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.messaging.FirebaseMessaging
-import com.solux.moro.BuildConfig
 import com.solux.moro.core.designsystem.theme.MoroTheme
+import com.solux.moro.core.navigation.NavGraph
 import com.solux.moro.data.network.NetworkModule
 import com.solux.moro.data.repository.menurepo.SettingPreferenceManager
-import com.solux.moro.core.navigation.NavGraph
 import com.solux.moro.ui.auth.AuthResult
 import com.solux.moro.ui.auth.parseAuthResult
 import com.solux.moro.ui.notification.NotificationViewModel
@@ -97,18 +96,18 @@ class MainActivity : ComponentActivity() {
         settingPreferenceManager.setAccessToken(normalized)
         Log.d("AUTH_LOG", "토큰 저장 완료: ${normalized.take(12)}...")
     }
-
+   // val myToken=settingPreferenceManager.getAccessToken() ?:""
     private fun getAndRegisterFcmToken() {
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             if (!task.isSuccessful) {
                 Log.w("FCM_LOG", "토큰 발급 실패", task.exception)
                 return@addOnCompleteListener
             }
-
+            val loginToken = settingPreferenceManager.getAccessToken().orEmpty()
             val token = task.result
             Log.d("FCM_LOG", "현재 FCM 토큰: $token")
 
-            notificationViewModel.registerToken(token)
+            notificationViewModel.registerToken(token,loginToken)
         }
     }
 }

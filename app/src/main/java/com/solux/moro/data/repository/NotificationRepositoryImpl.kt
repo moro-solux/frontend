@@ -6,7 +6,6 @@ import com.solux.moro.data.dto.BaseResponse
 import com.solux.moro.data.dto.TokenRequest
 import com.solux.moro.data.mapper.toUiModel
 import com.solux.moro.data.model.NotificationUiModel
-import com.solux.moro.data.network.NetworkModule
 import com.solux.moro.data.service.NotificationService
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -108,8 +107,8 @@ class NotificationRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun connectNotificationStream(token: String) {
-        val mytoken= NetworkModule.token
+    override fun connectNotificationStream(token: String?) {
+        val mytoken= token
         val request = Request.Builder()
             .url("https://moro-be.store/api/notifications/stream")
             .header("Accept", "text/event-stream")
