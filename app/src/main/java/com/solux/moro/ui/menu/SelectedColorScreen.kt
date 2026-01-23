@@ -66,7 +66,7 @@ fun SelectedColorScreen(
         topBar = {
             TopBarBack("컬러맵", onBackClick = { navController.popBackStack() })
         },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
