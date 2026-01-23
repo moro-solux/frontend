@@ -24,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -67,7 +66,7 @@ fun FeedScreen(
         ) {
             post?.let { item ->
                 Feed(
-                    modifier = Modifier.scale(1.8f),
+                    modifier = Modifier,
                     item = item,
                     onProfileClick = {
                         navController.navigate(Profile.createRoute(item.authorId))

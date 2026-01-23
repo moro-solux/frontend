@@ -16,7 +16,7 @@ interface NotificationRepository {
 
     suspend fun deleteToken(token: String): BaseResponse<String>
     val sseEvents: SharedFlow<String>
-    fun connectNotificationStream(token: String)
+    fun connectNotificationStream(token: String?)
     suspend fun getPrivacyStatus(): Boolean
 }
 
