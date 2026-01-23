@@ -31,8 +31,7 @@ import com.solux.moro.R
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.top.TopBarBack
 import com.solux.moro.core.util.figmaDp
-import com.solux.moro.ui.mission.InstagramUpload
-import com.solux.moro.ui.mission.Upload_Button
+import com.solux.moro.ui.mission.component.Upload_Button
 import com.solux.moro.ui.viewmodel.UploadViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -298,10 +297,6 @@ fun UploadBottomAction(
             Upload_Button(onClick = onUpload)
         }
         3 -> {
-            InstagramUpload(
-                onInstagramClick = onInstagram,
-                onSaveClick = { }
-            )
         }
     }
 }
