@@ -1,9 +1,11 @@
 package com.solux.moro.core.navigation
 
 import android.net.Uri
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -48,7 +50,8 @@ import kotlinx.coroutines.flow.filterNotNull
 fun NavGraph(
     navController: NavHostController,
     authResultFlow: StateFlow<AuthResult?>? = null,
-    onAuthResultConsumed: (() -> Unit)? = null
+    onAuthResultConsumed: (() -> Unit)? = null,
+    notificationViewModel:NotificationViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
 ){
     LaunchedEffect(authResultFlow) {
         authResultFlow?.filterNotNull()?.collect { result ->
@@ -267,10 +270,10 @@ fun NavGraph(
         }
 
         composable( "notification" ){ // 알림 화면
-            val viewModel: NotificationViewModel = hiltViewModel()
+            //val viewModel: NotificationViewModel = hiltViewModel()
             NotificationScreen(
                 navController = navController,
-                viewModel = viewModel
+                viewModel = notificationViewModel
             )
         }
         composable("search") {
