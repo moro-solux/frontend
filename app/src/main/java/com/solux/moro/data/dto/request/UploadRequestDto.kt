@@ -11,7 +11,7 @@ data class CaptureRequestDto(
 data class LocationRequestDto(
     @SerializedName("lat") val latitude: Double,
     @SerializedName("lng") val longitude: Double,
-    @SerializedName("address") val address: String
+    @SerializedName("placeName") val placeName: String
 )
 
 // 색상 수정 요청

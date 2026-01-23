@@ -23,10 +23,12 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import java.io.File
 
 @Composable
 fun UploadCameraScreen(
+    navController: NavHostController,
     viewModel: UploadCameraViewModel = viewModel(),
     onNavigateToPost: (Uri) -> Unit
 ) {
@@ -77,7 +79,7 @@ fun UploadCameraScreen(
                     viewModel.onPhotoCaptured(uri)
                 }
             },
-
+            onBackClick = { navController.popBackStack() },
             // 카메라 미리보기 화면 채워넣기
             cameraContent = {
                 AndroidView(

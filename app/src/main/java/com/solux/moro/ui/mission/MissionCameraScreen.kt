@@ -18,12 +18,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.solux.moro.ui.camera.CameraLayout
 import com.solux.moro.ui.camera.UploadCameraViewModel
 import java.io.File
 
 @Composable
 fun MissionCameraScreen(
+    navController: NavHostController,
     viewModel: UploadCameraViewModel = hiltViewModel(),
     onMissionComplete: (Uri) -> Unit = {}
 ) {
@@ -59,7 +61,7 @@ fun MissionCameraScreen(
         remainingShots = shotsLeft, // 3 -> 2 -> 1
         showConfirmDialog = viewModel.showConfirmDialog,
         capturedImageUri = viewModel.capturedUri,
-
+        onBackClick = { navController.popBackStack() },
         onCameraClick = {
             takeMissionPhoto(context, imageCapture) { uri ->
                 viewModel.capturedUri = uri

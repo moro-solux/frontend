@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.component.BottomBar
@@ -39,7 +40,8 @@ import com.solux.moro.ui.viewmodel.UploadViewModel
 fun UploadPostScreen(
     capturedUri: Uri,
     viewModel: UploadViewModel = hiltViewModel(),
-    onNavigateHome: () -> Unit
+    onNavigateHome: () -> Unit,
+    navController: NavHostController
 ) {
     val state by viewModel.uiState.collectAsState()
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -50,7 +52,7 @@ fun UploadPostScreen(
 
     Scaffold(
         topBar = { TopBarBack("게시물 업로드") },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -167,7 +169,7 @@ fun LocationBottomSheet(
             items(uiState.nearbyPlaces) { place ->
                 ListItem(
                     headlineContent = { Text(place.name, fontWeight = FontWeight.Bold) },
-                    supportingContent = { Text(place.address) },
+                    supportingContent = { Text(place.placeName) },
                     modifier = Modifier.clickable {
                         viewModel.selectPlace(place)
                         onDismiss()
