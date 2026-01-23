@@ -100,7 +100,7 @@ class UserRepositoryImpl @Inject constructor(
             val response = userService.mainColorEdit(request)
 
             if (response.success) {
-                loadUser()
+                loadUser(_user.value.id)
                 Result.success(Unit)
             } else {
                 Result.failure(Exception(response.message))
@@ -123,7 +123,7 @@ class UserRepositoryImpl @Inject constructor(
         return try {
             val response = userService.profileEdit(request)
             if (response.success) {
-                loadUser(user.value.id)
+                loadUser(currentUserId.value)
                 Result.success(Unit)
             }
             else {

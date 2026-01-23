@@ -44,6 +44,7 @@ import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.core.designsystem.theme.MoroTheme
+import com.solux.moro.data.mapper.ColorMapper
 import com.solux.moro.ui.profile.component.Captures
 import com.solux.moro.ui.profile.component.Palette
 import com.solux.moro.ui.profile.component.Profile
@@ -165,6 +166,7 @@ fun ProfileScreen(
                     navController = navController,
                     isMyProfile = isMyProfile,
                     paletteColors =palette,
+                    userColor = ColorMapper.toColorFromHex( userColorHex),
                     onAllClick = { viewType ->
                         viewModel.onChangeViewType(viewType)
                     },

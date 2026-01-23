@@ -249,7 +249,7 @@ fun NavGraph(
         }
 
         composable( "paletteEdit" ) { // 팔레트 설정 화면
-            PaletteEditScreen()
+            PaletteEditScreen(navController = navController)
         }
 
         composable( route = "follow", // 팔로우/팔로잉 화면
