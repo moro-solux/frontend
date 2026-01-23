@@ -36,6 +36,7 @@ fun HomeScreen(
     navController: NavHostController,
     viewModel: FeedViewModel = hiltViewModel()
 ) {
+    val isMyPost=viewModel.isMyPost
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedPostId by remember { mutableStateOf<Long?>(null) }
@@ -63,7 +64,8 @@ fun HomeScreen(
                         selectedPostId = item.id
                         showBottomSheet = true
                         //viewModel.onCommentClick(item.id)
-                    }
+                    },
+                    isMyPost=isMyPost
                 )
             }
         }

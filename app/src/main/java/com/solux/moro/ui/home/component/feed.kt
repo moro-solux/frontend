@@ -54,7 +54,8 @@ import com.solux.moro.ui.profile.component.toPxSp
 fun Feed(
     item: FeedItem,
     onLikeClick: () -> Unit = {},
-    onCommentClick: () -> Unit={}
+    onCommentClick: () -> Unit={},
+    isMyPost: Boolean = false
     ) {
     var expanded by remember { mutableStateOf(false) }
     Column(
@@ -128,10 +129,12 @@ fun Feed(
                         ),
                     )
                 }
-                FeedMoreMenu(
-                    onEditClick = { /*TODO*/ },
-                    onDeleteClick = { /*TODO*/ }
-                )
+                if(isMyPost) {
+                    FeedMoreMenu(
+                        onEditClick = { /*TODO*/ },
+                        onDeleteClick = { /*TODO*/ }
+                    )
+                }
             }
         }
 

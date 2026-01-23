@@ -3,6 +3,7 @@ package com.solux.moro.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.solux.moro.core.domain.FeedRepository
+import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.data.model.FeedItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
@@ -15,8 +16,11 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-    private val feedRepository: FeedRepository
+    private val feedRepository: FeedRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
+
+    val isMyPost = (userRepository.user==userRepository.currentUserId)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val feed: StateFlow<List<FeedItem>> =feedRepository.refreshTrigger
