@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.solux.moro.R
+import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.core.navigation.FeedRoute
 import com.solux.moro.data.model.ProfileFeedItem
 
@@ -77,10 +78,11 @@ fun Captures(
                     lineHeight = 72.58.toPxSp,
 //                   fontFamily = FontFamily(Font(R.font.inter)),
                     fontWeight = FontWeight(600),
-                    color = Color.LightGray,
+                    color = MoroTheme.colors.gray40,
                 ),
                 modifier = Modifier
                     .height(73.toPxDp)
+                    .padding(top=0.dp, end=0.dp )
                     .clickable {
                         onAllClick()
                     }
