@@ -53,9 +53,11 @@ import com.solux.moro.ui.profile.component.toPxSp
 @Composable
 fun Feed(
     item: FeedItem,
+    isMyPost: Boolean = false,
     onLikeClick: () -> Unit = {},
     onCommentClick: () -> Unit={},
-    isMyPost: Boolean = false
+    onEditClick : () -> Unit={},
+    onDeleteClick : () -> Unit={},
     ) {
     var expanded by remember { mutableStateOf(false) }
     Column(

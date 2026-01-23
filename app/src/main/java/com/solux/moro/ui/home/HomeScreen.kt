@@ -65,7 +65,13 @@ fun HomeScreen(
                         showBottomSheet = true
                         //viewModel.onCommentClick(item.id)
                     },
-                    isMyPost=isMyPost
+                    isMyPost=isMyPost,
+                    onEditClick = {
+                        //viewModel.onEditClick(item.id)
+                    },
+                    onDeleteClick = {
+                        viewModel.onDeleteClick(item.id)
+                    }
                 )
             }
         }

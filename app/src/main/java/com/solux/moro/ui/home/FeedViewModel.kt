@@ -39,4 +39,12 @@ class FeedViewModel @Inject constructor(
             feedRepository.triggerRefresh()
         }
     }
+
+    fun onDeleteClick(feedId: Long) {
+        viewModelScope.launch {
+            feedRepository.deleteFeed(feedId)
+            feedRepository.triggerRefresh()
+        }
+    }
+
 }
