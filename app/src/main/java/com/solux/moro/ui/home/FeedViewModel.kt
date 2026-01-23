@@ -18,9 +18,6 @@ class FeedViewModel @Inject constructor(
     private val feedRepository: FeedRepository
 ) : ViewModel() {
 
-//    private val refreshTrigger = MutableSharedFlow<Unit>(replay = 1).apply {
-//        tryEmit(Unit)
-//    }
     @OptIn(ExperimentalCoroutinesApi::class)
     val feed: StateFlow<List<FeedItem>> =feedRepository.refreshTrigger
         .flatMapLatest {

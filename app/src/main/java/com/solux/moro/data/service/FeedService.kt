@@ -45,7 +45,7 @@ interface FeedService {
     suspend fun addComment(
         @Path("postId") postId: Long,
         @Body content: CommentRequest,
-    ): BaseResponse<Unit>
+    ): BaseResponse<Int>
 
     @GET("/api/posts/{postId}/comments")
     suspend fun getComments(

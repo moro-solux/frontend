@@ -8,11 +8,12 @@ import com.solux.moro.data.model.CommentRequest
 import com.solux.moro.data.model.FeedItem
 import com.solux.moro.data.service.FeedService
 import jakarta.inject.Inject
+import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-
+@Singleton
 class FeedRepositoryImpl@Inject constructor(
     private val feedService: FeedService
 ): FeedRepository {
