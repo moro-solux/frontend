@@ -176,7 +176,7 @@ class PaletteEditViewModel @Inject constructor(
                 current.colorPalette.copy(
                     paletteColors = filteredColors),
                 ).onSuccess {
-                userRepository.loadUser()
+                userRepository.loadUser(myUserId.value)
                 _editingColorIndex.value = 0
                 _isSaveEnabled.value = false
                 Log.d("PaletteEdit","색상 편집 완료 $filteredColors")
