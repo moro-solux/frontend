@@ -125,6 +125,7 @@ fun NavGraph(
         // 카메라 화면
         composable("camera") {
             UploadCameraScreen(
+                navController = navController,
                 onNavigateToPost = { uri ->
                     val encodedUri = Uri.encode(uri.toString())
                     navController.navigate("post/$encodedUri")
@@ -145,6 +146,7 @@ fun NavGraph(
 
             if (uri != null) {
                 UploadPostScreen(
+                    navController = navController,
                     capturedUri = uri,
                     onNavigateHome = {
                         // TODO: 완료 후 홈으로
@@ -170,6 +172,7 @@ fun NavGraph(
             val missionId = backStackEntry.arguments?.getLong("missionId") ?: 0L
 
             com.solux.moro.ui.mission.MissionCameraScreen(
+                navController = navController,
                 onMissionComplete = { uri ->
                     val encodedUri = Uri.encode(uri.toString())
                     // 촬영 완료 시 업로드 화면으로 이동

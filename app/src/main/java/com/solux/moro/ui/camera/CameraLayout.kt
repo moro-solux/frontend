@@ -31,6 +31,7 @@ fun CameraLayout(
     showShotCount: Boolean = false,
     onCameraClick: () -> Unit,
     showConfirmDialog: Boolean,
+    onBackClick: () -> Unit,
     onConfirm: () -> Unit,
     onRetry: () -> Unit,
     capturedImageUri: Uri? = null, //찍은 사진 확인용
@@ -46,7 +47,9 @@ fun CameraLayout(
         cameraContent()
 
         Column(modifier = Modifier.align(Alignment.TopCenter)) {
-            CameraTopBar()
+            CameraTopBar(
+                onBackClick = onBackClick
+            )
         }
 
         if (showShotCount) {
@@ -78,7 +81,7 @@ fun CameraLayout(
 }
 
 @Composable
-fun CameraTopBar() {
+fun CameraTopBar(onBackClick: () -> Unit = {}) {
     Column {
         Row(
             modifier = Modifier
@@ -95,6 +98,7 @@ fun CameraTopBar() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
+                modifier = Modifier.clickable { onBackClick() },
                 painter = painterResource(id = R.drawable.left),
                 contentDescription = null
             )
