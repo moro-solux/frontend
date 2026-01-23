@@ -1,5 +1,6 @@
 package com.solux.moro.ui.menu
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -114,11 +115,10 @@ fun ColorPost(
             horizontalArrangement = Arrangement.spacedBy(figmaDp(10f), Alignment.Start),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier
-                    .size(figmaDp(38.46154f))
-                    .clip(CircleShape)
-                    .background(Color(0xFFF2F2F2))
+            Image(
+                painter = painterResource(id = R.drawable.profileframe),
+                contentDescription = "image description",
+                contentScale = ContentScale.None
             )
 
             Row(

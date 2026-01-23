@@ -6,6 +6,7 @@ import com.solux.moro.data.service.ColorMapService
 import com.solux.moro.data.service.FeedService
 import com.solux.moro.data.service.FollowService
 import com.solux.moro.data.service.MapService
+import com.solux.moro.data.service.MissionService
 import com.solux.moro.data.service.NotificationService
 import com.solux.moro.data.service.SettingService
 import com.solux.moro.data.service.UploadService
@@ -106,5 +107,11 @@ object NetworkModule {
     @Singleton
     fun provideMapService(retrofit: Retrofit): MapService {
         return retrofit.create(MapService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMissionService(retrofit: Retrofit): MissionService {
+        return retrofit.create(MissionService::class.java)
     }
 }
