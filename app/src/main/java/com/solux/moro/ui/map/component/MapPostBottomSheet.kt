@@ -38,6 +38,13 @@ fun MapPostBottomSheet(
     modifier: Modifier = Modifier,
 ) {
     val imageSize = 120.dp
+    val address = detail.addressKo.ifBlank { detail.addressEn }
+    val colors = listOf(
+        detail.hexCode1,
+        detail.hexCode2,
+        detail.hexCode3,
+        detail.hexCode4
+    )
 
     Column(modifier = modifier) {
         Row(
@@ -93,12 +100,12 @@ fun MapPostBottomSheet(
                         verticalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
                         Text(
-                            text = detail.title,
+                            text = detail.placeName,
                             style = MoroTheme.typography.bodyRegular14,
                             color = MoroTheme.colors.fontColor
                         )
                         Text(
-                            text = detail.address,
+                            text = address,
                             color = Color.White.copy(alpha = 0.55f),
                             fontSize = 10.sp
                         )
@@ -107,7 +114,7 @@ fun MapPostBottomSheet(
 
                 Column {
                     Text(
-                        text = detail.date,
+                        text = detail.createdAt,
                         style = MoroTheme.typography.bodyRegular12,
                         color = MoroPalette.Pastel.Gray400
                     )
@@ -117,7 +124,7 @@ fun MapPostBottomSheet(
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(15.dp)
                     ) {
-                        detail.colors.take(4).forEach { hex ->
+                        colors.take(4).forEach { hex ->
                             Text(
                                 text = hex.uppercase(),
                                 color = MoroPalette.Pastel.Gray400,

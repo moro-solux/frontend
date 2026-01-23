@@ -35,10 +35,12 @@ object NetworkModule {
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor { chain ->
-                val newRequest = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer $token")
-                    .build()
-                chain.proceed(newRequest)
+                val authToken = token.trim()
+                val requestBuilder = chain.request().newBuilder()
+                if (authToken.isNotBlank()) {
+                    requestBuilder.addHeader("Authorization", "Bearer $authToken")
+                }
+                chain.proceed(requestBuilder.build())
             }
             .build()
         val gson = GsonBuilder()

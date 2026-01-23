@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun AuthWebRoute() {
-    val authUrl = remember { "https://moro-be.store/auth/login/google" }
+    val authUrl = remember { "https://moro-be.store/api/auth/login/google" }
 
     AuthWebScreen(
         modifier = Modifier.fillMaxSize(),

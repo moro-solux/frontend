@@ -12,3 +12,12 @@ data class AuthResponse(
     val message: String,
     val data: String? = null
 )
+
+data class NicknameCheckRequest(
+    val userName: String
+)
+
+data class NicknameCheckData(
+    val available: Boolean,
+    val exists: Boolean
+)
