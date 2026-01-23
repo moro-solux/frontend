@@ -65,6 +65,7 @@ dependencies {
     // Hilt  dependencies
     implementation(libs.hilt.android)
     implementation(libs.play.services.maps)
+    implementation(libs.androidx.browser)
 
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.lifecycle.vm.compose)

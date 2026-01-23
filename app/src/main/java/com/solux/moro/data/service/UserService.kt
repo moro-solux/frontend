@@ -8,6 +8,7 @@ import com.solux.moro.data.dto.UserProfileEditRequest
 import com.solux.moro.data.dto.UserSearchResponseDto
 import com.solux.moro.data.model.FollowUserDto
 import com.solux.moro.data.model.FollowUserResponse
+import com.solux.moro.data.model.UserProfileData
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -34,11 +35,16 @@ interface UserService {
         @Path("userId") userId: Long
     ): BaseResponse<UserProfileDto>
 
-//    @GET("/api/users/{userId}/profile/feed")
-//    suspend fun getUserProfileFeed(
-//        @Path("userId") userId: Long
-//    ): BaseResponse<List<FeedDto>>
-//
+    @GET("/api/users/me/profile")
+    suspend fun getMyProfile(
+    ): BaseResponse<UserProfileDto>
+
+
+    @GET("/api/users/{userId}/profile/feed")
+    suspend fun getUserProfileFeed(
+        @Path("userId") userId: Long
+    ): BaseResponse<UserProfileData>
+
     @GET("/api/users/{userId}/followings")
     suspend fun getFollowings(
         @Path("userId") userId: Long,

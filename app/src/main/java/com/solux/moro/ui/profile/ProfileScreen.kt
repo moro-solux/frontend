@@ -70,6 +70,8 @@ fun ProfileScreen(
     val isFollowing = stats?.isFollowing?:false
     val posts by viewModel.userPosts.collectAsState(emptyList())
 
+    val captures by viewModel.userPosts.collectAsState()
+
     Scaffold(
         bottomBar = { BottomBar(navController) },
         topBar = { if(isMyProfile){TopBar()}
@@ -118,7 +120,7 @@ fun ProfileScreen(
                         )
                         if(!isMyProfile&& user?.visible ==false)
                             NotCaptures()
-                        else Captures(posts)
+                        else Captures(captures)
                     }
                     Box(
                         modifier = Modifier

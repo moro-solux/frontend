@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.solux.moro.R
-import com.solux.moro.core.designsystem.theme.MoroPalette
 import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.data.model.FeedItem
 import com.solux.moro.ui.profile.component.toPxDp
@@ -53,24 +52,7 @@ import com.solux.moro.ui.profile.component.toPxSp
 
 @Composable
 fun Feed(
-    item: FeedItem = FeedItem(
-        id = 1 ,
-        authorId = 1,
-        authorNickname = "",
-        authorProfileColor = Color.Black,
-        hexCodes = listOf<String>("3357FF","3357FF"),
-        contentColors= listOf(
-            MoroPalette.Pastel.Purple400,
-            MoroPalette.Pastel.Orange300,
-            MoroPalette.Pastel.Cyan400,
-            MoroPalette.Pastel.Gray400,
-        ),
-        imageUrl = null,
-        commentCount = 10,
-        likeCount = 10,
-        isLiked = false,
-        createdAt = 0
-    ),
+    item: FeedItem,
     onLikeClick: () -> Unit = {},
     onCommentClick: () -> Unit={}
     ) {
@@ -118,17 +100,15 @@ fun Feed(
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(
-                        (
-                                20.15999984741211).toPxDp,
+                        10.dp,
                         Alignment.Start
                     ),
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .width((393.48001).toPxDp)
                         .height((65).toPxDp)
                 ) {
                     Text(
-                        text = "@colorlover",
+                        text = item.authorNickname, //"@colorlover",
                         style = TextStyle(
                             fontSize = (46.08).toPxSp,
                             lineHeight = (64.51).toPxSp,
@@ -136,20 +116,16 @@ fun Feed(
                             color = Color(0xFFF2F2F2),
                         ),
                         modifier = Modifier
-                            .width((261).toPxDp)
                             .height((65).toPxDp)
                     )
                     Text(
-                        text = "2h ago",
+                        text = item.createdAt, //"2h ago",
                         style = TextStyle(
                             fontSize = (34.56).toPxSp,
                             lineHeight = (48.38).toPxSp,
                             fontWeight = FontWeight(400),
                             color = Color(0xFFA5A5A5),
                         ),
-                        modifier = Modifier
-                            .width((112.32001).toPxDp)
-                            .height((48).toPxDp)
                     )
                 }
                 FeedMoreMenu(
@@ -279,9 +255,9 @@ fun Feed(
                     modifier = Modifier.size((55.38462).toPxDp)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.share),
+                        painter = painterResource(id = R.drawable.like),
                         contentDescription = "More options",
-                        tint = Color.White,
+                        tint = if (item.isLiked) Color(0xFFFF5252) else Color.White,
                         modifier = Modifier
                             .padding((0.09736).toPxDp)
                             .size((49.85878).toPxDp)

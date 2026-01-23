@@ -38,11 +38,4 @@ class CommentViewModel @Inject constructor(
             commentRepository.addComment(currentId, content)
         }
     }
-
-    fun onDeleteComment(commentId: Long) {
-        viewModelScope.launch {
-            commentRepository.deleteComment(commentId)
-        }
-    }
-
 }

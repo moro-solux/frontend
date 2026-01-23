@@ -4,5 +4,5 @@ data class CommentItem(
     val id: Long,
     val userNickname: String,
     val content: String,
-    val createdAt: Long
+    val createdAt: String
 )

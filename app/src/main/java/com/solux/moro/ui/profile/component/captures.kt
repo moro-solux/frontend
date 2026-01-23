@@ -31,12 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.solux.moro.R
-import com.solux.moro.data.model.FeedItem
+import com.solux.moro.data.model.ProfileFeedItem
 
 @SuppressLint("DiscouragedApi")
 @Composable
 fun Captures(
-    posts: List<FeedItem>
+    posts: List<ProfileFeedItem>
 ){
     Column(
         modifier = Modifier.Companion
@@ -77,7 +77,7 @@ fun Captures(
 }
 
 @Composable
-fun ImageFeedGrid(posts: List<FeedItem>) {
+fun ImageFeedGrid(posts: List<ProfileFeedItem>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
         modifier = Modifier

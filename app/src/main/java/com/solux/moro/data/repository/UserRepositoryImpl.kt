@@ -9,7 +9,7 @@ import com.solux.moro.data.dto.UserProfileEditRequest
 import com.solux.moro.data.mapper.ColorMapper
 import com.solux.moro.data.mapper.toDomain
 import com.solux.moro.data.mapper.toStatsDomain
-import com.solux.moro.data.model.FeedItem
+import com.solux.moro.data.model.ProfileFeedItem
 import com.solux.moro.data.model.SearchResultPage
 import com.solux.moro.data.model.User
 import com.solux.moro.data.model.UserColorPalette
@@ -21,20 +21,23 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 
 @Singleton
 class UserRepositoryImpl @Inject constructor(
     private val userService: UserService
 ): UserRepository{
     private val _user = MutableStateFlow<User>(User(
-        id = -1,
+        id = -1L,
         nickname = "",
-        userColorHex = "#FFFFFF",
+        userColorHex = "",
         colorPalette = UserColorPalette(userColor=null,paletteColors = emptyList<Color>()),
         visible = false
     ))
     override val user: StateFlow<User> = _user.asStateFlow()
+    private val _currentUserId = MutableStateFlow(-1L)
+    override val currentUserId: StateFlow<Long> = _currentUserId.asStateFlow()
 
     private val _userStats = MutableStateFlow<UserStats?>(null)
     override val userStats: StateFlow<UserStats?> = _userStats.asStateFlow()
@@ -42,11 +45,21 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun loadUser(userId: Long) {
         try {
             Log.d("loadUserTest", "loadUser ID: $userId")
-            val response = userService.getUserProfile(userId = userId)
+            val response =
+                if(userId==-1L) {
+                    userService.getMyProfile()
+                }
+                else  userService.getUserProfile(userId = userId)
+
             if (response.success) {
+                if (userId == -1L) {
+                    _currentUserId.value = response.data.userId
+                    Log.d("loadUserTest", "내 ID 저장 완료: $currentUserId")
+                }
                 Log.d("loadUserTest", "서버가 보내준 실제 이름: ${response.data.userName}")
                 _user.value = response.data.toDomain()
                 _userStats.value= response.data.toStatsDomain()
+                Log.d("loadUserTest!!!!", "loadUser ID: ${_user.value.id}")
             }
             else {
                 Log.e("loadUserTest", "success== false")
@@ -57,11 +70,22 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getUserPosts(userId: Long): Flow<List<FeedItem>> {
-        return flowOf(emptyList())
-        //TODO("Not yet implemented")
-    }
+    override fun getUserPosts(userId: Long): Flow<List<ProfileFeedItem>> = flow {
+        val response = userService.getUserProfileFeed(userId = userId)
 
+        if (response.success && response.data != null) {
+            val postList = response.data.page.content
+            Log.d("FeedRepository", "유저 게시글 로딩 성공: $postList")
+            val userItems = postList.map { it.toDomain() }
+            emit(userItems)
+        } else {
+            Log.e("FeedRepository", "응답 실패: ${response.message}")
+            emit(emptyList())
+        }
+    }.catch { e ->
+        Log.e("FeedRepository", "유저 게시글 로딩 에러: ${e.message}")
+        emit(emptyList())
+    }
     //유저 컬러 팔레트 수정
     override suspend fun updateUserColorPalette(palette: UserColorPalette): Result<Unit> {
         return try {

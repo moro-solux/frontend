@@ -18,16 +18,16 @@ class FakeAuthRepository @Inject constructor()  : AuthRepository {
 
     override fun myUserId(): Long = 5
 
-    override suspend fun login(
-        email: String,
-        password: String
-    ) {
-        currentUserId = 1
-        _authState.value = AuthState.Authenticated
-    }
-
-    override suspend fun logout() {
-        currentUserId = null
-        _authState.value = AuthState.UnAuthenticated
-    }
+//    override suspend fun login(
+//        email: String,
+//        password: String
+//    ) {
+//        currentUserId = 1
+//        _authState.value = AuthState.Authenticated
+//    }
+//
+//    override suspend fun logout() {
+//        currentUserId = null
+//        _authState.value = AuthState.UnAuthenticated
+//    }
 }

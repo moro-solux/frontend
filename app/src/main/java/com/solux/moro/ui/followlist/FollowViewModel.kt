@@ -46,7 +46,7 @@ class FollowingViewModel @Inject constructor(
     val uiState: StateFlow<FollowUiState> = _uiState.asStateFlow()
 
     val myName: String = userRepository.user.value.nickname
-    private val targetUserId: Long = savedStateHandle.get<Long>("userId") ?: 5L
+    private val targetUserId: Long = savedStateHandle.get<Long>("userId") ?: -1L
 
     init {
         loadFollowData()

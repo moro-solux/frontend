@@ -42,7 +42,7 @@ fun HomeScreen(
 
     Scaffold(
         bottomBar = { BottomBar(navController) },
-        topBar = { TopBar(true, navController) }
+        topBar = { TopBar(true, navController,true) }
     ) { innerPadding ->
         val feed by viewModel.feed.collectAsState()
 
@@ -56,7 +56,9 @@ fun HomeScreen(
             items(feed) { item ->
                 Feed(
                     item = item,
-                    onLikeClick = { viewModel.onLikeClick(item.id) },
+                    onLikeClick = {
+                        viewModel.onLikeClick(item.id)
+                                  },
                     onCommentClick = {
                         selectedPostId = item.id
                         showBottomSheet = true

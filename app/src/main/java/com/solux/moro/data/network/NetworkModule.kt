@@ -3,6 +3,7 @@ package com.solux.moro.data.network
 import com.google.gson.GsonBuilder
 import com.solux.moro.data.service.AuthService
 import com.solux.moro.data.service.ColorMapService
+import com.solux.moro.data.service.FeedService
 import com.solux.moro.data.service.FollowService
 import com.solux.moro.data.service.MapService
 import com.solux.moro.data.service.NotificationService
@@ -76,6 +77,12 @@ object NetworkModule {
     @Singleton
     fun provideFollowService(retrofit: Retrofit): FollowService {
         return retrofit.create(FollowService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFeedService(retrofit: Retrofit): FeedService {
+        return retrofit.create(FeedService::class.java)
     }
 
     @Provides
