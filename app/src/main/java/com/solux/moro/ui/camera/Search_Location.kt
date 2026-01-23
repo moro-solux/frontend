@@ -29,7 +29,7 @@ import com.solux.moro.core.util.figmaDp
 
 data class PlaceData(
     val name: String,
-    val address: String,
+    val placeName: String,
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
     val placeId: String? = null
@@ -212,7 +212,7 @@ fun LocationBottomSheet(
                     PlaceItem(
                         isSelected = (place.name == selectedLocation),
                         name = place.name,
-                        address = place.address,
+                        placeName = place.placeName,
                         onClick = { onPlaceSelected(place) } // [수정] PlaceData 객체 전달
                     )
                 }
@@ -262,7 +262,7 @@ fun LocationBottomSheet(
 fun PlaceItem(
     isSelected: Boolean,
     name: String,
-    address: String,
+    placeName: String,
     onClick: () -> Unit = {},
 ) {
     Column(
@@ -301,7 +301,7 @@ fun PlaceItem(
             ) {
                 PlaceInfo(
                     name = name,
-                    address = address,
+                    placeName = placeName,
                     modifier = Modifier.weight(1f)
                 )
 
@@ -322,7 +322,7 @@ fun PlaceItem(
 @Composable
 fun PlaceInfo(
     name: String,
-    address: String,
+    placeName: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -348,7 +348,7 @@ fun PlaceInfo(
             )
 
             Text(
-                text = address,
+                text = placeName,
                 fontSize = 14.sp,
                 lineHeight = 20.sp,
                 fontWeight = FontWeight(400),

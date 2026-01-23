@@ -67,14 +67,14 @@ class UploadViewModel @Inject constructor(
             val location = locationRepo.getCurrentLocation()
             val lat = location?.latitude ?: 37.55
             val lng = location?.longitude ?: 126.97
-            val address = locationRepo.getAddressFromLocation(lat, lng)
+            val placeName = locationRepo.getAddressFromLocation(lat, lng)
 
             _uiState.value = _uiState.value.copy(
-                detectedLocation = address,
+                detectedLocation = placeName,
                 nearbyPlaces = listOf(
                     PlaceData(
-                        name = address,
-                        address = address,
+                        name = placeName,
+                        placeName = placeName,
                         latitude = lat,
                         longitude = lng
                     )
@@ -213,7 +213,7 @@ class UploadViewModel @Inject constructor(
                 val places = response.autocompletePredictions.map { prediction ->
                     PlaceData(
                         name = prediction.getPrimaryText(null).toString(), // 장소명
-                        address = prediction.getSecondaryText(null).toString(), // 주소
+                        placeName = prediction.getSecondaryText(null).toString(), // 주소
                         latitude = 0.0,
                         longitude = 0.0,
                         placeId = prediction.placeId
@@ -252,7 +252,7 @@ class UploadViewModel @Inject constructor(
                 val finalPlace = place.copy(
                     latitude = lat,
                     longitude = lng,
-                    address = item.address ?: place.address
+                    placeName = item.address ?: place.placeName
                 )
 
                 updateLocation(finalPlace)
