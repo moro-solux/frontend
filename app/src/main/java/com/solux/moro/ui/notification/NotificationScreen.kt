@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.solux.moro.R
@@ -38,12 +37,12 @@ import com.solux.moro.ui.notification.component.Notification
 
 @Composable
 fun NotificationScreen(
-    viewModel: NotificationViewModel= hiltViewModel(),
+    viewModel: NotificationViewModel,
     navController: NavHostController,
     color: Color = Color(0xFFA3A3A3),
     style: TextStyle = MoroTheme.typography.bodyRegular14
 ) {
-
+    Log.d("VM_HASH", "NotificationScreen recomposed - VM hash=${viewModel.hashCode()}")
     Log.d(
         "VM_UI",
         "NotificationScreen recomposed - VM hash=${viewModel.hashCode()}"
@@ -93,8 +92,8 @@ fun NotificationList(
     navController: NavHostController,
     groupedData: Map<String, List<NotificationUiModel>>,
     visible:Boolean,
-    onFollowClick: (Long) -> Unit,
-    unFollowClick: (Long) -> Unit,
+    onFollowClick: (Long,Long) -> Unit,
+    unFollowClick: (Long,Long) -> Unit,
     onItemClick: (Long) -> Unit) {
     //Log.d("UI_RECOMPOSE", "현재 맵 섹션 개수: ${groupedData.size}")
     LazyColumn (

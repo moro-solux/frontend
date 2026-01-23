@@ -32,10 +32,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("VM_HASH", "MainActivity onCreate hash=${this.hashCode()}")
         enableEdgeToEdge()
         val savedToken = settingPreferenceManager.getAccessToken().orEmpty()
         if (savedToken.isNotBlank()) {
             saveToken(savedToken)
+            notificationViewModel.fetchNotifications()
         }
         
         // 앱 실행 시 토큰 확인 및 서버 등록

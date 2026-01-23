@@ -15,6 +15,7 @@ import com.solux.moro.data.mapper.toUiModel
 import com.solux.moro.data.model.NotificationUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
@@ -35,6 +37,8 @@ class NotificationViewModel @Inject constructor(
         private set
 
     init {
+        fetchNotifications()
+        Log.d("VM_HASH", "NotificationViewModel init hash=${this.hashCode()}")
         loadPrivacyStatus()
         Log.d("isPublic", " ${isPublic}")
     }
@@ -46,6 +50,11 @@ class NotificationViewModel @Inject constructor(
     val user = userRepository.user
     val stats = userRepository.userStats
 
+    fun fetchNotifications() {
+        viewModelScope.launch {
+            notificationRepository.getNotifications()
+        }
+    }
     fun loadPrivacyStatus() {
         viewModelScope.launch {
             isPublic = notificationRepository.getPrivacyStatus()
@@ -60,43 +69,61 @@ class NotificationViewModel @Inject constructor(
                 SharingStarted.WhileSubscribed(5_000),
                 "@colorhunter"
             )
-
-    init{
+    init {
         loadNotifications()
         viewModelScope.launch {
             notificationRepository.sseEvents.collect { rawData ->
-
                 if (rawData == "connected") return@collect
+
                 try {
                     val dto = Gson().fromJson(rawData, NotificationDto::class.java)
                     val newUiModel = dto.toUiModel()
-                    Log.d("ViewModel_SSE", "새 알림 모델: $newUiModel")
-//                    _notifications.update { currentMap ->
-//                        val todayKey = "오늘"
-//                        val todayNotifications = currentMap[todayKey] ?: emptyList()
-//                        val updatedList = listOf(newUiModel) + todayNotifications
-//                        currentMap.toMutableMap().apply {
-//                            this[todayKey] = updatedList
-//                        }.toMap()
-//                    }
-                    _notifications.update { currentMap ->
-                        val todayKey = "Today"
-                        val todayNotifications = currentMap[todayKey] ?: emptyList()
 
-                        val updatedList = listOf(newUiModel) + todayNotifications
+                    withContext(Dispatchers.Main.immediate) {
+                        _notifications.update { currentMap ->
+                            val todayKey = "Today"
+                            val todayNotifications = currentMap[todayKey] ?: emptyList()
+                            val updatedList = listOf(newUiModel) + todayNotifications
 
-                        val newMap = currentMap.toMutableMap()
-                        newMap[todayKey] = updatedList
-                        newMap
+                            currentMap.toMutableMap().apply {
+                                this[todayKey] = updatedList
+                            }
+                        }
                     }
-
-                    //Log.d("ViewModel_SSE", "UI 모델 업데이트 완료")
                 } catch (e: Exception) {
                     Log.e("ViewModel_SSE", "파싱 또는 업데이트 실패", e)
                 }
             }
         }
     }
+//    init{
+//        loadNotifications()
+//        viewModelScope.launch {
+//            notificationRepository.sseEvents.collect { rawData ->
+//
+//                if (rawData == "connected") return@collect
+//                try {
+//                    val dto = Gson().fromJson(rawData, NotificationDto::class.java)
+//                    val newUiModel = dto.toUiModel()
+//                    Log.d("ViewModel_SSE", "새 알림 모델: $newUiModel")
+//
+//                    _notifications.update { currentMap ->
+//                        val todayKey = "Today"
+//                        val todayNotifications = currentMap[todayKey] ?: emptyList()
+//
+//                        val updatedList = listOf(newUiModel) + todayNotifications
+//
+//                        val newMap = currentMap.toMutableMap()
+//                        newMap[todayKey] = updatedList
+//                        newMap
+//                    }
+//
+//                } catch (e: Exception) {
+//                    Log.e("ViewModel_SSE", "파싱 또는 업데이트 실패", e)
+//                }
+//            }
+//        }
+//    }
 
     private fun loadNotifications() {
         viewModelScope.launch {
@@ -178,9 +205,10 @@ class NotificationViewModel @Inject constructor(
         notificationRepository.connectNotificationStream(token)
     }
 
-    fun onFollow(userId:Long) {
+    fun onFollow(userId:Long,notificationId: Long) {
         viewModelScope.launch {
             val result = followRepository.followRequest(userId)
+            notificationRepository.markAsRead(notificationId)
             result.onSuccess {
                 result.onSuccess {
                     _notifications.update { currentMap ->
@@ -200,9 +228,10 @@ class NotificationViewModel @Inject constructor(
             }
         }
     }
-        fun unFollow(userId: Long) {
+        fun unFollow(userId: Long,notificationId: Long) {
             viewModelScope.launch {
                 val result = followRepository.unFollow(userId)
+                notificationRepository.markAsRead(notificationId)
                 result.onSuccess {
                     _notifications.update { currentMap ->
                         currentMap.mapValues { (_, list) ->
