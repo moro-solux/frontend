@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -25,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Devices
@@ -34,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.solux.moro.R
+import com.solux.moro.core.designsystem.theme.MoroTheme
 import com.solux.moro.core.navigation.FeedRoute
 import com.solux.moro.data.model.ProfileFeedItem
 
@@ -41,7 +40,8 @@ import com.solux.moro.data.model.ProfileFeedItem
 @Composable
 fun Captures(
     posts: List<ProfileFeedItem>,
-    navController: NavHostController
+    navController: NavHostController,
+    onAllClick: () -> Unit,
 ){
     Column(
         modifier = Modifier.Companion
@@ -53,7 +53,7 @@ fun Captures(
     ) {
         Row(
             modifier = Modifier
-                .width(987.84003.toPxDp)
+                .fillMaxWidth()
                 .height(73.toPxDp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -68,16 +68,27 @@ fun Captures(
                     color = Color(0xFFF2F2F2),
                 ),
                 modifier = Modifier
-                    .width(405.toPxDp)
                     .height(73.toPxDp)
             )
-        }
-        val context = LocalContext.current
-        val captureImages = (1..9).map { i ->
-            context.resources.getIdentifier("imp_captures_$i", "drawable", context.packageName)
+
+            Text(
+                text = "전체보기",
+                style = TextStyle(
+                    fontSize = 40.toPxSp,
+                    lineHeight = 72.58.toPxSp,
+//                   fontFamily = FontFamily(Font(R.font.inter)),
+                    fontWeight = FontWeight(600),
+                    color = MoroTheme.colors.gray40,
+                ),
+                modifier = Modifier
+                    .height(73.toPxDp)
+                    .padding(top=0.dp, end=0.dp )
+                    .clickable {
+                        onAllClick()
+                    }
+            )
         }
         ImageFeedGrid(posts,navController)
-
     }
 }
 
