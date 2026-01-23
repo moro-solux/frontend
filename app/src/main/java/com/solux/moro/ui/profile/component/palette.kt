@@ -1,0 +1,178 @@
+package com.solux.moro.ui.profile.component
+
+import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.solux.moro.R
+import com.solux.moro.core.designsystem.theme.MoroTheme
+import com.solux.moro.data.mapper.ColorMapper
+import kotlin.math.cos
+import kotlin.math.sin
+
+class SidePanelState(
+    initialOffset: Float
+) {
+    val offsetX = Animatable(initialOffset)
+
+    suspend fun open() {
+        offsetX.animateTo(0f)
+    }
+
+    suspend fun close(panelWidth: Float) {
+        offsetX.animateTo(-panelWidth)
+    }
+}
+
+@Composable
+fun rememberSidePanelState(
+    panelWidthPx: Float
+): SidePanelState {
+    return remember {
+        SidePanelState(initialOffset = -panelWidthPx)
+    }
+}
+@Composable
+fun Palette(
+    modifier: Modifier,
+    navController: NavHostController,
+    isMyProfile: Boolean = false,
+    userColor: Color? = Color.White,
+    paletteColors: List<Color>? = emptyList(),
+    onAllClick: (String) -> Unit = {},
+    onColorClick: (Int?) -> Unit = {}
+) {
+    val finalColor = userColor ?: Color.White
+
+    Box(
+        contentAlignment = Alignment.CenterStart
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.Companion
+                .size(478.07999.toPxDp)
+                .offset(x=-60.dp)
+                .clip(CircleShape)
+                .background(finalColor),
+        ) {
+            if(!isMyProfile)
+            {
+                Text(text="ALL",
+                    style=MoroTheme.typography.bodyBold16,
+                    color=Color.Black,
+                    modifier = Modifier
+                        .size(35.dp)
+                        .offset(x = 35.dp,y=8.dp)
+
+                        .clickable(
+                            onClick = {
+                                onAllClick("USER_COLORS")
+                            }
+                        ),
+
+                )
+            }
+            else {
+                Image(
+                    painter = painterResource(id = R.drawable.icon_edit),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(28.dp)
+                        .offset(x = 25.dp)
+                        .clickable(
+                            onClick = {
+                                navController.navigate("paletteEdit")
+                            }
+                        ),
+
+                    )
+            }
+        }
+        SemiCircleItems(
+            itemColors = paletteColors,
+            onColorClick = onColorClick,
+        )
+    }
+}
+
+@Composable
+fun SemiCircleItems(
+    itemCount: Int = 6,
+    radius: Dp = 478.07999.toPxDp,
+    itemSize: Dp = 175.97812.toPxDp,
+    itemColors: List<Color>? = emptyList(),
+    onColorClick: (Int?) -> Unit = {},
+) {
+    Box(
+        contentAlignment = Alignment.CenterStart,
+        modifier = Modifier
+            .size(radius * 2 + itemSize)
+            .offset(x=-10.dp),
+    ) {
+        val angleStep = 180f / (itemCount - 1)
+
+        repeat(itemCount) { index ->
+            val angleDeg = -90f + angleStep * index
+            val angleRad = Math.toRadians(angleDeg.toDouble())
+
+            val x = radius * cos(angleRad).toFloat()
+            val y = radius * sin(angleRad).toFloat()
+
+            val color = itemColors?.getOrNull(index) ?: Color.Transparent
+
+            if(color==Color.Transparent){
+                Box(
+                    modifier = Modifier
+                        .size(itemSize)
+                        .offset(x = x, y = y)
+                        .clip(CircleShape)
+                        .background(color)
+                        .border(color=Color.White, width = 2.88.toPxDp, shape = CircleShape),
+                    contentAlignment = Alignment.Center,
+                ) {
+                }
+            }
+            else{
+                Box(
+                    modifier = Modifier
+                        .size(itemSize)
+                        .offset(x = x, y = y)
+                        .clip(CircleShape)
+                        .background(color)
+                        .clickable(
+                            onClick = {
+                                onColorClick(ColorMapper.toIdFromComposeColor(color))
+                            }
+                        ),
+                    contentAlignment = Alignment.Center,
+                ) {
+                }
+            }
+        }
+    }
+}
+
+
+@Preview(device = Devices.PIXEL_4A)
+@Composable
+fun PalettePreview(){
+    //Palette(modifier = Modifier)
+}

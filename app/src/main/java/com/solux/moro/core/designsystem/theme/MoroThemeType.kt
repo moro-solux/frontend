@@ -1,0 +1,177 @@
+package com.solux.moro.core.designsystem.theme
+
+enum class MoroThemeType { Pastel, Vivid, Nature }
+
+fun colorsOf(theme: MoroThemeType): List<androidx.compose.ui.graphics.Color> = when (theme) {
+    MoroThemeType.Pastel -> listOf(
+        MoroPalette.Pastel.Purple100,
+        MoroPalette.Pastel.Purple200,
+        MoroPalette.Pastel.Purple300,
+        MoroPalette.Pastel.Purple400,
+        MoroPalette.Pastel.Purple500,
+        MoroPalette.Pastel.Purple600,
+
+        MoroPalette.Pastel.Orange100,
+        MoroPalette.Pastel.Orange200,
+        MoroPalette.Pastel.Orange300,
+        MoroPalette.Pastel.Orange400,
+        MoroPalette.Pastel.Orange500,
+        MoroPalette.Pastel.Orange600,
+
+        MoroPalette.Pastel.Yellow100,
+        MoroPalette.Pastel.Yellow200,
+        MoroPalette.Pastel.Yellow300,
+        MoroPalette.Pastel.Yellow400,
+        MoroPalette.Pastel.Yellow500,
+        MoroPalette.Pastel.Yellow600,
+
+        MoroPalette.Pastel.Green100,
+        MoroPalette.Pastel.Green200,
+        MoroPalette.Pastel.Green300,
+        MoroPalette.Pastel.Green400,
+        MoroPalette.Pastel.Green500,
+        MoroPalette.Pastel.Green600,
+
+        MoroPalette.Pastel.Cyan100,
+        MoroPalette.Pastel.Cyan200,
+        MoroPalette.Pastel.Cyan300,
+        MoroPalette.Pastel.Cyan400,
+        MoroPalette.Pastel.Cyan500,
+        MoroPalette.Pastel.Cyan600,
+
+        MoroPalette.Pastel.Indigo100,
+        MoroPalette.Pastel.Indigo200,
+        MoroPalette.Pastel.Indigo300,
+        MoroPalette.Pastel.Indigo400,
+        MoroPalette.Pastel.Indigo500,
+        MoroPalette.Pastel.Indigo600,
+
+        MoroPalette.Pastel.Gray100,
+        MoroPalette.Pastel.Gray200,
+        MoroPalette.Pastel.Gray300,
+        MoroPalette.Pastel.Gray400,
+        MoroPalette.Pastel.Gray500,
+        MoroPalette.Pastel.Gray600,
+
+        MoroPalette.Pastel.Black,
+        MoroPalette.Pastel.White,
+        MoroPalette.Pastel.White100,
+        MoroPalette.Pastel.Gray2300,
+        MoroPalette.Pastel.Gray2400,
+        MoroPalette.Pastel.Gray2600,
+    )
+    MoroThemeType.Vivid -> listOf(
+        MoroPalette.Vivid.Red100,
+        MoroPalette.Vivid.Red200,
+        MoroPalette.Vivid.Red300,
+        MoroPalette.Vivid.Red400,
+        MoroPalette.Vivid.Red500,
+        MoroPalette.Vivid.Red600,
+
+        MoroPalette.Vivid.Yellow100,
+        MoroPalette.Vivid.Yellow200,
+        MoroPalette.Vivid.Yellow300,
+        MoroPalette.Vivid.Yellow400,
+        MoroPalette.Vivid.Yellow500,
+        MoroPalette.Vivid.Yellow600,
+
+        MoroPalette.Vivid.Green100,
+        MoroPalette.Vivid.Green200,
+        MoroPalette.Vivid.Green300,
+        MoroPalette.Vivid.Green400,
+        MoroPalette.Vivid.Green500,
+        MoroPalette.Vivid.Green600,
+
+        MoroPalette.Vivid.Indigo100,
+        MoroPalette.Vivid.Indigo200,
+        MoroPalette.Vivid.Indigo300,
+        MoroPalette.Vivid.Indigo400,
+        MoroPalette.Vivid.Indigo500,
+        MoroPalette.Vivid.Indigo600,
+
+        MoroPalette.Vivid.Purple100,
+        MoroPalette.Vivid.Purple200,
+        MoroPalette.Vivid.Purple300,
+        MoroPalette.Vivid.Purple400,
+        MoroPalette.Vivid.Purple500,
+        MoroPalette.Vivid.Purple600,
+
+        MoroPalette.Vivid.Cyan100,
+        MoroPalette.Vivid.Cyan200,
+        MoroPalette.Vivid.Cyan300,
+        MoroPalette.Vivid.Cyan400,
+        MoroPalette.Vivid.Cyan500,
+        MoroPalette.Vivid.Cyan600,
+
+        MoroPalette.Vivid.Yellow2100,
+        MoroPalette.Vivid.Yellow2200,
+        MoroPalette.Vivid.Yellow2300,
+        MoroPalette.Vivid.Yellow2400,
+        MoroPalette.Vivid.Yellow2500,
+        MoroPalette.Vivid.Yellow2600,
+
+        MoroPalette.Vivid.Gray100,
+        MoroPalette.Vivid.Gray200,
+        MoroPalette.Vivid.Gray300,
+        MoroPalette.Vivid.Gray400,
+        MoroPalette.Vivid.Gray500,
+        MoroPalette.Vivid.Gray600,
+
+    )
+    MoroThemeType.Nature -> listOf(
+        MoroPalette.Nature.Cyan100,
+        MoroPalette.Nature.Cyan200,
+        MoroPalette.Nature.Cyan300,
+        MoroPalette.Nature.Cyan400,
+        MoroPalette.Nature.Cyan500,
+        MoroPalette.Nature.Cyan600,
+
+        MoroPalette.Nature.Cyan2100,
+        MoroPalette.Nature.Cyan2200,
+        MoroPalette.Nature.Cyan2300,
+        MoroPalette.Nature.Cyan2400,
+        MoroPalette.Nature.Cyan2500,
+
+        MoroPalette.Nature.Teal100,
+        MoroPalette.Nature.Teal200,
+        MoroPalette.Nature.Teal300,
+        MoroPalette.Nature.Teal400,
+        MoroPalette.Nature.Teal500,
+        MoroPalette.Nature.Teal600,
+
+        MoroPalette.Nature.Teal2100,
+        MoroPalette.Nature.Teal2200,
+        MoroPalette.Nature.Teal2300,
+        MoroPalette.Nature.Teal2400,
+        MoroPalette.Nature.Teal2500,
+        MoroPalette.Nature.Teal2600,
+
+        MoroPalette.Nature.Green100,
+        MoroPalette.Nature.Green200,
+        MoroPalette.Nature.Green300,
+        MoroPalette.Nature.Green400,
+        MoroPalette.Nature.Green500,
+        MoroPalette.Nature.Green600,
+
+        MoroPalette.Nature.Brown100,
+        MoroPalette.Nature.Brown200,
+        MoroPalette.Nature.Brown300,
+        MoroPalette.Nature.Brown400,
+        MoroPalette.Nature.Brown500,
+        MoroPalette.Nature.Brown600,
+
+        MoroPalette.Nature.Orange100,
+        MoroPalette.Nature.Orange200,
+        MoroPalette.Nature.Orange300,
+        MoroPalette.Nature.Orange400,
+        MoroPalette.Nature.Orange500,
+        MoroPalette.Nature.Orange600,
+
+        MoroPalette.Nature.Purple100,
+        MoroPalette.Nature.Purple200,
+        MoroPalette.Nature.Purple300,
+        MoroPalette.Nature.Purple400,
+        MoroPalette.Nature.Purple500,
+        MoroPalette.Nature.Purple600,
+        )
+}
