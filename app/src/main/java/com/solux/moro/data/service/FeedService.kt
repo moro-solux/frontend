@@ -2,6 +2,7 @@ package com.solux.moro.data.service
 
 import com.solux.moro.data.dto.BaseResponse
 import com.solux.moro.data.model.CommentDto
+import com.solux.moro.data.model.CommentRequest
 import com.solux.moro.data.model.FeedData
 import com.solux.moro.data.model.LikeDto
 import com.solux.moro.data.model.PostDto
@@ -43,7 +44,7 @@ interface FeedService {
     @POST("/api/posts/{postId}/comments")
     suspend fun addComment(
         @Path("postId") postId: Long,
-        @Body content: String,
+        @Body content: CommentRequest,
     ): BaseResponse<Unit>
 
     @GET("/api/posts/{postId}/comments")

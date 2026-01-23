@@ -63,7 +63,9 @@ data class CommentDto(
     @SerializedName("createdAt") val createdAt: String,
 )
 
-
+data class CommentRequest(
+    val content: String
+)
 data class UserProfileData(
     val viewType: String,
     val page: PageData

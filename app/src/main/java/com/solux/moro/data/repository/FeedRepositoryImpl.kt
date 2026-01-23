@@ -4,16 +4,26 @@ import android.util.Log
 import com.solux.moro.core.domain.FeedRepository
 import com.solux.moro.data.mapper.toDomain
 import com.solux.moro.data.model.CommentItem
+import com.solux.moro.data.model.CommentRequest
 import com.solux.moro.data.model.FeedItem
 import com.solux.moro.data.service.FeedService
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 
 class FeedRepositoryImpl@Inject constructor(
     private val feedService: FeedService
 ): FeedRepository {
+
+    override val refreshTrigger = MutableSharedFlow<Unit>(replay = 1).apply { tryEmit(Unit) }
+
+    override fun triggerRefresh() {
+        refreshTrigger.tryEmit(Unit)
+    }
+
+
     override fun getHomeFeed(): Flow<List<FeedItem>> = flow {
         val response = feedService.getFeed()
         if (response.success) {
@@ -90,7 +100,7 @@ class FeedRepositoryImpl@Inject constructor(
 
     override suspend fun addComment(feedId: Long, content: String) {
         try {
-            val response = feedService.addComment(feedId, content)
+            val response = feedService.addComment(feedId, CommentRequest(content))
             if (response.success) {
                 Log.d("FeedRepository", "댓글 추가 성공")
             }

@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.solux.moro.R
 import com.solux.moro.core.designsystem.theme.MoroTheme
+import com.solux.moro.data.mapper.ColorMapper
 import kotlin.math.cos
 import kotlin.math.sin
 
@@ -56,6 +57,8 @@ fun Palette(
     isMyProfile: Boolean = false,
     userColor: Color? = Color.White,
     paletteColors: List<Color>? = emptyList(),
+    onAllClick: (String) -> Unit = {},
+    onColorClick: (Int?) -> Unit = {}
 ) {
     val finalColor = userColor ?: Color.White
 
@@ -81,8 +84,7 @@ fun Palette(
 
                         .clickable(
                             onClick = {
-                                //navController.navigate()
-                                //게시글로 이동
+                                onAllClick("USER_COLORS")
                             }
                         ),
 
@@ -105,7 +107,8 @@ fun Palette(
             }
         }
         SemiCircleItems(
-            itemColors = paletteColors
+            itemColors = paletteColors,
+            onColorClick = onColorClick,
         )
     }
 }
@@ -115,8 +118,8 @@ fun SemiCircleItems(
     itemCount: Int = 6,
     radius: Dp = 478.07999.toPxDp,
     itemSize: Dp = 175.97812.toPxDp,
-    itemColors: List<Color>? = emptyList()
-    ,
+    itemColors: List<Color>? = emptyList(),
+    onColorClick: (Int?) -> Unit = {},
 ) {
     Box(
         contentAlignment = Alignment.CenterStart,
@@ -156,7 +159,7 @@ fun SemiCircleItems(
                         .background(color)
                         .clickable(
                             onClick = {
-                                    //개별 색상 페이지로 이동
+                                onColorClick(ColorMapper.toIdFromComposeColor(color))
                             }
                         ),
                     contentAlignment = Alignment.Center,

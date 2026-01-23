@@ -16,7 +16,7 @@ interface UserRepository {
 
     suspend fun loadUser(userId:Long=5)
 
-    fun getUserPosts(userId: Long): Flow<List<ProfileFeedItem>>
+    fun getUserPosts(userId: Long, viewType: String ="DEFAULT", colorId: Int? =0): Flow<List<ProfileFeedItem>>
 
     suspend fun getColorUnlockInfo():Result<List<ColorThemeDto>>
 

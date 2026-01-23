@@ -70,12 +70,14 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getUserPosts(userId: Long): Flow<List<ProfileFeedItem>> = flow {
+    override fun getUserPosts(userId: Long, viewType: String, colorId: Int?): Flow<List<ProfileFeedItem>> = flow {
         val response = userService.getUserProfileFeed(userId = userId)
 
         if (response.success && response.data != null) {
             val postList = response.data.page.content
             Log.d("FeedRepository", "유저 게시글 로딩 성공: $postList")
+            if(colorId!=null)
+                Log.d("FeedRepository", "colorId별 유저 게시글 로딩 성공: $colorId")
             val userItems = postList.map { it.toDomain() }
             emit(userItems)
         } else {

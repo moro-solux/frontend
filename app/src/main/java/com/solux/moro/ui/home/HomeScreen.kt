@@ -62,6 +62,7 @@ fun HomeScreen(
                     onCommentClick = {
                         selectedPostId = item.id
                         showBottomSheet = true
+                        //viewModel.onCommentClick(item.id)
                     }
                 )
             }

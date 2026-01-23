@@ -2,12 +2,14 @@ package com.solux.moro.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.solux.moro.data.model.FeedItem
 import com.solux.moro.core.domain.FeedRepository
+import com.solux.moro.data.model.FeedItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -16,8 +18,14 @@ class FeedViewModel @Inject constructor(
     private val feedRepository: FeedRepository
 ) : ViewModel() {
 
-    val feed: StateFlow<List<FeedItem>> =
-        feedRepository.getHomeFeed()
+//    private val refreshTrigger = MutableSharedFlow<Unit>(replay = 1).apply {
+//        tryEmit(Unit)
+//    }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val feed: StateFlow<List<FeedItem>> =feedRepository.refreshTrigger
+        .flatMapLatest {
+            feedRepository.getHomeFeed()
+        }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000),
@@ -27,6 +35,7 @@ class FeedViewModel @Inject constructor(
     fun onLikeClick(feedId: Long) {
         viewModelScope.launch {
             feedRepository.likeFeed(feedId)
+            feedRepository.triggerRefresh()
         }
     }
 }

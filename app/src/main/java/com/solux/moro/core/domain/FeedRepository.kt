@@ -5,7 +5,8 @@ import com.solux.moro.data.model.FeedItem
 import kotlinx.coroutines.flow.Flow
 
 interface FeedRepository {
-
+    val refreshTrigger: Flow<Unit>
+    fun triggerRefresh()
     fun getHomeFeed(): Flow<List<FeedItem>>
 
     fun getPosts(postId: Long): Flow<List<FeedItem>>
