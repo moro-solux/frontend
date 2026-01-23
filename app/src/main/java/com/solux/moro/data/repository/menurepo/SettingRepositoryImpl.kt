@@ -47,4 +47,33 @@ class SettingRepositoryImpl @Inject constructor(
     }
 
     override fun getVisibility(): Flow<Boolean> = flowOf(true)
+
+
+    override suspend fun getPrivacyStatus(): Result<Boolean> {
+        return try {
+            val response = settingService.getPrivacyStatus()
+            if (response.isSuccessful) {
+                val status = response.body()?.data?.isPublic ?: true
+                Result.success(status)
+            } else {
+                Result.failure(Exception("상태 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getNotificationStatus(): Result<Boolean> {
+        return try {
+            val response = settingService.getNotificationStatus()
+            if (response.isSuccessful) {
+                val status = response.body()?.data?.isNotification ?: true
+                Result.success(status)
+            } else {
+                Result.failure(Exception("알림 조회 실패"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

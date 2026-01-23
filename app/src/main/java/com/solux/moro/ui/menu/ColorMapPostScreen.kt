@@ -50,7 +50,7 @@ fun ColorMapPostScreen(
                 navController.popBackStack()
             })
         },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -116,9 +116,11 @@ fun ColorPost(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
-                painter = painterResource(id = R.drawable.profileframe),
+                modifier = Modifier
+                    .width(figmaDp(38.46154f))
+                    .height(figmaDp(38.46154f)),
+                painter = painterResource(id = R.drawable.img_profile_small),
                 contentDescription = "image description",
-                contentScale = ContentScale.None
             )
 
             Row(
