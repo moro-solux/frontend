@@ -140,7 +140,7 @@ fun Feed(
                 if(isMyPost) {
                     FeedMoreMenu(
                         onEditClick = { /*TODO*/ },
-                        onDeleteClick = { onDeleteClick }
+                        onDeleteClick = { onDeleteClick() }
                     )
                 }
             }
@@ -325,7 +325,7 @@ fun FeedMoreMenu(
             DropdownMenuItem(
                 leadingIcon ={
                     Icon(
-                        painter = painterResource(id = R.drawable.icon_trash), // ⭐ painter 지정
+                        painter = painterResource(id = R.drawable.icon_trash),
                         contentDescription = "삭제 아이콘",
                         tint = Color.White,
                         modifier = Modifier.size(20.dp)

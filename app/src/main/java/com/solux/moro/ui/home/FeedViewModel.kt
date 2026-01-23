@@ -10,6 +10,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -20,7 +21,17 @@ class FeedViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    val isMyPost = (userRepository.user==userRepository.currentUserId)
+    val isMyProfile: StateFlow<Boolean> = combine(
+        userRepository.user,
+        userRepository.currentUserId
+    ) { user, currentId ->
+
+        user.id == currentId && currentId != -1L
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = false
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val feed: StateFlow<List<FeedItem>> =feedRepository.refreshTrigger
