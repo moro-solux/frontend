@@ -15,4 +15,7 @@ interface SettingRepository {
 
     // 알림
     suspend fun updateNotification(enabled: Boolean): Result<Unit>
+
+    suspend fun getPrivacyStatus(): Result<Boolean>
+    suspend fun getNotificationStatus(): Result<Boolean>
 }

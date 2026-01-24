@@ -1,5 +1,6 @@
 package com.solux.moro.ui.menu
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -49,7 +50,7 @@ fun ColorMapPostScreen(
                 navController.popBackStack()
             })
         },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -114,11 +115,12 @@ fun ColorPost(
             horizontalArrangement = Arrangement.spacedBy(figmaDp(10f), Alignment.Start),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
+            Image(
                 modifier = Modifier
-                    .size(figmaDp(38.46154f))
-                    .clip(CircleShape)
-                    .background(Color(0xFFF2F2F2))
+                    .width(figmaDp(38.46154f))
+                    .height(figmaDp(38.46154f)),
+                painter = painterResource(id = R.drawable.img_profile_small),
+                contentDescription = "image description",
             )
 
             Row(

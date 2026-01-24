@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
@@ -47,7 +48,8 @@ fun FeedScreen(
         viewModel.loadPost(postId)
     }
     val post by viewModel.postDetail.collectAsState()
-    val isMyPost=feedviewModel.isMyPost
+    val isMyPost by feedviewModel.isMyProfile.collectAsStateWithLifecycle()
+
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedPostId by remember { mutableStateOf<Long?>(null) }

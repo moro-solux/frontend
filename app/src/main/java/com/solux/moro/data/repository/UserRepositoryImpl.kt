@@ -39,8 +39,13 @@ class UserRepositoryImpl @Inject constructor(
     private val _currentUserId = MutableStateFlow(-1L)
     override val currentUserId: StateFlow<Long> = _currentUserId.asStateFlow()
 
-    private val _userStats = MutableStateFlow<UserStats?>(null)
-    override val userStats: StateFlow<UserStats?> = _userStats.asStateFlow()
+    private val _userStats = MutableStateFlow<UserStats>(UserStats(
+        colorsCount = 0,
+        followerCount = 0,
+        followingCount = 0,
+        isFollowing = false,
+    ))
+    override val userStats: StateFlow<UserStats> = _userStats.asStateFlow()
 
     override suspend fun loadUser(userId: Long) {
         try {
@@ -59,7 +64,7 @@ class UserRepositoryImpl @Inject constructor(
                 Log.d("loadUserTest", "서버가 보내준 실제 이름: ${response.data.userName}")
                 _user.value = response.data.toDomain()
                 _userStats.value= response.data.toStatsDomain()
-                Log.d("loadUserTest!!!!", "loadUser ID: ${_user.value.id}")
+                Log.d("loadUserTest!!!!", "userStats: ${_userStats.value?.isFollowing}")
             }
             else {
                 Log.e("loadUserTest", "success== false")
@@ -71,13 +76,18 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override fun getUserPosts(userId: Long, viewType: String, colorId: Int?): Flow<List<ProfileFeedItem>> = flow {
-        val response = userService.getUserProfileFeed(userId = userId)
+        val response = userService.getUserProfileFeed(
+            userId = userId,
+            viewType = viewType,
+            colorId = colorId)
 
         if (response.success && response.data != null) {
             val postList = response.data.page.content
             Log.d("FeedRepository", "유저 게시글 로딩 성공: $postList")
             if(colorId!=null)
                 Log.d("FeedRepository", "colorId별 유저 게시글 로딩 성공: $colorId")
+            if(viewType!="DEFAULT")
+                Log.d("FeedRepository", "viewType별 유저 게시글 로딩 성공: $viewType, $postList")
             val userItems = postList.map { it.toDomain() }
             emit(userItems)
         } else {
@@ -100,7 +110,7 @@ class UserRepositoryImpl @Inject constructor(
             val response = userService.mainColorEdit(request)
 
             if (response.success) {
-                loadUser()
+                loadUser(_user.value.id)
                 Result.success(Unit)
             } else {
                 Result.failure(Exception(response.message))
@@ -123,7 +133,7 @@ class UserRepositoryImpl @Inject constructor(
         return try {
             val response = userService.profileEdit(request)
             if (response.success) {
-                loadUser(user.value.id)
+                loadUser(currentUserId.value)
                 Result.success(Unit)
             }
             else {

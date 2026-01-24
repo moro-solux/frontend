@@ -125,6 +125,7 @@ fun NavGraph(
         // 카메라 화면
         composable("camera") {
             UploadCameraScreen(
+                navController = navController,
                 onNavigateToPost = { uri ->
                     val encodedUri = Uri.encode(uri.toString())
                     navController.navigate("post/$encodedUri")
@@ -145,6 +146,7 @@ fun NavGraph(
 
             if (uri != null) {
                 UploadPostScreen(
+                    navController = navController,
                     capturedUri = uri,
                     onNavigateHome = {
                         // TODO: 완료 후 홈으로
@@ -154,12 +156,81 @@ fun NavGraph(
             }
         }
 
-        composable("home") { //홈 화면
-            HomeScreen(navController = navController)
-        }
+
+        // 미션 메인
         composable("mission") {
             MissionScreen(navController = navController)
         }
+
+        // 미션 카메라
+        composable(
+            route = "mission_camera/{missionId}",
+            arguments = listOf(
+                navArgument("missionId") { type = NavType.LongType }
+            )
+        ) { backStackEntry ->
+            val missionId = backStackEntry.arguments?.getLong("missionId") ?: 0L
+
+            com.solux.moro.ui.mission.MissionCameraScreen(
+                navController = navController,
+                onMissionComplete = { uri ->
+                    val encodedUri = Uri.encode(uri.toString())
+                    // 촬영 완료 시 업로드 화면으로 이동
+                    navController.navigate("mission_upload/$encodedUri/$missionId") {
+                        popUpTo("mission_camera/$missionId") { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // 미션 업로드 (이미지 URI + 미션 ID)
+        composable(
+            route = "mission_upload/{uri}/{missionId}",
+            arguments = listOf(
+                navArgument("uri") { type = NavType.StringType },
+                navArgument("missionId") { type = NavType.LongType }
+            )
+        ) { backStackEntry ->
+            val uriString = backStackEntry.arguments?.getString("uri")
+            val missionId = backStackEntry.arguments?.getLong("missionId") ?: 0L
+            val uri = uriString?.let { Uri.parse(it) }
+
+            if (uri != null) {
+                com.solux.moro.ui.mission.MissionUploadScreen(
+                    navController = navController,
+                    imageUri = uri,
+                    missionId = missionId
+                )
+            }
+        }
+
+        // 내 미션 목록 (My Mission)
+        composable("my_mission") {
+            com.solux.moro.ui.mission.MyMissionScreen(navController = navController)
+        }
+
+        // 미션 상세 (게시물 ID)
+        composable(
+            route = "mission_post/{misPostId}",
+            arguments = listOf(
+                navArgument("misPostId") { type = NavType.LongType }
+            )
+        ) { backStackEntry ->
+            val misPostId = backStackEntry.arguments?.getLong("misPostId") ?: 0L
+
+            // 상세 화면 연결
+            com.solux.moro.ui.mission.MissionPostScreen(
+                navController = navController,
+                misPostId = misPostId
+            )
+        }
+
+
+
+        composable("home") { //홈 화면
+            HomeScreen(navController = navController)
+        }
+
         composable("map") {
             val viewModel: MapViewModel = hiltViewModel()
             MapScreenRoute(viewModel = viewModel, navController = navController)
@@ -249,7 +320,7 @@ fun NavGraph(
         }
 
         composable( "paletteEdit" ) { // 팔레트 설정 화면
-            PaletteEditScreen()
+            PaletteEditScreen(navController = navController)
         }
 
         composable( route = "follow", // 팔로우/팔로잉 화면

@@ -47,6 +47,7 @@ fun Profile(
     onFollow: () -> Unit,
     unFollow: () -> Unit,
 ) {
+
     val colorsCnt: Int = colorsCnt
     val followerCnt: Int = followerCnt
     val followingCnt: Int = followingCnt
@@ -140,8 +141,10 @@ fun ProfileActionButton(
     onEditProfile: () -> Unit,
     onFollow: () -> Unit,
     unFollow:() ->Unit,
-
 ) {
+    val containerColor = if (isFollowing) Color.White else Color.Transparent
+    val contentColor = if (isFollowing) Color.Black else Color.White
+
     Button(
         onClick = {
             when (action) {
@@ -154,8 +157,8 @@ fun ProfileActionButton(
         },
         shape = RoundedCornerShape(size = 46.08.toPxDp),
         colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-            containerColor = Color.Transparent,
-            contentColor = Color.White
+            containerColor =containerColor,
+            contentColor = contentColor
         ),
         contentPadding = PaddingValues(0.dp),
         modifier = Modifier

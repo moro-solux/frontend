@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface UserRepository {
     val user: StateFlow<User>
-    val userStats: StateFlow<UserStats?>
+    val userStats: StateFlow<UserStats>
     val currentUserId:StateFlow<Long>
 
-    suspend fun loadUser(userId:Long=5)
+    suspend fun loadUser(userId: Long)
 
     fun getUserPosts(userId: Long, viewType: String ="DEFAULT", colorId: Int? =0): Flow<List<ProfileFeedItem>>
 

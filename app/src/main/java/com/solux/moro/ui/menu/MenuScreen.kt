@@ -42,7 +42,7 @@ fun MenuScreen(
         topBar = { TopBarBack("메뉴",onBackClick = {
             navController.popBackStack()
         }) },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         Box(modifier = Modifier.fillMaxSize()) {
             LazyColumn(
@@ -85,12 +85,13 @@ fun MenuScreen(
                     LogoutDialog(
                         onDismiss = { showLogoutDialog = false },
                         onConfirm = {
+                            // 뷰모델에게 로그아웃 요청
                             viewModel.performLogout {
                                 showLogoutDialog = false
 
-                                // Splash 화면으로 이동
                                 navController.navigate("splash") {
-                                    popUpTo("menu") { inclusive = true }
+                                    popUpTo(0) { inclusive = true }
+                                    launchSingleTop = true
                                 }
                             }
                         }

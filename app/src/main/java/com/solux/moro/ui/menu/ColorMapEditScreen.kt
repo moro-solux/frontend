@@ -48,7 +48,7 @@ fun ColorMapEditScreen(
                 navController.popBackStack()
             })
         },
-        bottomBar = { BottomBar() }
+        bottomBar = { BottomBar(navController) }
     ) { innerPadding ->
         Column(
             modifier = Modifier

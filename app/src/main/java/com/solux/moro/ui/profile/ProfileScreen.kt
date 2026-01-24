@@ -23,6 +23,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -44,6 +45,7 @@ import com.solux.moro.components.BackNavigationTopAppBar
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
 import com.solux.moro.core.designsystem.theme.MoroTheme
+import com.solux.moro.data.mapper.ColorMapper
 import com.solux.moro.ui.profile.component.Captures
 import com.solux.moro.ui.profile.component.Palette
 import com.solux.moro.ui.profile.component.Profile
@@ -55,6 +57,10 @@ fun ProfileScreen(
     navController: NavHostController,
     viewModel: ProfileViewModel = hiltViewModel()
 ){
+    LaunchedEffect(Unit) {
+        viewModel.refreshProfile()
+    }
+
     val action by viewModel.profileAction.collectAsState()
     val isMyProfile by viewModel.isMyProfile.collectAsState()
 
@@ -73,7 +79,7 @@ fun ProfileScreen(
 
     Scaffold(
         bottomBar = { BottomBar(navController) },
-        topBar = { if(isMyProfile){TopBar()}
+        topBar = { if(isMyProfile){TopBar(showBtn=true, navController = navController)}
         else{BackNavigationTopAppBar(nickname,onBackClick = {
             navController.popBackStack()})}}
     ) { innerPadding ->
@@ -101,9 +107,9 @@ fun ProfileScreen(
                         Profile(
                             nickname,
                             userColorHex,
+                            colorsCount,
                             followerCount,
                             followingCount,
-                            colorsCount,
                             action,
                             navController,
                             isFollowing,
@@ -119,7 +125,11 @@ fun ProfileScreen(
                         )
                         if(!isMyProfile&& user?.visible ==false)
                             NotCaptures()
-                        else Captures(captures,navController)
+                        else Captures(captures,
+                            navController,
+                            isMyProfile,
+                            { viewModel.onChangeViewType("USER_COLORS") }
+                        ,)
                     }
                     Box(
                         modifier = Modifier
@@ -133,6 +143,7 @@ fun ProfileScreen(
 
             Box(modifier = Modifier
                 .fillMaxHeight()
+                .width(350.dp)
                 .offset {
                     IntOffset(
                         x = sidePanelState.offsetX.value.toInt(),
@@ -165,6 +176,7 @@ fun ProfileScreen(
                     navController = navController,
                     isMyProfile = isMyProfile,
                     paletteColors =palette,
+                    userColor = ColorMapper.toColorFromHex( userColorHex),
                     onAllClick = { viewType ->
                         viewModel.onChangeViewType(viewType)
                     },

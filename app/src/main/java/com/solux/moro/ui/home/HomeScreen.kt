@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.solux.moro.core.designsystem.component.BottomBar
 import com.solux.moro.core.designsystem.component.TopBar
@@ -37,7 +38,8 @@ fun HomeScreen(
     navController: NavHostController,
     viewModel: FeedViewModel = hiltViewModel()
 ) {
-    val isMyPost=viewModel.isMyPost
+    val isMyPost by viewModel.isMyProfile.collectAsStateWithLifecycle()
+
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedPostId by remember { mutableStateOf<Long?>(null) }

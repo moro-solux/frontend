@@ -17,15 +17,17 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.solux.moro.ui.camera.CameraLayout
 import com.solux.moro.ui.camera.UploadCameraViewModel
 import java.io.File
 
 @Composable
 fun MissionCameraScreen(
-    viewModel: UploadCameraViewModel = viewModel(),
-    onMissionComplete: (Uri) -> Unit = {} // 최종 선택된 사진 1장만
+    navController: NavHostController,
+    viewModel: UploadCameraViewModel = hiltViewModel(),
+    onMissionComplete: (Uri) -> Unit = {}
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -57,44 +59,35 @@ fun MissionCameraScreen(
     CameraLayout(
         showShotCount = true,
         remainingShots = shotsLeft, // 3 -> 2 -> 1
-
         showConfirmDialog = viewModel.showConfirmDialog,
         capturedImageUri = viewModel.capturedUri,
-
-        // 1. 셔터 눌렀을 때
+        onBackClick = { navController.popBackStack() },
         onCameraClick = {
             takeMissionPhoto(context, imageCapture) { uri ->
                 viewModel.capturedUri = uri
 
-                // 마지막 기회(1)였다면? -> 바로 업로드
                 if (shotsLeft == 1) {
                     onMissionComplete(uri)
                 } else {
-                    // 아직 기회가 남았다면(3, 2) -> 다이얼로그
                     viewModel.showConfirmDialog = true
                 }
             }
         },
 
-        // [예] 눌렀을 때
+
         onConfirm = {
-            // 남은 기회 상관없이 바로 미션 완료
             viewModel.capturedUri?.let { uri ->
-                viewModel.onConfirm() // 다이얼로그 닫기
-                onMissionComplete(uri) // 화면 이동
+                viewModel.onConfirm()
+                onMissionComplete(uri)
             }
         },
 
-        // 3. [다시 찍기] 눌렀을 때 (기회 차감)
-        onRetry = {
-            // 사진 버림
-            viewModel.onRetry()
 
-            // 기회 1회 차감 (3->2, 2->1)
+        onRetry = {
+            viewModel.onRetry()
             if (shotsLeft > 1) {
                 shotsLeft--
             }
-            // (참고: shotsLeft가 1일 때는 위에서 바로 통과되므로 여기로 올 일이 없음)
         },
 
         cameraContent = {

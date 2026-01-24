@@ -43,6 +43,8 @@ interface UserService {
     @GET("/api/users/{userId}/profile/feed")
     suspend fun getUserProfileFeed(
         @Path("userId") userId: Long
+        ,@Query("viewType") viewType: String,
+        @Query("colorId") colorId: Int?
     ): BaseResponse<UserProfileData>
 
     @GET("/api/users/{userId}/followings")
