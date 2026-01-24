@@ -23,9 +23,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 enum class FeedFilterType {
@@ -45,6 +42,7 @@ class MissionViewModel @Inject constructor(
 
     private val _myMissions = MutableStateFlow<List<MissionPostDto>>(emptyList())
     val myMissions: StateFlow<List<MissionPostDto>> = _myMissions.asStateFlow()
+
 
     private val _todaySubmission = MutableStateFlow<MissionPostDto?>(null)
     val todaySubmission: StateFlow<MissionPostDto?> = _todaySubmission.asStateFlow()
@@ -74,30 +72,41 @@ class MissionViewModel @Inject constructor(
     fun loadMissionData() {
         viewModelScope.launch {
             try {
+                _todaySubmission.value = null
+                _missionFeed.value = emptyList()
+
                 val missionRes = repository.getTodayMission()
-                if (missionRes.isSuccessful) _currentMission.value = missionRes.body()?.data
-                else if (missionRes.code() == 404) _currentMission.value = null
+                if (missionRes.isSuccessful) {
+                    _currentMission.value = missionRes.body()?.data
+                } else if (missionRes.code() == 404) {
+                    _currentMission.value = null
+                }
+
+                val currentTitle = _currentMission.value?.missionTitle ?: ""
 
                 val myRes = repository.getMyMissionPosts()
                 if (myRes.isSuccessful) {
-
-                    val myList = myRes.body()?.data?.sortedByDescending { it.misPostId } ?: emptyList()
-                    _myMissions.value = myList
+                    val rawList = myRes.body()?.data?.sortedByDescending { it.misPostId } ?: emptyList()
 
 
-                    if (myList.isNotEmpty()) {
-                        val myName = myList[0].userName
-                        _nickname.value = myName
-                        Log.d("MissionViewModel", "내 닉네임 감지됨: $myName")
+                    _myMissions.value = rawList
+
+                    if (rawList.isNotEmpty()) {
+                        _nickname.value = rawList[0].userName
                     }
 
 
-                    val submission = myList.firstOrNull()
+                    val todayPost = if (currentTitle.isNotEmpty()) {
+                        rawList.firstOrNull { it.missionTitle == currentTitle }
+                    } else {
+                        null
+                    }
+
 
                     if (_uploadedPost.value != null) {
                         _todaySubmission.value = _uploadedPost.value
                     } else {
-                        _todaySubmission.value = submission
+                        _todaySubmission.value = todayPost
                     }
                 }
 
@@ -106,6 +115,7 @@ class MissionViewModel @Inject constructor(
             } catch (e: Exception) { e.printStackTrace() }
         }
     }
+
     fun changeFilter(filterType: FeedFilterType) {
         if (_currentFilter.value == filterType) return
         _currentFilter.value = filterType
@@ -119,12 +129,26 @@ class MissionViewModel @Inject constructor(
                     FeedFilterType.GLOBAL -> repository.getAllMissionPosts()
                     FeedFilterType.FOLLOWING -> repository.getFriendsMissionPosts()
                 }
+
+
+                val currentTitle = _currentMission.value?.missionTitle ?: ""
+
                 if (response.isSuccessful) {
-                    _missionFeed.value = response.body()?.data ?: emptyList()
+                    val rawList = response.body()?.data ?: emptyList()
+
+
+                    val filteredList = if (currentTitle.isNotEmpty()) {
+                        rawList.filter { it.missionTitle == currentTitle }
+                    } else {
+                        emptyList()
+                    }
+                    _missionFeed.value = filteredList
                 }
             } catch (e: Exception) { e.printStackTrace() }
         }
     }
+
+
 
     fun analyzeImage(context: Context, imageUri: Uri, missionId: Long) {
         viewModelScope.launch {
