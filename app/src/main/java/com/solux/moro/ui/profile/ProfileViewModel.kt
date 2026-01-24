@@ -8,6 +8,7 @@ import com.solux.moro.core.domain.FeedRepository
 import com.solux.moro.core.domain.FollowRepository
 import com.solux.moro.core.domain.UserRepository
 import com.solux.moro.data.model.ProfileFeedItem
+import com.solux.moro.data.model.UserStats
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,11 +16,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class ProfileAction {
@@ -39,7 +42,10 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
 
     val user = userRepository.user
-    val stats = userRepository.userStats
+    private val _uiStats = MutableStateFlow<UserStats?>(null)
+    val stats = _uiStats.asStateFlow()
+
+
     val myUserId: StateFlow<Long> = userRepository.currentUserId
     private val _selectedColorId = MutableStateFlow<Int?>(null)
     private val _viewType = MutableStateFlow("DEFAULT")
@@ -54,7 +60,14 @@ class ProfileViewModel @Inject constructor(
                 userRepository.currentUserId // 내 ID
             }
         }
-
+    fun refreshProfile() {
+        viewModelScope.launch {
+            val argumentId = savedStateHandle.get<String>("userId")?.toLongOrNull() ?: -1L
+            userRepository.loadUser(argumentId)
+            Log.d("ProfileVM", "데이터 리프레시: $argumentId")
+            Log.d("ProfileVM","isFollowing :${_uiStats.value?.isFollowing}")
+        }
+    }
     fun onChangeViewType(newType: String) {
         _viewType.value = newType
 
@@ -97,6 +110,18 @@ class ProfileViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), false)
 
     init {
+        viewModelScope.launch {
+            userRepository.userStats.collect { newStats ->
+                _uiStats.value = newStats
+            }
+        }
+
+        viewModelScope.launch {
+            val argumentId = savedStateHandle.get<String>("userId")?.toLong()
+            val targetId = argumentId ?: -1L
+            userRepository.loadUser(targetId)
+        }
+
         viewModelScope.launch {
             val argumentId = savedStateHandle.get<String>("userId")?.toLong()
             val targetId = argumentId ?: -1L
@@ -141,7 +166,13 @@ class ProfileViewModel @Inject constructor(
             val result = followRepository.followRequest(userId)
             result.onSuccess {
                 Log.d("ProfileVM","팔로우 요청")
+                _uiStats.update {
+                    it?.copy(isFollowing = true)
+                }
             }.onFailure {
+                Log.d("ProfileVM","isFollowing ${_uiStats.value?.isFollowing}")
+
+                Log.d("ProfileVM","${user.value.id}")
                 Log.d("ProfileVM","팔로우 요청 실패")
             }
         }
@@ -153,6 +184,9 @@ class ProfileViewModel @Inject constructor(
             val result = followRepository.unFollow(userId)
             result.onSuccess {
                 Log.d("ProfileVM","언팔")
+                _uiStats.update {
+                    it?.copy(isFollowing = false)
+                }
             }.onFailure {
                 Log.d("ProfileVM","언팔 실패")
             }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface UserRepository {
     val user: StateFlow<User>
-    val userStats: StateFlow<UserStats?>
+    val userStats: StateFlow<UserStats>
     val currentUserId:StateFlow<Long>
 
     suspend fun loadUser(userId: Long)

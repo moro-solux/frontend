@@ -39,8 +39,13 @@ class UserRepositoryImpl @Inject constructor(
     private val _currentUserId = MutableStateFlow(-1L)
     override val currentUserId: StateFlow<Long> = _currentUserId.asStateFlow()
 
-    private val _userStats = MutableStateFlow<UserStats?>(null)
-    override val userStats: StateFlow<UserStats?> = _userStats.asStateFlow()
+    private val _userStats = MutableStateFlow<UserStats>(UserStats(
+        colorsCount = 0,
+        followerCount = 0,
+        followingCount = 0,
+        isFollowing = false,
+    ))
+    override val userStats: StateFlow<UserStats> = _userStats.asStateFlow()
 
     override suspend fun loadUser(userId: Long) {
         try {
@@ -59,7 +64,7 @@ class UserRepositoryImpl @Inject constructor(
                 Log.d("loadUserTest", "서버가 보내준 실제 이름: ${response.data.userName}")
                 _user.value = response.data.toDomain()
                 _userStats.value= response.data.toStatsDomain()
-                Log.d("loadUserTest!!!!", "loadUser ID: ${_user.value.id}")
+                Log.d("loadUserTest!!!!", "userStats: ${_userStats.value?.isFollowing}")
             }
             else {
                 Log.e("loadUserTest", "success== false")

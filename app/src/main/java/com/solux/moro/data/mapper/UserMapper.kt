@@ -26,7 +26,7 @@ fun UserProfileDto.toStatsDomain(): UserStats {
         colorsCount = this.colorCount,
         followerCount = this.followerCount,
         followingCount = this.followingCount,
-        isFollowing = this.followingStatus == "ACCEPTED",
+        isFollowing = this.followingStatus == "ACCEPTED"||this.followingStatus=="PENDING",
     )
 }
 
