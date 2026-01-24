@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -35,6 +36,7 @@ fun TopBar(
     showBell: Boolean = true,
     navController: NavHostController=NavHostController(LocalContext.current),
     search:Boolean=false,
+    showBtn:Boolean=false
 ) {
     Column {
         TopAppBar(
@@ -105,6 +107,25 @@ fun TopBar(
                         )
                     }
                 }
+                if (showBtn) {
+                    IconButton(
+                        onClick = {
+                            navController.navigate("menu")
+                        },
+                        Modifier
+                            .width((126.72).toPxDp)
+                            .height((126.72).toPxDp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.button),
+                            modifier = Modifier
+                                .padding((0.15429).toPxDp)
+                                .scale(2.3f),
+                            contentDescription = "Notification"
+                        )
+                    }
+                }
+
             },
         )
         HorizontalDivider(
@@ -118,6 +139,6 @@ fun TopBar(
 @Composable
 fun TopBarPreview() {
     Column {
-        TopBar(showBell = true, search = true)
+        TopBar(showBtn = true, search = true)
     }
 }
