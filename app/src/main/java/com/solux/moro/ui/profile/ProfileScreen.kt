@@ -122,6 +122,7 @@ fun ProfileScreen(
                             NotCaptures()
                         else Captures(captures,
                             navController,
+                            isMyProfile,
                             { viewModel.onChangeViewType("USER_COLORS") }
                         ,)
                     }
@@ -137,6 +138,7 @@ fun ProfileScreen(
 
             Box(modifier = Modifier
                 .fillMaxHeight()
+                .width(350.dp)
                 .offset {
                     IntOffset(
                         x = sidePanelState.offsetX.value.toInt(),

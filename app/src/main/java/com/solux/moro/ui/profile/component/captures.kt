@@ -41,6 +41,7 @@ import com.solux.moro.data.model.ProfileFeedItem
 fun Captures(
     posts: List<ProfileFeedItem>,
     navController: NavHostController,
+    isMyProfile:Boolean,
     onAllClick: () -> Unit,
 ){
     Column(
@@ -70,7 +71,7 @@ fun Captures(
                 modifier = Modifier
                     .height(73.toPxDp)
             )
-
+        if(isMyProfile) {
             Text(
                 text = "전체보기",
                 style = TextStyle(
@@ -82,11 +83,12 @@ fun Captures(
                 ),
                 modifier = Modifier
                     .height(73.toPxDp)
-                    .padding(top=0.dp, end=0.dp )
+                    .padding(top = 0.dp, end = 0.dp)
                     .clickable {
                         onAllClick()
                     }
             )
+        }
         }
         ImageFeedGrid(posts,navController)
     }
