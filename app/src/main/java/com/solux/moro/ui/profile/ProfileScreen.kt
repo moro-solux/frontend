@@ -74,7 +74,7 @@ fun ProfileScreen(
 
     Scaffold(
         bottomBar = { BottomBar(navController) },
-        topBar = { if(isMyProfile){TopBar()}
+        topBar = { if(isMyProfile){TopBar(showBtn=true, navController = navController)}
         else{BackNavigationTopAppBar(nickname,onBackClick = {
             navController.popBackStack()})}}
     ) { innerPadding ->
