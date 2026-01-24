@@ -41,7 +41,6 @@ fun MyMissionScreen(
     viewModel: MissionViewModel = hiltViewModel()
 ) {
     val myMissions by viewModel.myMissions.collectAsState()
-    val todayDate = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date()) }
 
     Scaffold(
         topBar = {
@@ -69,23 +68,12 @@ fun MyMissionScreen(
             }
 
             items(myMissions) { post ->
-                val isToday = post.createdAt.startsWith(todayDate)
-
-                if (isToday) {
-                    MyMission(
-                        title = post.missionTitle,
-                        imageUrl = post.imageUrl,
-                        shotAt = "촬영일시: ${formatDateSimple(post.createdAt)}",
-                        onClick = { navController.navigate("mission_post/${post.misPostId}") }
-                    )
-                } else {
-                    F_MyMission(
-                        title = post.missionTitle,
-                        imageUrl = post.imageUrl,
-                        shotAt = "촬영일시: ${formatDateSimple(post.createdAt)}",
-                        onClick = { navController.navigate("mission_post/${post.misPostId}") }
-                    )
-                }
+                F_MyMission(
+                    title = post.missionTitle,
+                    imageUrl = post.imageUrl,
+                    shotAt = "촬영일시: ${formatDateSimple(post.createdAt)}",
+                    onClick = { navController.navigate("mission_post/${post.misPostId}") }
+                )
             }
         }
     }
@@ -205,7 +193,7 @@ fun F_MyMission(
                 Row(modifier = Modifier.height(figmaDp(20f)), verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = title,
-                        style = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(400), color = Color(0xFFA5A5A5)) 
+                        style = TextStyle(fontSize = 14.sp, lineHeight = 20.sp, fontWeight = FontWeight(400), color = Color(0xFFA5A5A5))
                     )
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
